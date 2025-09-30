@@ -21,7 +21,7 @@ async function seed() {
     
     const admin = await prisma.militar.create({
       data: {
-        nome: 'Administrador do Sistema',
+        nome: 'Muriel',
         matricula: 'ADMIN001',
         posto: 'Comandante Geral',
         email: 'admin@bombeiros.gov.br',
