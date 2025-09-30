@@ -1,0 +1,128 @@
+// Schema do Banco de Dados - Sistema Corpo de Bombeiros
+// Versão: 1.0
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Tabela: Militar
+model Militar {
+  idMilitar      Int      @id @default(autoincrement()) @map("id_militar")
+  nome           String?  @db.VarChar(100)
+  matricula      String?  @unique @db.VarChar(20)
+  posto          String?  @db.VarChar(50)
+  email          String?  @db.VarChar(100)
+  senhaHash      String?  @map("senha_hash") @db.VarChar(255)
+  perfilAcesso   String?  @map("perfil_acesso") @db.VarChar(20)
+  
+  // Relacionamentos
+  equipesLideradas    Equipe[]           @relation("EquipeLider")
+  militarEquipes      MilitarEquipe[]
+  registrosOcorrencia RegistroOcorrencia[]
+  logsAuditoria       LogAuditoria[]
+  relatorios          Relatorio[]
+
+  @@map("Militar")
+}
+
+// Tabela: Equipe
+model Equipe {
+  idEquipe         Int      @id @default(autoincrement()) @map("id_equipe")
+  nomeEquipe       String?  @map("nome_equipe") @db.VarChar(100)
+  turno            String?  @db.VarChar(20)
+  idMilitarLider   Int?     @map("id_militar_lider")
+  
+  // Relacionamentos
+  lider               Militar?            @relation("EquipeLider", fields: [idMilitarLider], references: [idMilitar])
+  militarEquipes      MilitarEquipe[]
+  registrosOcorrencia RegistroOcorrencia[]
+
+  @@map("Equipe")
+}
+
+// Tabela: Ocorrencia
+model Ocorrencia {
+  idOcorrencia      Int       @id @default(autoincrement()) @map("id_ocorrencia")
+  dataHora          DateTime? @map("data_hora") @db.Timestamp(6)
+  tipoOcorrencia    String?   @map("tipo_ocorrencia") @db.VarChar(50)
+  descricao         String?   @db.Text
+  localizacaoGps    String?   @map("localizacao_gps") @db.VarChar(100)
+  status            String?   @db.VarChar(20)
+  assinaturaDigital String?   @map("assinatura_digital") @db.Text
+  fotoUrl           String?   @map("foto_url") @db.Text
+  videoUrl          String?   @map("video_url") @db.Text
+  modoTreinamento   Boolean?  @map("modo_treinamento")
+  
+  // Relacionamentos
+  registrosOcorrencia RegistroOcorrencia[]
+  relatorios          Relatorio[]
+
+  @@map("Ocorrencia")
+}
+
+// Tabela: RegistroOcorrencia
+model RegistroOcorrencia {
+  idRegistro     Int       @id @default(autoincrement()) @map("id_registro")
+  idOcorrencia   Int?      @map("id_ocorrencia")
+  idMilitar      Int?      @map("id_militar")
+  idEquipe       Int?      @map("id_equipe")
+  dataRegistro   DateTime? @map("data_registro") @db.Timestamp(6)
+  observacoes    String?   @db.Text
+  
+  // Relacionamentos
+  ocorrencia Ocorrencia? @relation(fields: [idOcorrencia], references: [idOcorrencia])
+  militar    Militar?    @relation(fields: [idMilitar], references: [idMilitar])
+  equipe     Equipe?     @relation(fields: [idEquipe], references: [idEquipe])
+
+  @@map("RegistroOcorrencia")
+}
+
+// Tabela: LogAuditoria
+model LogAuditoria {
+  idLog      Int       @id @default(autoincrement()) @map("id_log")
+  idMilitar  Int?      @map("id_militar")
+  acao       String?   @db.Text
+  dataHora   DateTime? @map("data_hora") @db.Timestamp(6)
+  ipOrigem   String?   @map("ip_origem") @db.VarChar(45)
+  
+  // Relacionamentos
+  militar Militar? @relation(fields: [idMilitar], references: [idMilitar])
+
+  @@map("LogAuditoria")
+}
+
+// Tabela: Relatorio
+model Relatorio {
+  idRelatorio   Int       @id @default(autoincrement()) @map("id_relatorio")
+  idOcorrencia  Int?      @map("id_ocorrencia")
+  geradoPor     Int?      @map("gerado_por")
+  dataGeracao   DateTime? @map("data_geracao") @db.Timestamp(6)
+  formato       String?   @db.VarChar(10)
+  urlArquivo    String?   @map("url_arquivo") @db.Text
+  
+  // Relacionamentos
+  ocorrencia Ocorrencia? @relation(fields: [idOcorrencia], references: [idOcorrencia])
+  militar    Militar?    @relation(fields: [geradoPor], references: [idMilitar])
+
+  @@map("Relatorio")
+}
+
+// Tabela Associativa: MilitarEquipe
+model MilitarEquipe {
+  idMilitar    Int       @map("id_militar")
+  idEquipe     Int       @map("id_equipe")
+  dataEntrada  DateTime? @map("data_entrada") @db.Date
+  dataSaida    DateTime? @map("data_saida") @db.Date
+  
+  // Relacionamentos
+  militar Militar @relation(fields: [idMilitar], references: [idMilitar])
+  equipe  Equipe  @relation(fields: [idEquipe], references: [idEquipe])
+
+  @@id([idMilitar, idEquipe])
+  @@map("MilitarEquipe")
+}

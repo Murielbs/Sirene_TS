@@ -1,0 +1,249 @@
+import prisma from '../database/prisma';
+import { AuthUtils, ValidationUtils } from '../utils/auth';
+import { 
+  LoginRequest, 
+  LoginResponse, 
+  CriarMilitarRequest, 
+  PerfilAcesso 
+} from '../types';
+
+export class AuthService {
+  /**
+   * Realiza login do militar
+   */
+  static async login(loginData: LoginRequest): Promise<LoginResponse> {
+    const { matricula, senha } = loginData;
+
+    // Busca militar pela matrícula
+    const militar = await prisma.militar.findUnique({
+      where: { matricula },
+      select: {
+        idMilitar: true,
+        nome: true,
+        matricula: true,
+        posto: true,
+        senhaHash: true,
+        perfilAcesso: true,
+      },
+    });
+
+    if (!militar || !militar.senhaHash) {
+      throw new Error('Credenciais inválidas');
+    }
+
+    // Verifica senha
+    const senhaValida = await AuthUtils.verifyPassword(senha, militar.senhaHash);
+    if (!senhaValida) {
+      throw new Error('Credenciais inválidas');
+    }
+
+    // Gera token
+    const token = AuthUtils.generateToken({
+      idMilitar: militar.idMilitar,
+      matricula: militar.matricula!,
+      perfilAcesso: militar.perfilAcesso as PerfilAcesso,
+    });
+
+    return {
+      token,
+      militar: {
+        idMilitar: militar.idMilitar,
+        nome: militar.nome || '',
+        matricula: militar.matricula || '',
+        posto: militar.posto || '',
+        perfilAcesso: militar.perfilAcesso as PerfilAcesso,
+      },
+    };
+  }
+
+  /**
+   * Cadastra novo militar (apenas admin pode fazer isso)
+   */
+  static async criarMilitar(dadosMilitar: CriarMilitarRequest) {
+    const { nome, matricula, posto, email, senha, perfilAcesso } = dadosMilitar;
+
+    // Validações
+    if (!ValidationUtils.isValidMatricula(matricula)) {
+      throw new Error('Formato de matrícula inválido');
+    }
+
+    if (!ValidationUtils.isValidEmail(email)) {
+      throw new Error('Formato de email inválido');
+    }
+
+    if (!ValidationUtils.isStrongPassword(senha)) {
+      throw new Error('Senha deve ter no mínimo 8 caracteres com pelo menos 1 maiúscula, 1 minúscula e 1 número');
+    }
+
+    // Verifica se matrícula já existe
+    const militarExistente = await prisma.militar.findUnique({
+      where: { matricula },
+    });
+
+    if (militarExistente) {
+      throw new Error('Matrícula já cadastrada');
+    }
+
+    // Verifica se email já existe
+    const emailExistente = await prisma.militar.findFirst({
+      where: { email },
+    });
+
+    if (emailExistente) {
+      throw new Error('Email já cadastrado');
+    }
+
+    // Cria hash da senha
+    const senhaHash = await AuthUtils.hashPassword(senha);
+
+    // Cria militar
+    const novoMilitar = await prisma.militar.create({
+      data: {
+        nome: ValidationUtils.sanitizeString(nome),
+        matricula: matricula.toUpperCase(),
+        posto: ValidationUtils.sanitizeString(posto),
+        email,
+        senhaHash,
+        perfilAcesso,
+      },
+      select: {
+        idMilitar: true,
+        nome: true,
+        matricula: true,
+        posto: true,
+        email: true,
+        perfilAcesso: true,
+      },
+    });
+
+    return novoMilitar;
+  }
+
+  /**
+   * Lista todos os militares (apenas admin e comandante)
+   */
+  static async listarMilitares(page = 1, limit = 20) {
+    const skip = (page - 1) * limit;
+
+    const [militares, total] = await Promise.all([
+      prisma.militar.findMany({
+        skip,
+        take: limit,
+        select: {
+          idMilitar: true,
+          nome: true,
+          matricula: true,
+          posto: true,
+          email: true,
+          perfilAcesso: true,
+        },
+        orderBy: { nome: 'asc' },
+      }),
+      prisma.militar.count(),
+    ]);
+
+    return {
+      militares,
+      total,
+      page,
+      totalPages: Math.ceil(total / limit),
+    };
+  }
+
+  /**
+   * Busca militar por ID
+   */
+  static async buscarMilitarPorId(idMilitar: number) {
+    const militar = await prisma.militar.findUnique({
+      where: { idMilitar },
+      select: {
+        idMilitar: true,
+        nome: true,
+        matricula: true,
+        posto: true,
+        email: true,
+        perfilAcesso: true,
+      },
+    });
+
+    if (!militar) {
+      throw new Error('Militar não encontrado');
+    }
+
+    return militar;
+  }
+
+  /**
+   * Atualiza dados do militar
+   */
+  static async atualizarMilitar(idMilitar: number, dados: Partial<CriarMilitarRequest>) {
+    const { nome, posto, email, senha } = dados;
+
+    const dadosAtualizacao: any = {};
+
+    if (nome) {
+      dadosAtualizacao.nome = ValidationUtils.sanitizeString(nome);
+    }
+
+    if (posto) {
+      dadosAtualizacao.posto = ValidationUtils.sanitizeString(posto);
+    }
+
+    if (email) {
+      if (!ValidationUtils.isValidEmail(email)) {
+        throw new Error('Formato de email inválido');
+      }
+
+      // Verifica se email já existe em outro militar
+      const emailExistente = await prisma.militar.findFirst({
+        where: { 
+          email,
+          NOT: { idMilitar },
+        },
+      });
+
+      if (emailExistente) {
+        throw new Error('Email já cadastrado para outro militar');
+      }
+
+      dadosAtualizacao.email = email;
+    }
+
+    if (senha) {
+      if (!ValidationUtils.isStrongPassword(senha)) {
+        throw new Error('Senha deve ter no mínimo 8 caracteres com pelo menos 1 maiúscula, 1 minúscula e 1 número');
+      }
+      dadosAtualizacao.senhaHash = await AuthUtils.hashPassword(senha);
+    }
+
+    const militarAtualizado = await prisma.militar.update({
+      where: { idMilitar },
+      data: dadosAtualizacao,
+      select: {
+        idMilitar: true,
+        nome: true,
+        matricula: true,
+        posto: true,
+        email: true,
+        perfilAcesso: true,
+      },
+    });
+
+    return militarAtualizado;
+  }
+
+  /**
+   * Remove militar (apenas admin)
+   */
+  static async removerMilitar(idMilitar: number) {
+    // Verifica se militar existe
+    await this.buscarMilitarPorId(idMilitar);
+
+    // Remove militar (Prisma cuidará das foreign keys com cascade)
+    await prisma.militar.delete({
+      where: { idMilitar },
+    });
+
+    return { message: 'Militar removido com sucesso' };
+  }
+}
