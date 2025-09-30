@@ -1,0 +1,30 @@
+{
+  "name": "sirene-ts",
+  "version": "1.0.0",
+  "description": "Projeto TypeScript",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "watch": "nodemon --exec ts-node src/index.ts",
+    "clean": "rimraf dist",
+    "build:watch": "tsc --watch"
+  },
+  "keywords": [
+    "typescript",
+    "nodejs"
+  ],
+  "author": "Muriel",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "nodemon": "^3.0.0",
+    "rimraf": "^5.0.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.2.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
