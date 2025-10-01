@@ -31,7 +31,7 @@ async function seed() {
     });
 
     console.log('✅ Administrador criado com sucesso!');
-    console.log(`   ID: ${admin.idMilitar}`);
+    console.log(`   ID: ${admin.id}`);
     console.log(`   Nome: ${admin.nome}`);
     console.log(`   Matrícula: ${admin.matricula}`);
     console.log(`   Email: ${admin.email}`);
@@ -42,7 +42,7 @@ async function seed() {
       data: {
         nomeEquipe: 'Equipe Alpha',
         turno: 'Manhã',
-        idMilitarLider: admin.idMilitar,
+        idMilitarLider: admin.id,
       },
     });
 
@@ -68,9 +68,8 @@ async function seed() {
     // Adicionar o admin à primeira equipe
     await prisma.militarEquipe.create({
       data: {
-        idMilitar: admin.idMilitar,
-        idEquipe: equipe1.idEquipe,
-        dataEntrada: new Date(),
+        idMilitar: admin.id,
+        idEquipe: equipe1.id,
       },
     });
 

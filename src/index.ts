@@ -1,44 +1,22 @@
-console.log('Hello, TypeScript!');
+import app from './server';
 
-// Exemplo de função com tipagem
-function greet(name: string): string {
-    return `Olá, ${name}! Bem-vindo ao TypeScript!`;
-}
+const PORT = process.env.PORT || 3000;
 
-// Exemplo de interface
-interface User {
-    id: number;
-    name: string;
-    email: string;
-}
+app.listen(PORT, () => {
+  console.log(`🚒 Sistema Corpo de Bombeiros iniciado!`);
+  console.log(`🌐 Servidor rodando na porta: ${PORT}`);
+  console.log(`📍 URL: http://localhost:${PORT}`);
+  console.log(`🏥 Health Check: http://localhost:${PORT}/api/health`);
+  console.log(`📚 Ambiente: ${process.env.NODE_ENV || 'development'}`);
 
-// Exemplo de classe
-class UserService {
-    private users: User[] = [];
-
-    addUser(user: User): void {
-        this.users.push(user);
-        console.log(`Usuário ${user.name} adicionado com sucesso!`);
-    }
-
-    getUser(id: number): User | undefined {
-        return this.users.find(user => user.id === id);
-    }
-
-    getAllUsers(): User[] {
-        return [...this.users];
-    }
-}
-
-// Uso das funções e classes
-const message = greet('Desenvolvedor');
-console.log(message);
-
-const userService = new UserService();
-userService.addUser({
-    id: 1,
-    name: 'João Silva',
-    email: 'joao@email.com'
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`\n📋 Rotas disponíveis:`);
+    console.log(`   POST /api/auth/login - Login`);
+    console.log(`   GET  /api/auth/me - Dados do usuário logado`);
+    console.log(`   POST /api/auth/militar - Criar militar (Admin)`);
+    console.log(`   GET  /api/auth/militares - Listar militares`);
+    console.log(`   GET  /api/auth/militar/:id - Buscar militar`);
+    console.log(`   PUT  /api/auth/militar/:id - Atualizar militar`);
+    console.log(`   DELETE /api/auth/militar/:id - Remover militar (Admin)`);
+  }
 });
-
-console.log('Todos os usuários:', userService.getAllUsers());
