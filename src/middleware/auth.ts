@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { AuthUtils, ResponseUtils } from '../utils/auth';
+import { AuthUtils } from '../utils/auth';
+import { ResponseUtils } from '../utils/response';
 import { AuthRequest, PerfilAcesso } from '../types';
 import prisma from '../database/prisma';
 
@@ -23,9 +24,9 @@ export const authenticateToken = async (
     
     // Busca dados atualizados do militar
     const militar = await prisma.militar.findUnique({
-      where: { idMilitar: decoded.idMilitar },
+      where: { id: decoded.id },
       select: {
-        idMilitar: true,
+        id: true,
         nome: true,
         matricula: true,
         posto: true,
@@ -39,7 +40,7 @@ export const authenticateToken = async (
     }
 
     req.militar = {
-      idMilitar: militar.idMilitar,
+      id: militar.id,
       nome: militar.nome || '',
       matricula: militar.matricula || '',
       posto: militar.posto || '',
@@ -90,7 +91,7 @@ export const auditLog = (acao: string) => {
       if (req.militar) {
         await prisma.logAuditoria.create({
           data: {
-            idMilitar: req.militar.idMilitar,
+            idMilitar: req.militar.id,
             acao: `${acao} - ${req.method} ${req.url}`,
             dataHora: new Date(),
             ipOrigem: req.socket?.remoteAddress || 'unknown',

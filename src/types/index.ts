@@ -3,7 +3,7 @@ import { Request } from 'express';
 
 export interface AuthRequest extends Request {
   militar?: {
-    idMilitar: number;
+    id: string;
     nome: string;
     matricula: string;
     posto: string;
@@ -41,7 +41,7 @@ export interface LoginRequest {
 export interface LoginResponse {
   token: string;
   militar: {
-    idMilitar: number;
+    id: string;
     nome: string;
     matricula: string;
     posto: string;

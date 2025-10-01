@@ -6,20 +6,20 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
 // Tabela: Militar
 model Militar {
-  idMilitar      Int      @id @default(autoincrement()) @map("id_militar")
-  nome           String?  @db.VarChar(100)
-  matricula      String?  @unique @db.VarChar(20)
-  posto          String?  @db.VarChar(50)
-  email          String?  @db.VarChar(100)
-  senhaHash      String?  @map("senha_hash") @db.VarChar(255)
-  perfilAcesso   String?  @map("perfil_acesso") @db.VarChar(20)
-  
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  nome         String?
+  matricula    String?  @unique
+  posto        String?
+  email        String?
+  senhaHash    String?  @map("senha_hash")
+  perfilAcesso String?  @map("perfil_acesso")
+
   // Relacionamentos
   equipesLideradas    Equipe[]           @relation("EquipeLider")
   militarEquipes      MilitarEquipe[]
@@ -32,13 +32,13 @@ model Militar {
 
 // Tabela: Equipe
 model Equipe {
-  idEquipe         Int      @id @default(autoincrement()) @map("id_equipe")
-  nomeEquipe       String?  @map("nome_equipe") @db.VarChar(100)
-  turno            String?  @db.VarChar(20)
-  idMilitarLider   Int?     @map("id_militar_lider")
-  
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  nomeEquipe       String?  @map("nome_equipe")
+  turno            String?
+  idMilitarLider   String?  @db.ObjectId
+
   // Relacionamentos
-  lider               Militar?            @relation("EquipeLider", fields: [idMilitarLider], references: [idMilitar])
+  lider               Militar?            @relation("EquipeLider", fields: [idMilitarLider], references: [id])
   militarEquipes      MilitarEquipe[]
   registrosOcorrencia RegistroOcorrencia[]
 
@@ -47,17 +47,16 @@ model Equipe {
 
 // Tabela: Ocorrencia
 model Ocorrencia {
-  idOcorrencia      Int       @id @default(autoincrement()) @map("id_ocorrencia")
-  dataHora          DateTime? @map("data_hora") @db.Timestamp(6)
-  tipoOcorrencia    String?   @map("tipo_ocorrencia") @db.VarChar(50)
-  descricao         String?   @db.Text
-  localizacaoGps    String?   @map("localizacao_gps") @db.VarChar(100)
-  status            String?   @db.VarChar(20)
-  assinaturaDigital String?   @map("assinatura_digital") @db.Text
-  fotoUrl           String?   @map("foto_url") @db.Text
-  videoUrl          String?   @map("video_url") @db.Text
-  modoTreinamento   Boolean?  @map("modo_treinamento")
-  
+  id                String    @id @default(auto()) @map("_id") @db.ObjectId
+  dataHora          DateTime? @map("data_hora")
+  tipoOcorrencia    String?   @map("tipo_ocorrencia")
+  descricao         String?
+  localizacaoGps    String?   @map("localizacao_gps")
+  status            String?
+  assinaturaDigital String?   @map("assinatura_digital")
+  fotoUrl           String?   @map("foto_url")
+  videoUrl          String?   @map("video_url")
+
   // Relacionamentos
   registrosOcorrencia RegistroOcorrencia[]
   relatorios          Relatorio[]
@@ -67,62 +66,60 @@ model Ocorrencia {
 
 // Tabela: RegistroOcorrencia
 model RegistroOcorrencia {
-  idRegistro     Int       @id @default(autoincrement()) @map("id_registro")
-  idOcorrencia   Int?      @map("id_ocorrencia")
-  idMilitar      Int?      @map("id_militar")
-  idEquipe       Int?      @map("id_equipe")
-  dataRegistro   DateTime? @map("data_registro") @db.Timestamp(6)
-  observacoes    String?   @db.Text
-  
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  idOcorrencia   String?   @db.ObjectId
+  idMilitar      String?   @db.ObjectId
+  idEquipe       String?   @db.ObjectId
+  dataRegistro   DateTime? @map("data_registro")
+  observacoes    String?
+
   // Relacionamentos
-  ocorrencia Ocorrencia? @relation(fields: [idOcorrencia], references: [idOcorrencia])
-  militar    Militar?    @relation(fields: [idMilitar], references: [idMilitar])
-  equipe     Equipe?     @relation(fields: [idEquipe], references: [idEquipe])
+  ocorrencia Ocorrencia? @relation(fields: [idOcorrencia], references: [id])
+  militar    Militar?    @relation(fields: [idMilitar], references: [id])
+  equipe     Equipe?     @relation(fields: [idEquipe], references: [id])
 
   @@map("RegistroOcorrencia")
 }
 
 // Tabela: LogAuditoria
 model LogAuditoria {
-  idLog      Int       @id @default(autoincrement()) @map("id_log")
-  idMilitar  Int?      @map("id_militar")
-  acao       String?   @db.Text
-  dataHora   DateTime? @map("data_hora") @db.Timestamp(6)
-  ipOrigem   String?   @map("ip_origem") @db.VarChar(45)
-  
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  idMilitar  String?   @db.ObjectId
+  acao       String?
+  dataHora   DateTime? @map("data_hora")
+  ipOrigem   String?   @map("ip_origem")
+
   // Relacionamentos
-  militar Militar? @relation(fields: [idMilitar], references: [idMilitar])
+  militar Militar? @relation(fields: [idMilitar], references: [id])
 
   @@map("LogAuditoria")
 }
 
 // Tabela: Relatorio
 model Relatorio {
-  idRelatorio   Int       @id @default(autoincrement()) @map("id_relatorio")
-  idOcorrencia  Int?      @map("id_ocorrencia")
-  geradoPor     Int?      @map("gerado_por")
-  dataGeracao   DateTime? @map("data_geracao") @db.Timestamp(6)
-  formato       String?   @db.VarChar(10)
-  urlArquivo    String?   @map("url_arquivo") @db.Text
-  
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  idOcorrencia  String?   @db.ObjectId
+  geradoPor     String?   @db.ObjectId
+  dataGeracao   DateTime? @map("data_geracao")
+  formato       String?
+  urlArquivo    String?   @map("url_arquivo")
+
   // Relacionamentos
-  ocorrencia Ocorrencia? @relation(fields: [idOcorrencia], references: [idOcorrencia])
-  militar    Militar?    @relation(fields: [geradoPor], references: [idMilitar])
+  ocorrencia Ocorrencia? @relation(fields: [idOcorrencia], references: [id])
+  militar    Militar?    @relation(fields: [geradoPor], references: [id])
 
   @@map("Relatorio")
 }
 
-// Tabela Associativa: MilitarEquipe
+// Tabela de Junção: MilitarEquipe
 model MilitarEquipe {
-  idMilitar    Int       @map("id_militar")
-  idEquipe     Int       @map("id_equipe")
-  dataEntrada  DateTime? @map("data_entrada") @db.Date
-  dataSaida    DateTime? @map("data_saida") @db.Date
-  
-  // Relacionamentos
-  militar Militar @relation(fields: [idMilitar], references: [idMilitar])
-  equipe  Equipe  @relation(fields: [idEquipe], references: [idEquipe])
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  idMilitar  String @db.ObjectId
+  idEquipe   String @db.ObjectId
 
-  @@id([idMilitar, idEquipe])
+  // Relacionamentos
+  militar Militar @relation(fields: [idMilitar], references: [id])
+  equipe  Equipe  @relation(fields: [idEquipe], references: [id])
+
   @@map("MilitarEquipe")
 }

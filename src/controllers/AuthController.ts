@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { AuthService } from '../services/AuthService';
-import { ResponseUtils } from '../utils/auth';
+import { ResponseUtils } from '../utils/response';
 import { AuthRequest, LoginRequest, CriarMilitarRequest } from '../types';
 
 export class AuthController {
@@ -57,19 +57,13 @@ export class AuthController {
    */
   static async buscarMilitar(req: Request, res: Response): Promise<void> {
     try {
-      const idParam = req.params.id;
-      if (!idParam) {
+      const id = req.params.id;
+      if (!id) {
         res.status(400).json(ResponseUtils.error('ID é obrigatório'));
         return;
       }
 
-      const idMilitar = parseInt(idParam);
-      if (isNaN(idMilitar)) {
-        res.status(400).json(ResponseUtils.error('ID inválido'));
-        return;
-      }
-
-      const militar = await AuthService.buscarMilitarPorId(idMilitar);
+      const militar = await AuthService.buscarMilitarPorId(id);
       res.json(ResponseUtils.success('Militar encontrado', militar));
     } catch (error: any) {
       res.status(404).json(ResponseUtils.error('Militar não encontrado', error.message));
@@ -81,21 +75,15 @@ export class AuthController {
    */
   static async atualizarMilitar(req: AuthRequest, res: Response): Promise<void> {
     try {
-      const idParam = req.params.id;
-      if (!idParam) {
+      const id = req.params.id;
+      if (!id) {
         res.status(400).json(ResponseUtils.error('ID é obrigatório'));
         return;
       }
 
-      const idMilitar = parseInt(idParam);
       const dados = req.body;
 
-      if (isNaN(idMilitar)) {
-        res.status(400).json(ResponseUtils.error('ID inválido'));
-        return;
-      }
-
-      const militarAtualizado = await AuthService.atualizarMilitar(idMilitar, dados);
+      const militarAtualizado = await AuthService.atualizarMilitar(id, dados);
       res.json(ResponseUtils.success('Militar atualizado com sucesso', militarAtualizado));
     } catch (error: any) {
       res.status(400).json(ResponseUtils.error('Erro ao atualizar militar', error.message));
@@ -107,20 +95,14 @@ export class AuthController {
    */
   static async removerMilitar(req: Request, res: Response): Promise<void> {
     try {
-      const idParam = req.params.id;
-      if (!idParam) {
+      const id = req.params.id;
+      if (!id) {
         res.status(400).json(ResponseUtils.error('ID é obrigatório'));
         return;
       }
 
-      const idMilitar = parseInt(idParam);
-      if (isNaN(idMilitar)) {
-        res.status(400).json(ResponseUtils.error('ID inválido'));
-        return;
-      }
-
-      const resultado = await AuthService.removerMilitar(idMilitar);
-      res.json(ResponseUtils.success('Militar removido com sucesso', resultado));
+      await AuthService.removerMilitar(id);
+      res.json(ResponseUtils.success('Militar removido com sucesso'));
     } catch (error: any) {
       res.status(400).json(ResponseUtils.error('Erro ao remover militar', error.message));
     }

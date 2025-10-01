@@ -3,7 +3,7 @@ import rateLimit from 'express-rate-limit';
 import multer from 'multer';
 import path from 'path';
 import crypto from 'crypto';
-import { ResponseUtils } from '../utils/auth';
+import { ResponseUtils } from '../utils/response';
 
 /**
  * Middleware de rate limiting
@@ -27,47 +27,20 @@ export const loginRateLimiter = rateLimit({
 });
 
 /**
- * Configuração do multer para upload de arquivos
+ * Middleware de log de requisições
  */
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, process.env.UPLOAD_PATH || './uploads');
-  },
-  filename: (req, file, cb) => {
-    const uniqueName = `${crypto.randomUUID()}${path.extname(file.originalname)}`;
-    cb(null, uniqueName);
-  },
-});
-
-const fileFilter = (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
-  // Tipos permitidos
-  const allowedTypes = [
-    'image/jpeg',
-    'image/png',
-    'image/gif',
-    'video/mp4',
-    'video/avi',
-    'video/mov',
-    'application/pdf',
-  ];
-
-  if (allowedTypes.includes(file.mimetype)) {
-    cb(null, true);
-  } else {
-    cb(new Error('Tipo de arquivo não permitido'));
-  }
+export const requestLogger = (req: Request, res: Response, next: NextFunction): void => {
+  const timestamp = new Date().toISOString();
+  const method = req.method;
+  const url = req.url;
+  const ip = req.socket?.remoteAddress || 'unknown';
+  
+  console.log(`[${timestamp}] ${method} ${url} - IP: ${ip}`);
+  next();
 };
 
-export const upload = multer({
-  storage,
-  fileFilter,
-  limits: {
-    fileSize: parseInt(process.env.MAX_FILE_SIZE || '10485760'), // 10MB padrão
-  },
-});
-
 /**
- * Middleware de tratamento de erros global
+ * Middleware de tratamento de erros
  */
 export const errorHandler = (
   error: any,
@@ -130,14 +103,82 @@ export const validateRequest = (schema: any) => {
 };
 
 /**
- * Middleware de log de requisições
+ * Configuração do multer para upload de arquivos
  */
-export const requestLogger = (req: Request, res: Response, next: NextFunction): void => {
-  const timestamp = new Date().toISOString();
-  const method = req.method;
-  const url = req.url;
-  const ip = req.socket?.remoteAddress || 'unknown';
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, process.env.UPLOAD_PATH || './uploads');
+  },
+  filename: (req, file, cb) => {
+    const uniqueName = `${crypto.randomUUID()}${path.extname(file.originalname)}`;
+    cb(null, uniqueName);
+  },
+});
+
+const fileFilter = (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+  // Tipos permitidos
+  const allowedTypes = [
+    'image/jpeg',
+    'image/png',
+    'image/gif',
+    'video/mp4',
+    'video/avi',
+    'video/mov',
+    'application/pdf',
+  ];
+
+  if (allowedTypes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(new Error('Tipo de arquivo não permitido'));
+  }
+};
+
+export const upload = multer({
+  storage,
+  fileFilter,
+  limits: {
+    fileSize: parseInt(process.env.MAX_FILE_SIZE || '10485760'), // 10MB padrão
+  },
+});
+
+/**
+ * Middleware para rotas não encontradas
+ */
+export const notFoundHandler = (req: Request, res: Response): void => {
+  res.status(404).json(ResponseUtils.error('Rota não encontrada.'));
+};
+
+/**
+ * Middleware para validar o modo de treinamento
+ */
+export const checkTrainingMode = (req: Request, res: Response, next: NextFunction): void => {
+  const isTraining = req.body.modoTreinamento === true || req.query.modoTreinamento === 'true';
   
-  console.log(`[${timestamp}] ${method} ${url} - IP: ${ip}`);
+  if (isTraining && process.env.NODE_ENV !== 'development') {
+    res.status(403).json(ResponseUtils.error('Modo de treinamento só é permitido em ambiente de desenvolvimento.'));
+    return;
+  }
+  
+  next();
+};
+
+/**
+ * Middleware para validar dados de paginação
+ */
+export const validatePagination = (req: Request, res: Response, next: NextFunction): void => {
+  const page = req.query.page ? parseInt(req.query.page as string) : undefined;
+  const limit = req.query.limit ? parseInt(req.query.limit as string) : undefined;
+
+  if (page !== undefined && (isNaN(page) || page < 1)) {
+    res.status(400).json(ResponseUtils.error('Parâmetro "page" inválido.'));
+    return;
+  }
+
+  if (limit !== undefined && (isNaN(limit) || limit < 1 || limit > 100)) {
+    res.status(400).json(ResponseUtils.error('Parâmetro "limit" inválido (deve ser entre 1 e 100).'));
+    return;
+  }
+
   next();
 };

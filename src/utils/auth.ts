@@ -25,7 +25,7 @@ export class AuthUtils {
    * Gera token JWT
    */
   static generateToken(payload: {
-    idMilitar: number;
+    id: string;
     matricula: string;
     perfilAcesso: PerfilAcesso;
   }): string {
@@ -50,8 +50,22 @@ export class AuthUtils {
     }
     return authHeader.substring(7);
   }
+
+  /**
+   * Utilitário para padronizar respostas JSON
+   */
+  static success<T>(message: string, data?: T) {
+    return { success: true, message, data };
+  }
+
+  static error(message: string, error?: any) {
+    return { success: false, message, error };
+  }
 }
 
+/**
+ * Validações diversas
+ */
 export class ValidationUtils {
   /**
    * Valida formato de email
@@ -84,29 +98,5 @@ export class ValidationUtils {
    */
   static sanitizeString(str: string): string {
     return str.trim().replace(/[<>]/g, '');
-  }
-}
-
-export class ResponseUtils {
-  /**
-   * Resposta de sucesso padrão
-   */
-  static success<T>(message: string, data?: T) {
-    return {
-      success: true,
-      message,
-      data,
-    };
-  }
-
-  /**
-   * Resposta de erro padrão
-   */
-  static error(message: string, error?: string) {
-    return {
-      success: false,
-      message,
-      error,
-    };
   }
 }

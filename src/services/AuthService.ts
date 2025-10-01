@@ -18,7 +18,7 @@ export class AuthService {
     const militar = await prisma.militar.findUnique({
       where: { matricula },
       select: {
-        idMilitar: true,
+        id: true,
         nome: true,
         matricula: true,
         posto: true,
@@ -39,7 +39,7 @@ export class AuthService {
 
     // Gera token
     const token = AuthUtils.generateToken({
-      idMilitar: militar.idMilitar,
+      id: militar.id,
       matricula: militar.matricula!,
       perfilAcesso: militar.perfilAcesso as PerfilAcesso,
     });
@@ -47,7 +47,7 @@ export class AuthService {
     return {
       token,
       militar: {
-        idMilitar: militar.idMilitar,
+        id: militar.id,
         nome: militar.nome || '',
         matricula: militar.matricula || '',
         posto: militar.posto || '',
@@ -107,7 +107,7 @@ export class AuthService {
         perfilAcesso,
       },
       select: {
-        idMilitar: true,
+        id: true,
         nome: true,
         matricula: true,
         posto: true,
@@ -130,7 +130,7 @@ export class AuthService {
         skip,
         take: limit,
         select: {
-          idMilitar: true,
+          id: true,
           nome: true,
           matricula: true,
           posto: true,
@@ -153,11 +153,11 @@ export class AuthService {
   /**
    * Busca militar por ID
    */
-  static async buscarMilitarPorId(idMilitar: number) {
+  static async buscarMilitarPorId(id: string) {
     const militar = await prisma.militar.findUnique({
-      where: { idMilitar },
+      where: { id },
       select: {
-        idMilitar: true,
+        id: true,
         nome: true,
         matricula: true,
         posto: true,
@@ -176,7 +176,7 @@ export class AuthService {
   /**
    * Atualiza dados do militar
    */
-  static async atualizarMilitar(idMilitar: number, dados: Partial<CriarMilitarRequest>) {
+  static async atualizarMilitar(id: string, dados: Partial<CriarMilitarRequest>) {
     const { nome, posto, email, senha } = dados;
 
     const dadosAtualizacao: any = {};
@@ -198,7 +198,7 @@ export class AuthService {
       const emailExistente = await prisma.militar.findFirst({
         where: { 
           email,
-          NOT: { idMilitar },
+          NOT: { id },
         },
       });
 
@@ -217,10 +217,10 @@ export class AuthService {
     }
 
     const militarAtualizado = await prisma.militar.update({
-      where: { idMilitar },
+      where: { id },
       data: dadosAtualizacao,
       select: {
-        idMilitar: true,
+        id: true,
         nome: true,
         matricula: true,
         posto: true,
@@ -235,13 +235,13 @@ export class AuthService {
   /**
    * Remove militar (apenas admin)
    */
-  static async removerMilitar(idMilitar: number) {
+  static async removerMilitar(id: string) {
     // Verifica se militar existe
-    await this.buscarMilitarPorId(idMilitar);
+    await this.buscarMilitarPorId(id);
 
     // Remove militar (Prisma cuidará das foreign keys com cascade)
     await prisma.militar.delete({
-      where: { idMilitar },
+      where: { id },
     });
 
     return { message: 'Militar removido com sucesso' };
