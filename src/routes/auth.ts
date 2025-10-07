@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { AuthController } from '../controllers/AuthController';
+import { OcorrenciaController } from '../controllers/OcorrenciaController';
 import { 
   authenticateToken, 
   adminOnly, 
@@ -84,5 +85,9 @@ router.delete(
   auditLog('REMOVER_MILITAR'),
   AuthController.removerMilitar
 );
+
+// Rotas de ocorrência
+router.post('/Ocorrencia', OcorrenciaController.criarOcorrencia);
+router.post('/ocorrencia', OcorrenciaController.criarOcorrencia);
 
 export default router;
