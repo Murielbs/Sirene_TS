@@ -64,7 +64,7 @@ export const authorize = (perfisPermitidos: PerfilAcesso[]) => {
     }
 
     if (!perfisPermitidos.includes(req.militar.perfilAcesso)) {
-      res.status(403).json(ResponseUtils.error('Acesso negado'));
+      res.status(403).json(ResponseUtils.error('Você não pode cadastrar, você não é admin!'));
       return;
     }
 
