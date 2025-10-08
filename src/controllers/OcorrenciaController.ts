@@ -34,11 +34,15 @@ export const OcorrenciaController = {
       });
       console.log('Ocorrencia criada:', ocorrencia);
 
+      // Pega o id do militar autenticado do token
+      const militarId = (req as any).militar?.id;
+
       // Cria registro de ocorrência
       const registro = await prisma.registroOcorrencia.create({
         data: {
           idOcorrencia: ocorrencia.id,
-          // idMilitar e idEquipe podem ser preenchidos se disponíveis
+          idMilitar: militarId,
+          // idEquipe pode ser preenchido se disponível
           dataRegistro: new Date(),
           observacoes: `Ocorrência criada pelo endpoint.`
         }

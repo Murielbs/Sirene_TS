@@ -8,6 +8,8 @@ import { errorHandler, rateLimiter, requestLogger } from './middleware/general';
 
 // Importar rotas
 import authRoutes from './routes/auth';
+import ocorrenciaRoutes from './routes/ocorrencia';
+import relatorioRoutes from './routes/relatorio';
 
 // Carregar variáveis de ambiente
 dotenv.config();
@@ -39,6 +41,8 @@ app.use('/uploads', express.static('uploads'));
 
 // Rotas
 app.use('/api/auth', authRoutes);
+app.use('/api/ocorrencia', ocorrenciaRoutes);
+app.use('/api/relatorio', relatorioRoutes);
 
 // Rota de health check
 app.get('/api/health', (req, res) => {
