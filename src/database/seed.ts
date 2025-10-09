@@ -3,7 +3,7 @@ import { AuthUtils } from '../utils/auth';
 import { PerfilAcesso } from '../types';
 
 async function seed() {
-  console.log('🌱 Iniciando seed do banco de dados...');
+  console.log(' Iniciando seed do banco de dados...');
 
   try {
     // Verifica se já existe um admin
@@ -12,7 +12,7 @@ async function seed() {
     });
 
     if (adminExistente) {
-      console.log('✅ Administrador já existe no sistema');
+      console.log(' Administrador já existe no sistema');
       return;
     }
 
@@ -30,7 +30,7 @@ async function seed() {
       },
     });
 
-    console.log('✅ Administrador criado com sucesso!');
+    console.log(' Administrador criado com sucesso!');
     console.log(`   ID: ${admin.id}`);
     console.log(`   Nome: ${admin.nome}`);
     console.log(`   Matrícula: ${admin.matricula}`);
@@ -60,7 +60,7 @@ async function seed() {
       },
     });
 
-    console.log('✅ Equipes de exemplo criadas:');
+    console.log(' Equipes de exemplo criadas:');
     console.log(`   - ${equipe1.nomeEquipe} (${equipe1.turno})`);
     console.log(`   - ${equipe2.nomeEquipe} (${equipe2.turno})`);
     console.log(`   - ${equipe3.nomeEquipe} (${equipe3.turno})`);
@@ -73,15 +73,15 @@ async function seed() {
       },
     });
 
-    console.log('✅ Administrador adicionado à Equipe Alpha');
+    console.log('Administrador adicionado à Equipe Alpha');
 
-    console.log('\n🔐 Para fazer login use:');
+    console.log(' Para fazer login use:');
     console.log('   Matrícula: ADMIN001');
     console.log('   Senha: admin123');
-    console.log('\n⚠️  IMPORTANTE: Altere a senha padrão após o primeiro login!');
+    console.log('  IMPORTANTE: Altere a senha padrão após o primeiro login!');
     
   } catch (error) {
-    console.error('❌ Erro durante o seed:', error);
+    console.error(' Erro durante o seed:', error);
     throw error;
   } finally {
     await prisma.$disconnect();
@@ -92,11 +92,11 @@ async function seed() {
 if (require.main === module) {
   seed()
     .then(() => {
-      console.log('🎉 Seed concluído com sucesso!');
+      console.log(' Seed concluído com sucesso!');
       process.exit(0);
     })
     .catch((error) => {
-      console.error('💥 Erro no seed:', error);
+      console.error(' Erro no seed:', error);
       process.exit(1);
     });
 }
