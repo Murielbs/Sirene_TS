@@ -8,9 +8,9 @@ import {
 } from '../types';
 
 export class AuthService {
-  /**
-   * Realiza login do militar
-   */
+  
+    // Realiza login do militar
+   
   static async login(loginData: LoginRequest): Promise<LoginResponse> {
     const { matricula, senha } = loginData;
 
@@ -56,9 +56,9 @@ export class AuthService {
     };
   }
 
-  /**
-   * Cadastra novo militar (apenas admin pode fazer isso)
-   */
+  
+   // Cadastra novo militar (apenas admin pode fazer isso)
+   
   static async criarMilitar(dadosMilitar: CriarMilitarRequest) {
     const { nome, matricula, posto, email, senha, perfilAcesso } = dadosMilitar;
 
@@ -119,9 +119,9 @@ export class AuthService {
     return novoMilitar;
   }
 
-  /**
-   * Lista todos os militares (apenas admin e comandante)
-   */
+  
+  // Lista todos os militares (apenas admin e comandante)
+   
   static async listarMilitares(page = 1, limit = 20) {
     const skip = (page - 1) * limit;
 
@@ -150,9 +150,9 @@ export class AuthService {
     };
   }
 
-  /**
-   * Busca militar por ID
-   */
+  
+   // Busca militar por ID
+   
   static async buscarMilitarPorId(id: string) {
     const militar = await prisma.militar.findUnique({
       where: { id },
@@ -173,9 +173,9 @@ export class AuthService {
     return militar;
   }
 
-  /**
-   * Atualiza dados do militar
-   */
+  
+  // Atualiza dados do militar
+   
   static async atualizarMilitar(id: string, dados: Partial<CriarMilitarRequest>) {
     const { nome, posto, email, senha } = dados;
 
@@ -232,9 +232,9 @@ export class AuthService {
     return militarAtualizado;
   }
 
-  /**
-   * Remove militar (apenas admin)
-   */
+  
+   // Remove militar (apenas admin)
+   
   static async removerMilitar(id: string) {
     // Verifica se militar existe
     await this.buscarMilitarPorId(id);

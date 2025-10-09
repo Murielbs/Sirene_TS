@@ -10,6 +10,10 @@ import { errorHandler, rateLimiter, requestLogger } from './middleware/general';
 import authRoutes from './routes/auth';
 import ocorrenciaRoutes from './routes/ocorrencia';
 import relatorioRoutes from './routes/relatorio';
+import equipeRoutes from './routes/equipe';
+import registroOcorrenciaRoutes from './routes/registroOcorrencia';
+import logAuditoriaRoutes from './routes/logAuditoria';
+import militarEquipeRoutes from './routes/militarEquipe';
 
 // Carregar variáveis de ambiente
 dotenv.config();
@@ -43,6 +47,10 @@ app.use('/uploads', express.static('uploads'));
 app.use('/api/auth', authRoutes);
 app.use('/api/ocorrencia', ocorrenciaRoutes);
 app.use('/api/relatorio', relatorioRoutes);
+app.use('/api/equipe', equipeRoutes);
+app.use('/api/registro-ocorrencia', registroOcorrenciaRoutes);
+app.use('/api/log-auditoria', logAuditoriaRoutes);
+app.use('/api/militar-equipe', militarEquipeRoutes);
 
 // Rota de health check
 app.get('/api/health', (req, res) => {

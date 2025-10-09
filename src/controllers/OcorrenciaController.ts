@@ -3,60 +3,31 @@ import prisma from '../database/prisma';
 
 export const OcorrenciaController = {
   async criarOcorrencia(req: Request, res: Response) {
-    console.log('OcorrenciaController.criarOcorrencia chamado');
+    // ...código existente...
+  },
+  async listarOcorrencias(req: Request, res: Response) {
     try {
-      // Dados recebidos do body
-      const {
-        tipoOcorrencia,
-        descricao,
-        localizacaoGps,
-        assinaturaDigital,
-        fotoUrl,
-        videoUrl
-      } = req.body;
-
-      // Preencher campos automáticos
-      const dataHora = new Date();
-      const status = 'Em andamento';
-
-      // Cria ocorrência
-      const ocorrencia = await prisma.ocorrencia.create({
-        data: {
-          dataHora,
-          tipoOcorrencia,
-          descricao,
-          localizacaoGps,
-          status,
-          assinaturaDigital,
-          fotoUrl,
-          videoUrl
-        }
-      });
-      console.log('Ocorrencia criada:', ocorrencia);
-
-      // Pega o id do militar autenticado do token
-      const militarId = (req as any).militar?.id;
-
-      // Cria registro de ocorrência
-      const registro = await prisma.registroOcorrencia.create({
-        data: {
-          idOcorrencia: ocorrencia.id,
-          idMilitar: militarId,
-          // idEquipe pode ser preenchido se disponível
-          dataRegistro: new Date(),
-          observacoes: `Ocorrência criada pelo endpoint.`
-        }
-      });
-      console.log('RegistroOcorrencia criado:', registro);
-
-      return res.status(201).json({ success: true, ocorrencia });
+      const ocorrencias = await prisma.ocorrencia.findMany();
+      res.json(ocorrencias);
     } catch (error) {
-      let errorMsg = 'Erro desconhecido';
-      if (error instanceof Error) {
-        errorMsg = error.message;
+      res.status(500).json({ success: false, message: 'Erro ao listar ocorrências', error });
+    }
+  },
+  async buscarOcorrenciaPorId(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      if (!id || typeof id !== 'string') {
+        res.status(400).json({ error: 'ID inválido' });
+        return;
       }
-      console.error('Erro ao criar ocorrência:', error);
-      return res.status(500).json({ success: false, message: 'Erro ao criar ocorrência', error: errorMsg });
+      const ocorrencia = await prisma.ocorrencia.findUnique({ where: { id } });
+      if (!ocorrencia) {
+        res.status(404).json({ error: 'Ocorrência não encontrada' });
+        return;
+      }
+      res.json(ocorrencia);
+    } catch (error) {
+      res.status(500).json({ success: false, message: 'Erro ao buscar ocorrência', error });
     }
   }
 };

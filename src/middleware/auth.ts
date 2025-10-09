@@ -4,9 +4,7 @@ import { ResponseUtils } from '../utils/response';
 import { AuthRequest, PerfilAcesso } from '../types';
 import prisma from '../database/prisma';
 
-/**
- * Middleware de autenticação JWT
- */
+
 export const authenticateToken = async (
   req: AuthRequest,
   res: Response,
@@ -53,9 +51,9 @@ export const authenticateToken = async (
   }
 };
 
-/**
- * Middleware de autorização por perfil
- */
+
+ // Middleware de autorização por perfil
+ 
 export const authorize = (perfisPermitidos: PerfilAcesso[]) => {
   return (req: AuthRequest, res: Response, next: NextFunction): void => {
     if (!req.militar) {
@@ -72,19 +70,19 @@ export const authorize = (perfisPermitidos: PerfilAcesso[]) => {
   };
 };
 
-/**
- * Middleware apenas para administradores
- */
+
+  // Middleware apenas para administradores
+ 
 export const adminOnly = authorize([PerfilAcesso.ADMIN]);
 
-/**
- * Middleware para administradores e comandantes
- */
+
+ // Middleware para administradores e comandantes
+ 
 export const adminOrCommander = authorize([PerfilAcesso.ADMIN, PerfilAcesso.COMANDANTE]);
 
-/**
- * Middleware de log de auditoria
- */
+
+ // Middleware de log de auditoria
+
 export const auditLog = (acao: string) => {
   return async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
