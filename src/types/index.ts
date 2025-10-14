@@ -6,6 +6,8 @@ export interface AuthRequest extends Request {
     id: string;
     nome: string;
     matricula: string;
+    cpf: string;
+    numeroMilitar: string;
     posto: string;
     perfilAcesso: PerfilAcesso;
   };
@@ -44,6 +46,8 @@ export interface LoginResponse {
     id: string;
     nome: string;
     matricula: string;
+    cpf: string;
+    numeroMilitar: string;
     posto: string;
     perfilAcesso: PerfilAcesso;
   };
@@ -52,6 +56,8 @@ export interface LoginResponse {
 export interface CriarMilitarRequest {
   nome: string;
   matricula: string;
+  cpf: string;
+  numeroMilitar: string;
   posto: string;
   email: string;
   senha: string;

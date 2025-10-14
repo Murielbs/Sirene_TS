@@ -8,6 +8,29 @@ import {
 } from '../types';
 
 export class AuthService {
+  // Busca militar por matrícula e CPF
+  static async buscarPorMatriculaECpf(matricula: string, cpf: string) {
+    return prisma.militar.findFirst({
+      where: { matricula, cpf },
+      select: {
+        id: true,
+        nome: true,
+        matricula: true,
+        cpf: true,
+        numeroMilitar: true,
+        email: true,
+      },
+    });
+  }
+
+  // Redefine a senha do militar
+  static async redefinirSenha(id: string, novaSenha: string) {
+    const senhaHash = await AuthUtils.hashPassword(novaSenha);
+    return prisma.militar.update({
+      where: { id },
+      data: { senhaHash },
+    });
+  }
   
     // Realiza login do militar
    
@@ -21,6 +44,8 @@ export class AuthService {
         id: true,
         nome: true,
         matricula: true,
+        cpf: true,
+        numeroMilitar: true,
         posto: true,
         senhaHash: true,
         perfilAcesso: true,
@@ -50,6 +75,8 @@ export class AuthService {
         id: militar.id,
         nome: militar.nome || '',
         matricula: militar.matricula || '',
+        cpf: militar.cpf || '',
+        numeroMilitar: militar.numeroMilitar || '',
         posto: militar.posto || '',
         perfilAcesso: militar.perfilAcesso as PerfilAcesso,
       },
@@ -60,7 +87,7 @@ export class AuthService {
    // Cadastra novo militar (apenas admin pode fazer isso)
    
   static async criarMilitar(dadosMilitar: CriarMilitarRequest) {
-    const { nome, matricula, posto, email, senha, perfilAcesso } = dadosMilitar;
+    const { nome, matricula, cpf, numeroMilitar, posto, email, senha, perfilAcesso } = dadosMilitar;
 
     // Validações
     if (!ValidationUtils.isValidMatricula(matricula)) {
@@ -101,6 +128,8 @@ export class AuthService {
       data: {
         nome: ValidationUtils.sanitizeString(nome),
         matricula: matricula.toUpperCase(),
+        cpf,
+        numeroMilitar,
         posto: ValidationUtils.sanitizeString(posto),
         email,
         senhaHash,
@@ -110,6 +139,8 @@ export class AuthService {
         id: true,
         nome: true,
         matricula: true,
+        cpf: true,
+        numeroMilitar: true,
         posto: true,
         email: true,
         perfilAcesso: true,
@@ -133,6 +164,8 @@ export class AuthService {
           id: true,
           nome: true,
           matricula: true,
+          cpf: true,
+          numeroMilitar: true,
           posto: true,
           email: true,
           perfilAcesso: true,
@@ -160,6 +193,8 @@ export class AuthService {
         id: true,
         nome: true,
         matricula: true,
+        cpf: true,
+        numeroMilitar: true,
         posto: true,
         email: true,
         perfilAcesso: true,
@@ -177,12 +212,18 @@ export class AuthService {
   // Atualiza dados do militar
    
   static async atualizarMilitar(id: string, dados: Partial<CriarMilitarRequest>) {
-    const { nome, posto, email, senha } = dados;
+    const { nome, cpf, numeroMilitar, posto, email, senha } = dados;
 
     const dadosAtualizacao: any = {};
 
     if (nome) {
       dadosAtualizacao.nome = ValidationUtils.sanitizeString(nome);
+    }
+    if (cpf) {
+      dadosAtualizacao.cpf = cpf;
+    }
+    if (numeroMilitar) {
+      dadosAtualizacao.numeroMilitar = numeroMilitar;
     }
 
     if (posto) {
@@ -223,6 +264,8 @@ export class AuthService {
         id: true,
         nome: true,
         matricula: true,
+        cpf: true,
+        numeroMilitar: true,
         posto: true,
         email: true,
         perfilAcesso: true,

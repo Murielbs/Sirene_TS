@@ -10,6 +10,19 @@ import {
 import { loginRateLimiter } from '../middleware/general';
 
 const router = Router();
+/**
+ * @route POST /auth/recuperar-senha
+ * @desc Solicita recuperação de senha
+ * @access Public
+ */
+router.post('/recuperar-senha', AuthController.solicitarRecuperacaoSenha);
+
+/**
+ * @route POST /auth/redefinir-senha
+ * @desc Redefine a senha do militar
+ * @access Public
+ */
+router.post('/redefinir-senha', AuthController.redefinirSenha);
 
 /**
  * @route POST /auth/login

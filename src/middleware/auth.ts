@@ -27,6 +27,8 @@ export const authenticateToken = async (
         id: true,
         nome: true,
         matricula: true,
+        cpf: true,
+        numeroMilitar: true,
         posto: true,
         perfilAcesso: true,
       },
@@ -41,6 +43,8 @@ export const authenticateToken = async (
       id: militar.id,
       nome: militar.nome || '',
       matricula: militar.matricula || '',
+      cpf: militar.cpf || '',
+      numeroMilitar: militar.numeroMilitar || '',
       posto: militar.posto || '',
       perfilAcesso: militar.perfilAcesso as PerfilAcesso || PerfilAcesso.MILITAR,
     };

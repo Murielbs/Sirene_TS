@@ -5,6 +5,49 @@ import { AuthRequest, LoginRequest, CriarMilitarRequest } from '../types';
 
 export class AuthController {
   /**
+   * POST /auth/recuperar-senha
+   * Solicita recuperação de senha informando matrícula e CPF
+   */
+  static async solicitarRecuperacaoSenha(req: Request, res: Response): Promise<void> {
+    const { matricula, cpf } = req.body;
+    if (!matricula || !cpf) {
+      res.status(400).json(ResponseUtils.error('Matrícula e CPF são obrigatórios'));
+      return;
+    }
+    try {
+      const militar = await AuthService.buscarPorMatriculaECpf(matricula, cpf);
+      if (!militar) {
+        res.status(404).json(ResponseUtils.error('Dados não encontrados ou inválidos'));
+        return;
+      }
+      res.json(ResponseUtils.success('Dados validados. Prossiga para redefinir a senha.', { id: militar.id }));
+    } catch (error: any) {
+      res.status(400).json(ResponseUtils.error('Erro ao validar dados', error.message));
+    }
+  }
+
+  /**
+   * POST /auth/redefinir-senha
+   * Redefine a senha do militar
+   */
+  static async redefinirSenha(req: Request, res: Response): Promise<void> {
+    const { id, novaSenha, confirmarSenha } = req.body;
+    if (!id || !novaSenha || !confirmarSenha) {
+      res.status(400).json(ResponseUtils.error('Todos os campos são obrigatórios'));
+      return;
+    }
+    if (novaSenha !== confirmarSenha) {
+      res.status(400).json(ResponseUtils.error('As senhas não conferem'));
+      return;
+    }
+    try {
+      await AuthService.redefinirSenha(id, novaSenha);
+      res.json(ResponseUtils.success('Senha redefinida com sucesso'));
+    } catch (error: any) {
+      res.status(400).json(ResponseUtils.error('Erro ao redefinir senha', error.message));
+    }
+  }
+  /**
    * POST /auth/login
    */
   static async login(req: Request, res: Response): Promise<void> {

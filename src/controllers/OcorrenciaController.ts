@@ -3,7 +3,23 @@ import prisma from '../database/prisma';
 
 export const OcorrenciaController = {
   async criarOcorrencia(req: Request, res: Response) {
-
+    try {
+      const { tipoOcorrencia, descricao, cidade, bairro, localizacaoGps, status } = req.body;
+      const novaOcorrencia = await prisma.ocorrencia.create({
+        data: {
+          tipoOcorrencia,
+          descricao,
+          cidade,
+          bairro,
+          localizacaoGps,
+          status,
+          dataHora: new Date(),
+        },
+      });
+      res.status(201).json(novaOcorrencia);
+    } catch (error) {
+      res.status(500).json({ success: false, message: 'Erro ao criar ocorrência', error });
+    }
   },
   async listarOcorrencias(req: Request, res: Response) {
     try {

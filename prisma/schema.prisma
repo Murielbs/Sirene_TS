@@ -15,6 +15,8 @@ model Militar {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   nome         String?
   matricula    String?  @unique
+  cpf          String?
+  numeroMilitar String?
   posto        String?
   email        String?
   senhaHash    String?  @map("senha_hash")
@@ -99,12 +101,12 @@ model LogAuditoria {
 
 // Tabela: Relatorio
 model Relatorio {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  idOcorrencia  String?   @db.ObjectId
-  geradoPor     String?   @db.ObjectId
-  dataGeracao   DateTime? @map("data_geracao")
-  formato       String?
-  urlArquivo    String?   @map("url_arquivo")
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  idOcorrencia String?   @db.ObjectId
+  geradoPor    String?   @db.ObjectId
+  dataGeracao  DateTime? @map("data_geracao")
+  formato      String?
+  urlArquivo   String?
 
   // Relacionamentos
   ocorrencia Ocorrencia? @relation(fields: [idOcorrencia], references: [id])
