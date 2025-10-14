@@ -51,6 +51,8 @@ model Ocorrencia {
   dataHora          DateTime? @map("data_hora")
   tipoOcorrencia    String?   @map("tipo_ocorrencia")
   descricao         String?
+  cidade            String?
+  bairro            String?          
   localizacaoGps    String?   @map("localizacao_gps")
   status            String?
   assinaturaDigital String?   @map("assinatura_digital")
