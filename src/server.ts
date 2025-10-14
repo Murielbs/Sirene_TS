@@ -19,6 +19,7 @@ import militarEquipeRoutes from './routes/militarEquipe';
 dotenv.config();
 
 const app = express();
+app.set('trust proxy', 'loopback'); // Mais seguro para ambiente local
 const PORT = process.env.PORT || 3000;
 
 // Middleware de segurança

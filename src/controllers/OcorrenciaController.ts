@@ -3,7 +3,7 @@ import prisma from '../database/prisma';
 
 export const OcorrenciaController = {
   async criarOcorrencia(req: Request, res: Response) {
-    // ...código existente...
+
   },
   async listarOcorrencias(req: Request, res: Response) {
     try {
