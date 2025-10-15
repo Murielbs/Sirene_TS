@@ -87,47 +87,56 @@ export class AuthService {
    // Cadastra novo militar (apenas admin pode fazer isso)
    
   static async criarMilitar(dadosMilitar: CriarMilitarRequest) {
-    const { nome, matricula, cpf, numeroMilitar, posto, email, senha, perfilAcesso } = dadosMilitar;
-
+    const { nome, cpf, numeroMilitar, posto, email, senha, perfilAcesso } = dadosMilitar;
     // Validações
-    if (!ValidationUtils.isValidMatricula(matricula)) {
-      throw new Error('Formato de matrícula inválido');
-    }
-
     if (!ValidationUtils.isValidEmail(email)) {
       throw new Error('Formato de email inválido');
     }
-
     if (!ValidationUtils.isStrongPassword(senha)) {
       throw new Error('Senha deve ter no mínimo 8 caracteres com pelo menos 1 maiúscula, 1 minúscula e 1 número');
     }
-
-    // Verifica se matrícula já existe
-    const militarExistente = await prisma.militar.findUnique({
-      where: { matricula },
-    });
-
-    if (militarExistente) {
-      throw new Error('Matrícula já cadastrada');
-    }
-
     // Verifica se email já existe
     const emailExistente = await prisma.militar.findFirst({
       where: { email },
     });
-
     if (emailExistente) {
       throw new Error('Email já cadastrado');
     }
-
+    // Busca o último número de matrícula para o perfil
+    const ultimoMilitar = await prisma.militar.findMany({
+      where: { perfilAcesso },
+      orderBy: { matricula: 'desc' },
+      select: { matricula: true },
+    });
+    let ultimoNumero = 0;
+    if (ultimoMilitar.length > 0) {
+  const matriculaUltima = ultimoMilitar[0]?.matricula ?? '';
+      if (matriculaUltima) {
+        // Extrai apenas o número sequencial após o ano 2025
+        const regex = /2025(\d+)$/;
+        const match = matriculaUltima.match(regex);
+        if (match && match[1]) {
+          ultimoNumero = parseInt(match[1], 10);
+        }
+      }
+    }
+    // Gera matrícula automática
+    const { gerarMatricula } = await import('../utils/matricula');
+    const matricula = gerarMatricula(perfilAcesso, ultimoNumero);
+    // Verifica se matrícula já existe
+    const militarExistente = await prisma.militar.findUnique({
+      where: { matricula },
+    });
+    if (militarExistente) {
+      throw new Error('Matrícula já cadastrada');
+    }
     // Cria hash da senha
     const senhaHash = await AuthUtils.hashPassword(senha);
-
     // Cria militar
     const novoMilitar = await prisma.militar.create({
       data: {
         nome: ValidationUtils.sanitizeString(nome),
-        matricula: matricula.toUpperCase(),
+        matricula,
         cpf,
         numeroMilitar,
         posto: ValidationUtils.sanitizeString(posto),
@@ -146,7 +155,6 @@ export class AuthService {
         perfilAcesso: true,
       },
     });
-
     return novoMilitar;
   }
 
