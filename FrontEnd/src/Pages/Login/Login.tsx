@@ -26,15 +26,30 @@ function Login(): JSX.Element {
       const data = await response.json();
 
       if (response.ok) {
-        // Supondo que o backend retorna um token
-        // localStorage.setItem('token', data.token); 
-        navigate('/inicial');
+        
+        // 🔑 CORREÇÃO: O token está aninhado em data.data.token
+        // Assumimos que a resposta é: { success: true, data: { token: '...', user: {...} } }
+        const token = data.data && data.data.token ? data.data.token : null;
+        
+        if (token) {
+            // 1. Armazena o token na chave 'token', que o Inicial.tsx lerá
+            localStorage.setItem('token', token); 
+            
+            // 2. Redireciona para a página inicial
+            navigate('/Inicial'); 
+            
+        } else {
+            setMessage("Erro: O servidor não forneceu o token de autenticação.");
+            console.error("Resposta do servidor não continha um token válido:", data);
+        }
+
       } else {
+        // Usa a mensagem de erro do servidor, se disponível
         setMessage(data.message || "Credenciais inválidas. Tente novamente.");
       }
     } catch (error) {
       console.error("Erro ao tentar fazer login:", error);
-      setMessage("Não foi possível conectar ao servidor. Tente novamente mais tarde.");
+      setMessage("Não foi possível conectar ao servidor. Verifique sua conexão.");
     }
 
     setTimeout(() => setMessage(""), 5000);

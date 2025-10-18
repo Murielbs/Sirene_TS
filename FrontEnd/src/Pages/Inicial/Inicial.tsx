@@ -1,4 +1,4 @@
-import React, { useState, type JSX } from "react";
+import React, { useState, useEffect, type JSX } from "react";
 import {
   Plus,
   FileText,
@@ -7,6 +7,7 @@ import {
   AlertCircle,
   X,
 } from "lucide-react";
+import { jwtDecode } from "jwt-decode";
 import LogoSvg from "../../img/Logo.svg";
 import PaginaIncialSvg from "../../img/PaginaIncial.svg";
 import ListaOcorrenciaSvg from "../../img/ListaOcorrencia.svg";
@@ -32,6 +33,12 @@ interface Activity {
   icon: JSX.Element;
   text: string;
   time: string;
+}
+
+interface JwtPayload {
+  nome: string;
+  cargo: string;
+  [key: string]: any;
 }
 
 const mockOcorrenciasRecentes: Ocorrencia[] = [
@@ -95,6 +102,25 @@ function Inicial(): JSX.Element {
   const [currentDate] = useState(new Date(2025, 9, 13));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalActionType, setModalActionType] = useState("");
+  const [userData, setUserData] = useState<JwtPayload | null>(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token'); 
+    
+    if (token) {
+      try {
+        const decodedUser = jwtDecode<JwtPayload>(token);
+        
+        if (decodedUser.nome && decodedUser.cargo) {
+            setUserData(decodedUser);
+        } else {
+            console.error("Token JWT decodificado não contém 'nome' ou 'cargo'.");
+        }
+      } catch (error) {
+        console.error("Erro ao decodificar o token JWT:", error);
+      }
+    }
+  }, []);
 
   const getStatusClass = (status: Ocorrencia["status"]) => {
     switch (status) {
@@ -111,6 +137,11 @@ function Inicial(): JSX.Element {
 
   const handleMenuItemClick = (path: string) => {
     navigate(path);
+  };
+  
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate("/");
   };
 
   const handleCardClick = (actionType: string) => {
@@ -183,7 +214,7 @@ function Inicial(): JSX.Element {
           <nav className={styles.navMenu}>
             <div
               className={`${styles.navItem} ${styles.navActive}`}
-              onClick={() => handleMenuItemClick("/Pagina inicial")}
+              onClick={() => handleMenuItemClick("/inicial")} 
             >
               <img
                 src={PaginaIncialSvg}
@@ -256,7 +287,7 @@ function Inicial(): JSX.Element {
 
           <div
             className={styles.navItem}
-            onClick={() => handleMenuItemClick("/")}
+            onClick={handleLogout} 
           >
             <img src={SairSvg} alt="Sair" className={styles.navIconImg} />
             <span className={styles.navText}>Sair</span>
@@ -372,11 +403,15 @@ function Inicial(): JSX.Element {
           <div className={styles.profileCard}>
             <img
               src="/src/img/Persona1.png"
-              alt="Roberta Silva"
+              alt={userData?.nome || "Usuário"}
               className={styles.profileImage}
             />
-            <span className={styles.profileName}>Roberta Silva</span>
-            <span className={styles.profileRole}>ADMIN</span>
+            <span className={styles.profileName}>
+              {userData ? userData.nome : "Carregando..."}
+            </span>
+            <span className={styles.profileRole}>
+              {userData ? userData.cargo.toUpperCase() : "..."}
+            </span>
           </div>
 
           <div className={styles.calendarCard}>

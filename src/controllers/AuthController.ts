@@ -1,13 +1,14 @@
+// Conteúdo para src/controllers/AuthController.ts
+
 import { Request, Response } from 'express';
 import { AuthService } from '../services/AuthService';
 import { ResponseUtils } from '../utils/response';
 import { AuthRequest, LoginRequest, CriarMilitarRequest } from '../types';
 
+// A classe exportada é AuthController, que o router espera.
 export class AuthController {
-  /**
-   * POST /auth/recuperar-senha
-   * Solicita recuperação de senha informando matrícula e CPF
-   */
+  
+  // POST /auth/recuperar-senha
   static async solicitarRecuperacaoSenha(req: Request, res: Response): Promise<void> {
     const { matricula, cpf } = req.body;
     if (!matricula || !cpf) {
@@ -15,6 +16,7 @@ export class AuthController {
       return;
     }
     try {
+      // Chama o Service: a função do Service é limpa e tipada
       const militar = await AuthService.buscarPorMatriculaECpf(matricula, cpf);
       if (!militar) {
         res.status(404).json(ResponseUtils.error('Dados não encontrados ou inválidos'));
@@ -26,10 +28,7 @@ export class AuthController {
     }
   }
 
-  /**
-   * POST /auth/redefinir-senha
-   * Redefine a senha do militar
-   */
+  // POST /auth/redefinir-senha
   static async redefinirSenha(req: Request, res: Response): Promise<void> {
     const { id, novaSenha, confirmarSenha } = req.body;
     if (!id || !novaSenha || !confirmarSenha) {
@@ -41,15 +40,15 @@ export class AuthController {
       return;
     }
     try {
+      // Chama o Service
       await AuthService.redefinirSenha(id, novaSenha);
       res.json(ResponseUtils.success('Senha redefinida com sucesso'));
     } catch (error: any) {
       res.status(400).json(ResponseUtils.error('Erro ao redefinir senha', error.message));
     }
   }
-  /**
-   * POST /auth/login
-   */
+  
+  // POST /auth/login
   static async login(req: Request, res: Response): Promise<void> {
     try {
       const loginData: LoginRequest = req.body;
@@ -59,6 +58,7 @@ export class AuthController {
         return;
       }
 
+      // Chama o Service
       const resultado = await AuthService.login(loginData);
       res.json(ResponseUtils.success('Login realizado com sucesso', resultado));
     } catch (error: any) {
@@ -66,13 +66,12 @@ export class AuthController {
     }
   }
 
-  /**
-   * POST /auth/militar (apenas admin)
-   */
+  // POST /auth/militar (apenas admin)
   static async criarMilitar(req: AuthRequest, res: Response): Promise<void> {
     try {
       const dadosMilitar: CriarMilitarRequest = req.body;
 
+      // Chama o Service
       const novoMilitar = await AuthService.criarMilitar(dadosMilitar);
       res.status(201).json(ResponseUtils.success('Militar criado com sucesso', novoMilitar));
     } catch (error: any) {
@@ -80,14 +79,14 @@ export class AuthController {
     }
   }
 
-  /**
-   * GET /auth/militares (admin e comandante)
-   */
+  // GET /auth/militares (admin e comandante)
+  // RESOLVE O ERRO TS2769: Passando req/res e extraindo os dados
   static async listarMilitares(req: Request, res: Response): Promise<void> {
     try {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 20;
 
+      // Chama o Service
       const resultado = await AuthService.listarMilitares(page, limit);
       res.json(ResponseUtils.success('Militares listados com sucesso', resultado));
     } catch (error: any) {
@@ -95,9 +94,8 @@ export class AuthController {
     }
   }
 
-  /**
-   * GET /auth/militar/:id
-   */
+  // GET /auth/militar/:id
+  // RESOLVE O ERRO TS2339 / TS2551: Método correto e assinatura do Express
   static async buscarMilitar(req: Request, res: Response): Promise<void> {
     try {
       const id = req.params.id;
@@ -106,6 +104,7 @@ export class AuthController {
         return;
       }
 
+      // Chama o Service
       const militar = await AuthService.buscarMilitarPorId(id);
       res.json(ResponseUtils.success('Militar encontrado', militar));
     } catch (error: any) {
@@ -113,9 +112,7 @@ export class AuthController {
     }
   }
 
-  /**
-   * PUT /auth/militar/:id
-   */
+  // PUT /auth/militar/:id
   static async atualizarMilitar(req: AuthRequest, res: Response): Promise<void> {
     try {
       const id = req.params.id;
@@ -126,6 +123,7 @@ export class AuthController {
 
       const dados = req.body;
 
+      // Chama o Service
       const militarAtualizado = await AuthService.atualizarMilitar(id, dados);
       res.json(ResponseUtils.success('Militar atualizado com sucesso', militarAtualizado));
     } catch (error: any) {
@@ -133,9 +131,7 @@ export class AuthController {
     }
   }
 
-  /**
-   * DELETE /auth/militar/:id (apenas admin)
-   */
+  // DELETE /auth/militar/:id (apenas admin)
   static async removerMilitar(req: Request, res: Response): Promise<void> {
     try {
       const id = req.params.id;
@@ -144,6 +140,7 @@ export class AuthController {
         return;
       }
 
+      // Chama o Service
       await AuthService.removerMilitar(id);
       res.json(ResponseUtils.success('Militar removido com sucesso'));
     } catch (error: any) {
@@ -151,9 +148,7 @@ export class AuthController {
     }
   }
 
-  /**
-   * GET /auth/me - Dados do usuário logado
-   */
+  // GET /auth/me - Dados do usuário logado
   static async dadosUsuario(req: AuthRequest, res: Response): Promise<void> {
     try {
       if (!req.militar) {
@@ -161,6 +156,7 @@ export class AuthController {
         return;
       }
 
+      // Retorna os dados que o middleware injetou
       res.json(ResponseUtils.success('Dados do usuário', req.militar));
     } catch (error: any) {
       res.status(500).json(ResponseUtils.error('Erro ao buscar dados do usuário', error.message));
