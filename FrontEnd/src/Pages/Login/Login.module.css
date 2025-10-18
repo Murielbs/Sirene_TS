@@ -1,0 +1,179 @@
+
+.pageContainer {
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  min-height: 100vh; 
+  background-color: #550d08;
+  width: 100%;
+}
+
+.box {
+  height: 40.625rem; 
+  width: 36.75rem; 
+}
+
+
+.containerLogin {
+  background-color: #f6f6f6;
+  border-radius: 1.875rem; 
+  box-shadow: -2.5rem 2.5rem 3.125rem 0.1875rem #00000040; 
+  height: 40.625rem;
+  width: 37rem; 
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 6.25rem; 
+  box-sizing: border-box;
+}
+
+.containerLogin::before {
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  background: conic-gradient(
+    from 90deg at 100% 100%,
+    rgba(255, 255, 255, 0.4) 12%,
+    rgba(255, 255, 255, 0) 37%,
+    rgba(255, 255, 255, 0.4) 62%,
+    rgba(255, 255, 255, 0) 87%
+  );
+  border-radius: 1.875rem; 
+  content: "";
+  inset: 0;
+  mask-composite: exclude;
+  padding: 0.0625rem; 
+  pointer-events: none;
+  position: absolute;
+  z-index: 1;
+}
+
+.textWrapper {
+  color: #550d08;
+  font-family: "Open Sans-Bold", Helvetica;
+  font-size: 2.25rem; 
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: normal;
+  margin-bottom: 4.375rem; 
+  position: relative;
+  z-index: 2;
+}
+
+
+.formField {
+  width: 75%; 
+  position: relative;
+  margin-bottom: 3.125rem; 
+  z-index: 2;
+}
+
+
+.inputFieldBox {
+  all: unset;
+  box-sizing: border-box;
+  background-color: #f6f6f6;
+  border: 0.0625rem solid #550d08; 
+  border-radius: 0.625rem;
+  height: 3.125rem; 
+  width: 100%;
+  padding: 0 0.9375rem; 
+  font-family: "Inter-SemiBold", Helvetica;
+  font-size: 1rem; 
+  color: #550d08;
+}
+
+
+.labelTextWrapper {
+  position: absolute;
+  top: -0.625rem; 
+  left: 1.25rem; 
+  background-color: #f6f6f6;
+  padding: 0 0.3125rem; 
+  z-index: 3;
+}
+
+.labelText {
+  color: #550d08;
+  font-family: "Inter-SemiBold", Helvetica;
+  font-size: 0.6875rem; 
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+
+.textWrapper4 {
+  color: #000000;
+  font-family: "Inter-Regular", Helvetica;
+  font-size: 0.8125rem; 
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: normal;
+  text-align: right;
+  align-self: flex-end;
+  margin-right: 5.625rem; 
+  margin-top: -1.875rem; 
+  z-index: 2;
+}
+
+
+.keepLoggedIn {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 75%;
+  margin-top: 1.25rem; 
+  margin-bottom: 1.25rem; 
+  font-family: "Inter-Regular", Helvetica;
+  font-size: 0.8125rem; 
+  color: #000000;
+  z-index: 2;
+}
+
+.keepLoggedIn input[type="checkbox"] {
+  width: 1rem; 
+  height: 1rem; 
+  margin-right: 0.625rem; 
+}
+
+.checkboxLabel {
+  cursor: pointer;
+}
+
+
+.CONFIRMAR {
+  width: 50%; 
+  margin-top: 2.5rem; 
+  z-index: 2;
+}
+
+.loginButton {
+  background-color: #550d08;
+  border: none;
+  border-radius: 0.625rem;
+  color: #ffffff;
+  cursor: pointer;
+  font-family: "Inter-Bold", Helvetica;
+  font-size: 1.125rem; 
+  font-weight: 700;
+  height: 3.125rem; 
+  width: 100%;
+}
+
+
+.successMessage {
+  color: green;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+
+.copyright {
+  position: absolute;
+  bottom: 1.25rem;
+  font-size: 0.8rem;
+  color: #550d08;
+  opacity: 0.6;
+}
