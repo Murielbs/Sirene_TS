@@ -9,6 +9,7 @@ import GestaoUsuarioSvg from "../../img/GestaoUsuario.svg";
 import AuditoriaLogSvg from "../../img/AuditoriaLog.svg";
 import ConfiguracaoSvg from "../../img/Configuracao.svg";
 import SairSvg from "../../img/sair.svg";
+import LogoSvg from "../../img/Logo.svg";
 
 interface Ocorrencia {
   id: string;
@@ -155,6 +156,9 @@ const NewOcorrenciaModal: React.FC<NewOcorrenciaModalProps> = ({ onClose }) => {
                 <label>Região</label>
                 <select className={styles.modalInput} required>
                   <option value="">Região</option>
+                  <option value="RegiaoMetropolitana">(COM)</option>
+                  <option value="AgresteZonaDaMata">(COInter/I)</option>
+                  <option value="Sertão">(COInter/II)</option>
                   {/* Opções de Região */}
                 </select>
               </div>
@@ -214,16 +218,12 @@ const NewOcorrenciaModal: React.FC<NewOcorrenciaModalProps> = ({ onClose }) => {
   return (
     <div className={styles.modalOverlay}>
       <div className={`${styles.modalContent} ${styles.multistepModal}`}>
-        
-        <div className={styles.stepHeader}>
-            {renderPassos()}
-        </div>
-        
+        <div className={styles.stepHeader}>{renderPassos()}</div>
 
-        <div className={styles.boxFundoBranca}> 
-            <div className={styles.stepContent}>
-                {renderStepContent(currentStep)}
-            </div>
+        <div className={styles.boxFundoBranca}>
+          <div className={styles.stepContent}>
+            {renderStepContent(currentStep)}
+          </div>
         </div>
 
         <div className={styles.modalActions}>
@@ -234,7 +234,7 @@ const NewOcorrenciaModal: React.FC<NewOcorrenciaModalProps> = ({ onClose }) => {
           >
             CANCELAR
           </button>
-          
+
           {currentStep < totalSteps ? (
             <button
               type="button"
@@ -272,7 +272,9 @@ function ListaOcorrencias(): JSX.Element {
     useState(false);
 
   const totalOcorrencias = allOcorrencias.length.toString();
-  const ocorrenciasAbertas = allOcorrencias.filter(o => o.status === 'Em aberto').length;
+  const ocorrenciasAbertas = allOcorrencias.filter(
+    (o) => o.status === "Em aberto"
+  ).length;
   const tempoMedioResposta = "-"; // não disponível no backend ainda
 
   const filteredOcorrencias = allOcorrencias.filter(
@@ -331,7 +333,10 @@ function ListaOcorrencias(): JSX.Element {
 
     let cancelled = false;
 
-    const API_BASE = (typeof import.meta !== "undefined" ? (import.meta as any).env?.VITE_API_URL : "") || "";
+    const API_BASE =
+      (typeof import.meta !== "undefined"
+        ? (import.meta as any).env?.VITE_API_URL
+        : "") || "";
     const base = API_BASE ? API_BASE.replace(/\/$/, "") : "";
     const url = `${base}/api/ocorrencia`;
 
@@ -349,29 +354,57 @@ function ListaOcorrencias(): JSX.Element {
         const body = await res.json();
         const list = body?.data || body?.ocorrencias || body;
 
-        const normalized: Ocorrencia[] = (Array.isArray(list) ? list : []).map((o: any) => {
-          const rawDate = o.data_hora || o.dataHora || o.data || o.created_at;
-          const ts = rawDate ? new Date(rawDate).getTime() : undefined;
-          const dateStr = ts ? new Date(ts).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—';
+        const normalized: Ocorrencia[] = (Array.isArray(list) ? list : []).map(
+          (o: any) => {
+            const rawDate = o.data_hora || o.dataHora || o.data || o.created_at;
+            const ts = rawDate ? new Date(rawDate).getTime() : undefined;
+            const dateStr = ts
+              ? new Date(ts).toLocaleString("pt-BR", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
+              : "—";
 
-          const rawStatus = String(o?.status ?? '').toLowerCase();
-          const status = (
-            !rawStatus || rawStatus === 'open' || rawStatus === 'aberta' || rawStatus === 'aberto'
-          ) ? 'Em aberto'
-          : (rawStatus.includes('in_progress') || rawStatus.includes('andamento') || rawStatus.includes('em_andamento') || rawStatus.includes('em-andamento') || rawStatus.includes('em andamento')) ? 'Andamento'
-          : (rawStatus.includes('closed') || rawStatus.includes('fechado') || rawStatus.includes('concluida') || rawStatus.includes('concluido') || rawStatus.includes('cancel')) ? 'Fechado'
-          : 'Em aberto';
+            const rawStatus = String(o?.status ?? "").toLowerCase();
+            const status =
+              !rawStatus ||
+              rawStatus === "open" ||
+              rawStatus === "aberta" ||
+              rawStatus === "aberto"
+                ? "Em aberto"
+                : rawStatus.includes("in_progress") ||
+                  rawStatus.includes("andamento") ||
+                  rawStatus.includes("em_andamento") ||
+                  rawStatus.includes("em-andamento") ||
+                  rawStatus.includes("em andamento")
+                ? "Andamento"
+                : rawStatus.includes("closed") ||
+                  rawStatus.includes("fechado") ||
+                  rawStatus.includes("concluida") ||
+                  rawStatus.includes("concluido") ||
+                  rawStatus.includes("cancel")
+                ? "Fechado"
+                : "Em aberto";
 
-          return {
-            id: String(o.id ?? o._id ?? o.codigo ?? o.numero ?? ''),
-            tipo: o.tipoOcorrencia || o.tipo || o.descricao || '—',
-            criadoPor: o.assinatura_digital || o.assinaturaDigital || o.responsavel || o.nomeAgente || undefined,
-            regiao: o.cidade || o.regiao || o.local || o.unidade || '—',
-            dataHora: dateStr,
-            dataTimestamp: ts,
-            status,
-          } as Ocorrencia;
-        });
+            return {
+              id: String(o.id ?? o._id ?? o.codigo ?? o.numero ?? ""),
+              tipo: o.tipoOcorrencia || o.tipo || o.descricao || "—",
+              criadoPor:
+                o.assinatura_digital ||
+                o.assinaturaDigital ||
+                o.responsavel ||
+                o.nomeAgente ||
+                undefined,
+              regiao: o.cidade || o.regiao || o.local || o.unidade || "—",
+              dataHora: dateStr,
+              dataTimestamp: ts,
+              status,
+            } as Ocorrencia;
+          }
+        );
 
         if (!cancelled) setAllOcorrencias(normalized);
       } catch (err) {
@@ -424,7 +457,9 @@ function ListaOcorrencias(): JSX.Element {
     <div className={styles.appContainer}>
       <div className={styles.sidebar}>
         <div className={styles.logoSection}>
-          <div className={styles.sLogo}>S</div>
+          <span className={styles.logoText}>
+            <img src={LogoSvg} alt="Sirene" className={styles.logoImage} />
+          </span>
         </div>
 
         <nav className={styles.navMenu}>

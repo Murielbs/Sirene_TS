@@ -119,7 +119,6 @@ function DashboardAdmin(): JSX.Element {
         <div className={styles.logoSection}>
           <span className={styles.logoText}>
             <img src={LogoSvg} alt="Sirene" className={styles.logoImage} />
-            Sirene
           </span>
         </div>
 

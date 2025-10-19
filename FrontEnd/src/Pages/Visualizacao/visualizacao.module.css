@@ -10,13 +10,23 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes popIn {
-  from { transform: scale(0.9); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 :root {
@@ -26,12 +36,12 @@
   --border-color: #e0e0e0;
   --border-color-card: #fff;
   --border-color-table: #fff;
-  --primary-dark: #550D08;
+  --primary-dark: #550d08;
   --primary-light: #702c28;
   --radius-default: 0.5rem;
-  --status-closed: #DF0404;
-  --status-in-progress: #FF6200;
-  --status-open: #00B087;
+  --status-closed: #df0404;
+  --status-in-progress: #ff6200;
+  --status-open: #00b087;
   --text-dark: #333333;
   --text-light: #eeeeee;
   --text-subtle: #999999;
@@ -84,7 +94,7 @@
 body {
   background-color: var(--background-page);
   box-sizing: border-box;
-  font-family: 'Open Sans', sans-serif;
+  font-family: "Open Sans", sans-serif;
   margin: 0;
   min-height: 100vh;
   padding: 0;
@@ -105,9 +115,9 @@ body {
 }
 
 .controlsRightGroup {
-    align-items: center;
-    display: flex;
-    gap: 1rem;
+  align-items: center;
+  display: flex;
+  gap: 1rem;
 }
 
 .detailCard {
@@ -165,18 +175,18 @@ body {
 }
 
 .detailStatusClosed {
-    color: var(--status-closed);
-    font-weight: 700;
+  color: var(--status-closed);
+  font-weight: 700;
 }
 
 .detailStatusInProgress {
-    color: var(--status-in-progress);
-    font-weight: 700;
+  color: var(--status-in-progress);
+  font-weight: 700;
 }
 
 .detailStatusOpen {
-    color: var(--status-open);
-    font-weight: 700;
+  color: var(--status-open);
+  font-weight: 700;
 }
 
 .detailSubtitle {
@@ -200,24 +210,24 @@ body {
 }
 
 .dropdownArrow {
-    color: var(--text-subtle);
-    pointer-events: none;
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
+  color: var(--text-subtle);
+  pointer-events: none;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .dropdownSelect {
-    appearance: none;
-    background-color: transparent;
-    border: none;
-    color: var(--text-dark);
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 700;
-    outline: none;
-    padding-right: 1.5rem;
+  appearance: none;
+  background-color: transparent;
+  border: none;
+  color: var(--text-dark);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 700;
+  outline: none;
+  padding-right: 1.5rem;
 }
 
 .filterButton {
@@ -241,8 +251,8 @@ body {
 }
 
 .headerActions {
-    text-align: center;
-    width: 10%;
+  text-align: center;
+  width: 10%;
 }
 
 .headerLarge {
@@ -250,7 +260,7 @@ body {
 }
 
 .headerMedium {
-    width: 20%;
+  width: 20%;
 }
 
 .headerSmall {
@@ -264,7 +274,7 @@ body {
 }
 
 .locationFooter {
-  background-color: #f0f0f0; 
+  background-color: #f0f0f0;
   border-radius: 0 0 var(--radius-default) var(--radius-default);
   padding: 0.75rem 1rem;
   margin: 1.5rem -1.5rem -1.5rem -1.5rem;
@@ -287,9 +297,16 @@ body {
 .logoSection {
   align-items: center;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   margin-bottom: 2rem;
-  padding: 3rem 0;
+  padding: 1.5rem 1rem;
+  border-bottom: none;
+}
+
+.logoImage {
+  width: 70px;
+  height: 70px;
+  margin-right: 0.25rem;
 }
 
 .mainContent {
@@ -306,63 +323,63 @@ body {
 }
 
 .mapPlaceholder {
-  height: 200px; 
-  background-color: #ccc; 
+  height: 200px;
+  background-color: #ccc;
   border-radius: var(--radius-default);
 }
 
 .metricCard {
-    background-color: var(--background-card);
-    border: none;
-    border-radius: 1rem;
-    box-shadow: 0 0.375rem 0.75rem rgba(0, 0, 0, 0.08);
-    display: flex;
-    flex: 0 0 calc(33.33% - 1rem); 
-    flex-direction: column;
-    padding: 1rem 1rem;
-    text-align: center;
-    height: auto;
-    justify-content: center;
-    min-width: 150px;
+  background-color: var(--background-card);
+  border: none;
+  border-radius: 1rem;
+  box-shadow: 0 0.375rem 0.75rem rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex: 0 0 calc(33.33% - 1rem);
+  flex-direction: column;
+  padding: 1rem 1rem;
+  text-align: center;
+  height: auto;
+  justify-content: center;
+  min-width: 150px;
 }
 
 .metricCardsContainer {
-    animation: fadeInScale 0.3s ease-in-out;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-    width: 100%;
+  animation: fadeInScale 0.3s ease-in-out;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  width: 100%;
 }
 
 .metricTitle {
-    color: var(--text-dark);
-    font-size: 0.9rem;
-    font-weight: 600;
-    margin-bottom: 0.2rem;
-    line-height: 1.2;
-    text-transform: uppercase;
-    flex-grow: 0;
+  color: var(--text-dark);
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+  line-height: 1.2;
+  text-transform: uppercase;
+  flex-grow: 0;
 }
 
 .metricUnit {
-    color: var(--primary-dark);
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-left: 0.3rem;
+  color: var(--primary-dark);
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-left: 0.3rem;
 }
 
 .metricValue {
-    color: var(--primary-dark);
-    font-size: 2.5rem;
-    font-weight: 700;
-    line-height: 1;
+  color: var(--primary-dark);
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1;
 }
 
 .metricValueGroup {
-    align-items: baseline;
-    display: flex;
-    justify-content: center;
+  align-items: baseline;
+  display: flex;
+  justify-content: center;
 }
 
 .modalCloseButton {
@@ -394,12 +411,12 @@ body {
 }
 
 .modalInput {
-    width: 100%;
-    padding: 10px;
-    margin-top: 15px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    box-sizing: border-box;
+  width: 100%;
+  padding: 10px;
+  margin-top: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
 }
 
 .modalOverlay {
@@ -451,6 +468,13 @@ body {
   transition: color 0.2s;
 }
 
+.navIconImg {
+  width: 20px;
+  height: 20px;
+  margin-right: 0.9375rem;
+  display: inline-block;
+}
+
 .navItem {
   align-items: center;
   border-radius: var(--radius-default) 0 0 var(--radius-default);
@@ -479,6 +503,7 @@ body {
   justify-content: center;
   align-items: stretch;
   padding-top: 0;
+  gap: 2rem;
 }
 
 .navText {
@@ -486,23 +511,23 @@ body {
 }
 
 .newOcorrenciaButton {
-    align-items: center;
-    background-color: var(--white);
-    border: 1px solid var(--primary-dark);
-    border-radius: 0.75rem;
-    color: var(--primary-dark);
-    cursor: pointer;
-    display: flex;
-    font-size: 0.9rem;
-    font-weight: 700;
-    gap: 0.5rem;
-    padding: 0.75rem 1.25rem;
-    transition: background-color 0.2s, box-shadow 0.2s;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
+  align-items: center;
+  background-color: var(--white);
+  border: 1px solid var(--primary-dark);
+  border-radius: 0.75rem;
+  color: var(--primary-dark);
+  cursor: pointer;
+  display: flex;
+  font-size: 0.9rem;
+  font-weight: 700;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  transition: background-color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
 }
 
 .newOcorrenciaButton:hover {
-    background-color: #fce8e8;
+  background-color: #fce8e8;
 }
 
 .occurrencesTable {
@@ -540,7 +565,7 @@ body {
   position: absolute;
   left: 20rem;
   bottom: 10rem;
-  background-color: #FFC107;
+  background-color: #ffc107;
   color: var(--primary-dark);
   font-weight: 700;
   font-size: 1.2rem;
@@ -560,7 +585,9 @@ body {
   font-weight: 700;
 }
 
-.pageArrow, .pageNumber, .pageEllipsis {
+.pageArrow,
+.pageNumber,
+.pageEllipsis {
   align-items: center;
   background: var(--background-card);
   border: 1px solid var(--border-color);
@@ -582,10 +609,10 @@ body {
 }
 
 .pageEllipsis {
-    background: transparent;
-    border: none;
-    color: var(--text-subtle);
-    cursor: default;
+  background: transparent;
+  border: none;
+  color: var(--text-subtle);
+  cursor: default;
 }
 
 .pageHeaderTitle {
@@ -596,11 +623,11 @@ body {
 }
 
 .pageNumber {
-    background-color: transparent;
-    border: none;
-    color: var(--text-dark);
-    padding: 0.5rem 0.6rem;
-    width: auto;
+  background-color: transparent;
+  border: none;
+  color: var(--text-dark);
+  padding: 0.5rem 0.6rem;
+  width: auto;
 }
 
 .pageNumber:hover:not(.pageActive) {
@@ -608,9 +635,9 @@ body {
 }
 
 .pageNumbers {
-    align-items: center;
-    display: flex;
-    gap: 0.25rem;
+  align-items: center;
+  display: flex;
+  gap: 0.25rem;
 }
 
 .pagination {
@@ -660,9 +687,9 @@ body {
 }
 
 .searchFilterGroup {
-    align-items: center;
-    display: flex;
-    gap: 1rem;
+  align-items: center;
+  display: flex;
+  gap: 1rem;
 }
 
 .searchIcon {
@@ -686,9 +713,9 @@ body {
   flex-direction: column;
   justify-content: space-between;
   padding: 0;
-  width: 15rem;
+  width: 16.5rem; /* aumentado para evitar quebra de linha */
   height: 100%;
-  z-index: 2;
+
   border-top-right-radius: 1.5rem;
   border-bottom-right-radius: 1.5rem;
 }
@@ -702,22 +729,22 @@ body {
 }
 
 .sortDropdown {
-    align-items: center;
-    background-color: var(--background-card);
-    border: 1px solid var(--border-color);
-    border-radius: 0.75rem;
-    color: var(--text-dark);
-    display: flex;
-    font-size: 0.9rem;
-    gap: 0.25rem;
-    padding: 0.75rem 1rem;
-    position: relative;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
+  align-items: center;
+  background-color: var(--background-card);
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+  color: var(--text-dark);
+  display: flex;
+  font-size: 0.9rem;
+  gap: 0.25rem;
+  padding: 0.75rem 1rem;
+  position: relative;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
 }
 
 .sortDropdown span {
-    color: var(--text-dark);
-    font-weight: 400;
+  color: var(--text-dark);
+  font-weight: 400;
 }
 
 .statusClosed {
@@ -767,7 +794,8 @@ body {
   background-color: #f7f7f7;
 }
 
-.userTable td, .userTable th {
+.userTable td,
+.userTable th {
   border-bottom: 1px solid var(--border-color);
   font-size: 0.9rem;
   padding: 1rem 1.25rem;

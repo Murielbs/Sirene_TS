@@ -97,13 +97,14 @@ const ActionModal: React.FC<SimpleModalProps> = ({ onClose, action, user }) => {
             required
           />
           <div className={styles.modalActions}>
-            <button type="button" className={styles.botaoCancelar} onClick={onClose}>
+            <button
+              type="button"
+              className={styles.botaoCancelar}
+              onClick={onClose}
+            >
               CANCELAR
             </button>
-            <button
-              type="submit"
-              className={styles.botaoAvancar}
-            >
+            <button type="submit" className={styles.botaoAvancar}>
               {primaryButtonText}
             </button>
           </div>
@@ -119,7 +120,11 @@ const ActionModal: React.FC<SimpleModalProps> = ({ onClose, action, user }) => {
             <strong>{user.nome}</strong>? Esta ação é irreversível.
           </p>
           <div className={styles.modalActions}>
-            <button type="button" className={styles.botaoCancelar} onClick={onClose}>
+            <button
+              type="button"
+              className={styles.botaoCancelar}
+              onClick={onClose}
+            >
               CANCELAR
             </button>
             <button
@@ -139,13 +144,14 @@ const ActionModal: React.FC<SimpleModalProps> = ({ onClose, action, user }) => {
           <input type="password" placeholder="Nova Senha" required />
           <input type="password" placeholder="Confirmar Nova Senha" required />
           <div className={styles.modalActions}>
-            <button type="button" className={styles.botaoCancelar} onClick={onClose}>
+            <button
+              type="button"
+              className={styles.botaoCancelar}
+              onClick={onClose}
+            >
               CANCELAR
             </button>
-            <button
-              type="submit"
-              className={styles.botaoAvancar}
-            >
+            <button type="submit" className={styles.botaoAvancar}>
               {primaryButtonText}
             </button>
           </div>
@@ -241,18 +247,15 @@ const NewUserModal: React.FC<NewUserModalProps> = ({ onClose }) => {
             <div className={styles.formRowTwoColumns}>
               <div className={styles.formGroup}>
                 <label>Data de Admissão</label>
-                <input
-                  type="date"
-                  className={styles.modalInput}
-                  required
-                />
+                <input type="date" className={styles.modalInput} required />
               </div>
               <div className={styles.formGroup}>
                 <label>Unidade</label>
                 <select className={styles.modalInput} required>
                   <option value="">Selecione a Unidade</option>
-                  <option value="recife">Recife (COM)</option>
-                  <option value="caruaru">Caruaru (COInter/I)</option>
+                  <option value="RegiaoMetropolitana">(COM)</option>
+                  <option value="AgresteZonaDaMata">(COInter/I)</option>
+                  <option value="Sertão">(COInter/II)</option>
                   {/* Outras opções de unidade */}
                 </select>
               </div>
@@ -268,7 +271,7 @@ const NewUserModal: React.FC<NewUserModalProps> = ({ onClose }) => {
                 </select>
               </div>
               {/* Espaço vazio para manter o layout de 2 colunas */}
-              <div className={styles.formGroup}></div> 
+              <div className={styles.formGroup}></div>
             </div>
           </form>
         );
@@ -304,7 +307,7 @@ const NewUserModal: React.FC<NewUserModalProps> = ({ onClose }) => {
 
   const handleNext = () =>
     setCurrentStep((prev) => Math.min(totalSteps, prev + 1));
-  
+
   const handleSubmit = () => {
     // Lógica final de submissão do formulário
     onClose();
@@ -313,14 +316,12 @@ const NewUserModal: React.FC<NewUserModalProps> = ({ onClose }) => {
   return (
     <div className={styles.modalOverlay}>
       <div className={`${styles.modalContent} ${styles.multistepModal}`}>
-        <div className={styles.stepHeader}>
-            {renderPassos()}
-        </div>
-        
-        <div className={styles.boxFundoBranca}> 
-            <div className={styles.stepContent}>
-                {renderStepContent(currentStep)}
-            </div>
+        <div className={styles.stepHeader}>{renderPassos()}</div>
+
+        <div className={styles.boxFundoBranca}>
+          <div className={styles.stepContent}>
+            {renderStepContent(currentStep)}
+          </div>
         </div>
 
         <div className={styles.modalActions}>
@@ -331,7 +332,7 @@ const NewUserModal: React.FC<NewUserModalProps> = ({ onClose }) => {
           >
             CANCELAR
           </button>
-          
+
           {currentStep < totalSteps ? (
             <button
               type="button"
@@ -355,12 +356,11 @@ const NewUserModal: React.FC<NewUserModalProps> = ({ onClose }) => {
   );
 };
 
-
 function GestaoUsuarios(): JSX.Element {
   const navigate = useNavigate();
   const [allUsers] = useState<User[]>(mockUsers);
   const [isNewUserModalOpen, setIsNewUserModalOpen] = useState(false);
-  
+
   const [actionModal, setActionModal] = useState<ActionModalState>({
     isOpen: false,
     action: null,
@@ -370,7 +370,7 @@ function GestaoUsuarios(): JSX.Element {
   const [filterBy, setFilterBy] = useState<
     "todos" | "Em serviço" | "Fora de serviço"
   >("todos");
-  const currentPage = 1; 
+  const currentPage = 1;
   const usersPerPage = 8;
   const totalPages = Math.max(1, Math.ceil(allUsers.length / usersPerPage));
 
@@ -429,7 +429,6 @@ function GestaoUsuarios(): JSX.Element {
         <div className={styles.logoSection}>
           <span className={styles.logoText}>
             <img src={LogoSvg} alt="Sirene" className={styles.logoImage} />
-            Sirene
           </span>
         </div>
 
@@ -654,9 +653,7 @@ function GestaoUsuarios(): JSX.Element {
       </div>
 
       {isNewUserModalOpen && (
-        <NewUserModal
-          onClose={() => setIsNewUserModalOpen(false)}
-        />
+        <NewUserModal onClose={() => setIsNewUserModalOpen(false)} />
       )}
 
       {actionModal.isOpen && (

@@ -34,10 +34,12 @@ function Inicial(): JSX.Element {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalActionType, setModalActionType] = useState("");
   const [userData, setUserData] = useState<JwtPayload | null>(null);
-  const [ocorrenciasRecentes, setOcorrenciasRecentes] = useState<Ocorrencia[]>([]);
+  const [ocorrenciasRecentes, setOcorrenciasRecentes] = useState<Ocorrencia[]>(
+    []
+  );
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
 
     if (!token) return;
 
@@ -47,17 +49,20 @@ function Inicial(): JSX.Element {
       const decodedUser = jwtDecode<any>(token);
 
       // Base da API (Vite): VITE_API_URL, se não setada tenta rota relativa
-      const API_BASE = (typeof import.meta !== 'undefined' ? (import.meta as any).env?.VITE_API_URL : '') || '';
-      const base = API_BASE ? API_BASE.replace(/\/$/, '') : '';
+      const API_BASE =
+        (typeof import.meta !== "undefined"
+          ? (import.meta as any).env?.VITE_API_URL
+          : "") || "";
+      const base = API_BASE ? API_BASE.replace(/\/$/, "") : "";
 
       // buscar ocorrências recentes do backend (fallback para mock em erro)
-  const urlOcorrencias = `${base}/api/ocorrencia`;
+      const urlOcorrencias = `${base}/api/ocorrencia`;
       const fetchOcorrencias = async () => {
         try {
           const res = await fetch(urlOcorrencias, {
             headers: {
               Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
           });
 
@@ -66,33 +71,67 @@ function Inicial(): JSX.Element {
           const body = await res.json();
           const list = body?.data || body?.ocorrencias || body;
 
-              const normalizedList: Ocorrencia[] = (Array.isArray(list) ? list : []).map((o: any) => {
-                const rawDate = o.data_hora || o.dataHora || o.data || o.created_at;
-                const dateStr = rawDate ? new Date(rawDate).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—';
+          const normalizedList: Ocorrencia[] = (
+            Array.isArray(list) ? list : []
+          ).map((o: any) => {
+            const rawDate = o.data_hora || o.dataHora || o.data || o.created_at;
+            const dateStr = rawDate
+              ? new Date(rawDate).toLocaleString("pt-BR", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
+              : "—";
 
-                const rawStatus = String(o?.status ?? '').toLowerCase();
-                const status = (
-                  !rawStatus || rawStatus === 'open' || rawStatus === 'aberta' || rawStatus === 'aberto' || rawStatus === 'aberta' || rawStatus === 'aberto' || rawStatus === 'aberta' || rawStatus === 'aberta'
-                ) ? 'Em aberto'
-                : (rawStatus.includes('in_progress') || rawStatus.includes('andamento') || rawStatus.includes('em_andamento') || rawStatus.includes('em-andamento') || rawStatus.includes('em andamento')) ? 'Andamento'
-                : (rawStatus.includes('closed') || rawStatus.includes('fechado') || rawStatus.includes('concluida') || rawStatus.includes('concluído') || rawStatus.includes('concluido') || rawStatus.includes('cancel') || rawStatus.includes('cancelada')) ? 'Fechado'
-                : 'Em aberto';
+            const rawStatus = String(o?.status ?? "").toLowerCase();
+            const status =
+              !rawStatus ||
+              rawStatus === "open" ||
+              rawStatus === "aberta" ||
+              rawStatus === "aberto" ||
+              rawStatus === "aberta" ||
+              rawStatus === "aberto" ||
+              rawStatus === "aberta" ||
+              rawStatus === "aberta"
+                ? "Em aberto"
+                : rawStatus.includes("in_progress") ||
+                  rawStatus.includes("andamento") ||
+                  rawStatus.includes("em_andamento") ||
+                  rawStatus.includes("em-andamento") ||
+                  rawStatus.includes("em andamento")
+                ? "Andamento"
+                : rawStatus.includes("closed") ||
+                  rawStatus.includes("fechado") ||
+                  rawStatus.includes("concluida") ||
+                  rawStatus.includes("concluído") ||
+                  rawStatus.includes("concluido") ||
+                  rawStatus.includes("cancel") ||
+                  rawStatus.includes("cancelada")
+                ? "Fechado"
+                : "Em aberto";
 
-                return {
-                  id: String(o.id ?? o._id ?? o.codigo ?? o.numero ?? ''),
-                  tipo: o.tipoOcorrencia || o.tipo || o.descricao || '—',
-                  criadoPor: o.assinatura_digital || o.assinaturaDigital || o.responsavel || o.nomeAgente || undefined,
-                  regiao: o.cidade || o.regiao || o.local || o.unidade || '—',
-                  dataHora: dateStr,
-                  status,
-                } as Ocorrencia;
-              });
+            return {
+              id: String(o.id ?? o._id ?? o.codigo ?? o.numero ?? ""),
+              tipo: o.tipoOcorrencia || o.tipo || o.descricao || "—",
+              criadoPor:
+                o.assinatura_digital ||
+                o.assinaturaDigital ||
+                o.responsavel ||
+                o.nomeAgente ||
+                undefined,
+              regiao: o.cidade || o.regiao || o.local || o.unidade || "—",
+              dataHora: dateStr,
+              status,
+            } as Ocorrencia;
+          });
 
           // mostrar apenas os 4 mais recentes no feed
           const top4 = normalizedList.slice(0, 4);
           if (!cancelled) setOcorrenciasRecentes(top4);
         } catch (err) {
-          console.error('Erro ao buscar ocorrências:', err);
+          console.error("Erro ao buscar ocorrências:", err);
           if (!cancelled) setOcorrenciasRecentes([]);
         }
       };
@@ -106,7 +145,7 @@ function Inicial(): JSX.Element {
           const res = await fetch(url, {
             headers: {
               Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
           });
 
@@ -120,16 +159,26 @@ function Inicial(): JSX.Element {
           // Normaliza os campos para o formato esperado pelo componente
           const normalized = {
             ...apiUser,
-            nome: apiUser?.nome || decodedUser?.nome || '',
-            cargo: apiUser?.posto || apiUser?.perfilAcesso || decodedUser?.cargo || decodedUser?.perfilAcesso || '',
+            nome: apiUser?.nome || decodedUser?.nome || "",
+            cargo:
+              apiUser?.posto ||
+              apiUser?.perfilAcesso ||
+              decodedUser?.cargo ||
+              decodedUser?.perfilAcesso ||
+              "",
           };
 
           if (!cancelled) setUserData(normalized);
         } catch (fetchErr) {
-          console.error('Erro ao buscar usuário:', fetchErr);
+          console.error("Erro ao buscar usuário:", fetchErr);
 
           // fallback: usar dados do token se houver nome/cargo
-          if (!cancelled && decodedUser && decodedUser.nome && (decodedUser.cargo || decodedUser.perfilAcesso)) {
+          if (
+            !cancelled &&
+            decodedUser &&
+            decodedUser.nome &&
+            (decodedUser.cargo || decodedUser.perfilAcesso)
+          ) {
             setUserData({
               ...decodedUser,
               nome: decodedUser.nome,
@@ -141,7 +190,7 @@ function Inicial(): JSX.Element {
 
       fetchUser();
     } catch (error) {
-      console.error('Erro ao decodificar o token JWT:', error);
+      console.error("Erro ao decodificar o token JWT:", error);
     }
 
     return () => {
@@ -162,7 +211,7 @@ function Inicial(): JSX.Element {
     }
   };
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem("token");
     navigate("/");
   };
 
@@ -240,7 +289,7 @@ function Inicial(): JSX.Element {
           <nav className={styles.navMenu}>
             <div
               className={`${styles.navItem} ${styles.navActive}`}
-              onClick={() => handleMenuItemClick("/inicial")} 
+              onClick={() => handleMenuItemClick("/inicial")}
             >
               <img
                 src={PaginaIncialSvg}
@@ -311,10 +360,7 @@ function Inicial(): JSX.Element {
             </div>
           </nav>
 
-          <div
-            className={styles.navItem}
-            onClick={handleLogout} 
-          >
+          <div className={styles.navItem} onClick={handleLogout}>
             <img src={SairSvg} alt="Sair" className={styles.navIconImg} />
             <span className={styles.navText}>Sair</span>
           </div>
@@ -420,7 +466,7 @@ function Inicial(): JSX.Element {
         <div className={styles.rightSidebar}>
           <div className={styles.profileCard}>
             <img
-              src={userData?.foto || "/src/img/Persona1.png"}
+              src={userData?.foto || "/src/img/Profile2.svg"}
               alt={userData?.nome || "Usuário"}
               className={styles.profileImage}
             />

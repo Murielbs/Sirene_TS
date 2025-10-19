@@ -719,7 +719,9 @@ select.modalInput:focus {
 select.modalInput {
   appearance: none;
   padding-right: 2.5rem;
-  background: var(--white) url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%23550d08" d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center;
+  background: var(--white)
+    url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%23550d08" d="M7 10l5 5 5-5z"/></svg>')
+    no-repeat right 10px center;
   background-size: 16px;
   cursor: pointer;
 }
@@ -732,9 +734,9 @@ select.modalInput {
   flex-direction: column;
   justify-content: space-between;
   padding: 0;
-  width: 16.5rem;
+  width: 16.5rem; /* aumentado para evitar quebra de linha */
   height: 100%;
-  z-index: 2;
+
   border-top-right-radius: 1.5rem;
   border-bottom-right-radius: 1.5rem;
 }
@@ -802,7 +804,7 @@ select.modalInput {
   width: 35px;
   height: 35px;
   border-radius: 50%;
-  background-color: var(--white);
+  background-color: var(--background-card);
   border: 2px solid var(--primary-dark);
   display: flex;
   justify-content: center;
@@ -810,12 +812,11 @@ select.modalInput {
   font-weight: 700;
   color: var(--primary-dark);
   transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-  z-index: 2;
-  cursor: pointer;
+  cursor: default; /* Remove o cursor pointer do hover */
 }
 
 .stepCircle:hover {
-    background-color: var(--white); /* Remove o hover para o efeito cinza */
+  background-color: var(--white); /* Remove o hover para o efeito cinza */
 }
 
 /* Nova classe para etapas já concluídas/ativas */
@@ -839,7 +840,7 @@ select.modalInput {
   align-items: center;
   margin-bottom: 2rem;
   position: relative;
-  padding: 0 3rem; /* Diminui o padding lateral para apertar o conteúdo */
+  padding: 0 3rem; /* Espaço lateral dos círculos */
   width: 100%;
   box-sizing: border-box;
 }
@@ -848,8 +849,8 @@ select.modalInput {
   content: "";
   position: absolute;
   top: 50%;
-  left: 3rem; /* Alinha a linha de progresso com o padding do .stepIndicator */
-  width: calc(100% - 6rem); /* 2*3rem = 6rem de espaço lateral total */
+  left: 3rem;
+  width: calc(100% - 6rem);
   height: 2px;
   background-color: var(--primary-dark);
   transform: translateY(-50%);
@@ -857,7 +858,7 @@ select.modalInput {
 }
 
 .stepIndicator > * {
-  background-color: var(--white);
+  background-color: var(--background-card);
   position: relative;
   z-index: 2;
 }
