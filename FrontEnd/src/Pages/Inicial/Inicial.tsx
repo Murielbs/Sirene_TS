@@ -105,21 +105,66 @@ function Inicial(): JSX.Element {
   const [userData, setUserData] = useState<JwtPayload | null>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('token'); 
-    
-    if (token) {
-      try {
-        const decodedUser = jwtDecode<JwtPayload>(token);
-        
-        if (decodedUser.nome && decodedUser.cargo) {
-            setUserData(decodedUser);
-        } else {
-            console.error("Token JWT decodificado não contém 'nome' ou 'cargo'.");
+    const token = localStorage.getItem('token');
+
+    if (!token) return;
+
+    let cancelled = false;
+
+    try {
+      const decodedUser = jwtDecode<any>(token);
+
+      // Base da API (Vite): VITE_API_URL, se não setada tenta rota relativa
+      const API_BASE = (typeof import.meta !== 'undefined' ? (import.meta as any).env?.VITE_API_URL : '') || '';
+      const base = API_BASE ? API_BASE.replace(/\/$/, '') : '';
+      const url = `${base}/api/auth/me`;
+
+      const fetchUser = async () => {
+        try {
+          const res = await fetch(url, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          });
+
+          if (!res.ok) throw new Error(`Resposta não OK: ${res.status}`);
+
+          const respJson = await res.json();
+
+          // Backend padroniza como { success, message, data }
+          const apiUser = respJson?.data || respJson?.militar || respJson;
+
+          // Normaliza os campos para o formato esperado pelo componente
+          const normalized = {
+            ...apiUser,
+            nome: apiUser?.nome || decodedUser?.nome || '',
+            cargo: apiUser?.posto || apiUser?.perfilAcesso || decodedUser?.cargo || decodedUser?.perfilAcesso || '',
+          };
+
+          if (!cancelled) setUserData(normalized);
+        } catch (fetchErr) {
+          console.error('Erro ao buscar usuário:', fetchErr);
+
+          // fallback: usar dados do token se houver nome/cargo
+          if (!cancelled && decodedUser && decodedUser.nome && (decodedUser.cargo || decodedUser.perfilAcesso)) {
+            setUserData({
+              ...decodedUser,
+              nome: decodedUser.nome,
+              cargo: decodedUser.cargo || decodedUser.perfilAcesso,
+            });
+          }
         }
-      } catch (error) {
-        console.error("Erro ao decodificar o token JWT:", error);
-      }
+      };
+
+      fetchUser();
+    } catch (error) {
+      console.error('Erro ao decodificar o token JWT:', error);
     }
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const getStatusClass = (status: Ocorrencia["status"]) => {
@@ -402,7 +447,7 @@ function Inicial(): JSX.Element {
         <div className={styles.rightSidebar}>
           <div className={styles.profileCard}>
             <img
-              src="/src/img/Persona1.png"
+              src={userData?.foto || "/src/img/Persona1.png"}
               alt={userData?.nome || "Usuário"}
               className={styles.profileImage}
             />

@@ -1,4 +1,4 @@
-import prisma from './prisma';
+/*import prisma from './prisma';
 import { AuthUtils } from '../utils/auth';
 import { PerfilAcesso } from '../types';
 
@@ -101,4 +101,4 @@ if (require.main === module) {
     });
 }
 
-export default seed;
+export default seed; */
