@@ -1,12 +1,5 @@
-import React, { useState, useEffect, type JSX } from "react";
-import {
-  Plus,
-  FileText,
-  ChevronDown,
-  User,
-  AlertCircle,
-  X,
-} from "lucide-react";
+import { useState, useEffect, type JSX } from "react";
+import { Plus, FileText, ChevronDown, User, X } from "lucide-react";
 import { jwtDecode } from "jwt-decode";
 import LogoSvg from "../../img/Logo.svg";
 import PaginaIncialSvg from "../../img/PaginaIncial.svg";
@@ -20,19 +13,12 @@ import styles from "./Inicial.module.css";
 import { useNavigate } from "react-router-dom";
 
 interface Ocorrencia {
-  id: number;
+  id: string;
   tipo: string;
-  agente?: string;
+  criadoPor?: string;
   regiao: string;
   dataHora: string;
   status: "Em aberto" | "Fechado" | "Andamento";
-}
-
-interface Activity {
-  id: number;
-  icon: JSX.Element;
-  text: string;
-  time: string;
 }
 
 interface JwtPayload {
@@ -41,68 +27,14 @@ interface JwtPayload {
   [key: string]: any;
 }
 
-const mockOcorrenciasRecentes: Ocorrencia[] = [
-  {
-    id: 202593,
-    tipo: "Acidente",
-    agente: "João Silva",
-    regiao: "Recife(COM)",
-    dataHora: "10/10/2025 00:30",
-    status: "Em aberto",
-  },
-  {
-    id: 202592,
-    tipo: "Resgate",
-    agente: "José Carlos",
-    regiao: "Recife(COM)",
-    dataHora: "10/10/2025 08:47",
-    status: "Em aberto",
-  },
-  {
-    id: 202591,
-    tipo: "Afogamento",
-    agente: "Ana Caetano",
-    regiao: "Paulista(COM)",
-    dataHora: "10/10/2025 08:30",
-    status: "Em aberto",
-  },
-  {
-    id: 202590,
-    tipo: "Incêndio",
-    agente: "Marlina Sena",
-    regiao: "Exu(COinter/2)",
-    dataHora: "10/10/2025 10:00",
-    status: "Andamento",
-  },
-];
-
-const mockActivities: Activity[] = [
-  {
-    id: 3,
-    icon: <User size={16} />,
-    text: "Equipe Bravo designada para a ocorrência #202590.",
-    time: "Há 2 minutos",
-  },
-  {
-    id: 2,
-    icon: <User size={16} />,
-    text: "Novo usuário Andre Santana foi adicionado como Analista.",
-    time: "Há 7 minutos",
-  },
-  {
-    id: 1,
-    icon: <AlertCircle size={16} />,
-    text: "Nova ocorrência de Acidente foi registrada.",
-    time: "Há 7 minutos",
-  },
-];
-
+// atividades serão carregadas via API futuramente
 function Inicial(): JSX.Element {
   const navigate = useNavigate();
   const [currentDate] = useState(new Date(2025, 9, 13));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalActionType, setModalActionType] = useState("");
   const [userData, setUserData] = useState<JwtPayload | null>(null);
+  const [ocorrenciasRecentes, setOcorrenciasRecentes] = useState<Ocorrencia[]>([]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -117,6 +49,56 @@ function Inicial(): JSX.Element {
       // Base da API (Vite): VITE_API_URL, se não setada tenta rota relativa
       const API_BASE = (typeof import.meta !== 'undefined' ? (import.meta as any).env?.VITE_API_URL : '') || '';
       const base = API_BASE ? API_BASE.replace(/\/$/, '') : '';
+
+      // buscar ocorrências recentes do backend (fallback para mock em erro)
+  const urlOcorrencias = `${base}/api/ocorrencia`;
+      const fetchOcorrencias = async () => {
+        try {
+          const res = await fetch(urlOcorrencias, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          });
+
+          if (!res.ok) throw new Error(`Resposta não OK: ${res.status}`);
+
+          const body = await res.json();
+          const list = body?.data || body?.ocorrencias || body;
+
+              const normalizedList: Ocorrencia[] = (Array.isArray(list) ? list : []).map((o: any) => {
+                const rawDate = o.data_hora || o.dataHora || o.data || o.created_at;
+                const dateStr = rawDate ? new Date(rawDate).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—';
+
+                const rawStatus = String(o?.status ?? '').toLowerCase();
+                const status = (
+                  !rawStatus || rawStatus === 'open' || rawStatus === 'aberta' || rawStatus === 'aberto' || rawStatus === 'aberta' || rawStatus === 'aberto' || rawStatus === 'aberta' || rawStatus === 'aberta'
+                ) ? 'Em aberto'
+                : (rawStatus.includes('in_progress') || rawStatus.includes('andamento') || rawStatus.includes('em_andamento') || rawStatus.includes('em-andamento') || rawStatus.includes('em andamento')) ? 'Andamento'
+                : (rawStatus.includes('closed') || rawStatus.includes('fechado') || rawStatus.includes('concluida') || rawStatus.includes('concluído') || rawStatus.includes('concluido') || rawStatus.includes('cancel') || rawStatus.includes('cancelada')) ? 'Fechado'
+                : 'Em aberto';
+
+                return {
+                  id: String(o.id ?? o._id ?? o.codigo ?? o.numero ?? ''),
+                  tipo: o.tipoOcorrencia || o.tipo || o.descricao || '—',
+                  criadoPor: o.assinatura_digital || o.assinaturaDigital || o.responsavel || o.nomeAgente || undefined,
+                  regiao: o.cidade || o.regiao || o.local || o.unidade || '—',
+                  dataHora: dateStr,
+                  status,
+                } as Ocorrencia;
+              });
+
+          // mostrar apenas os 4 mais recentes no feed
+          const top4 = normalizedList.slice(0, 4);
+          if (!cancelled) setOcorrenciasRecentes(top4);
+        } catch (err) {
+          console.error('Erro ao buscar ocorrências:', err);
+          if (!cancelled) setOcorrenciasRecentes([]);
+        }
+      };
+
+      fetchOcorrencias();
+
       const url = `${base}/api/auth/me`;
 
       const fetchUser = async () => {
@@ -179,14 +161,13 @@ function Inicial(): JSX.Element {
         return "";
     }
   };
-
-  const handleMenuItemClick = (path: string) => {
-    navigate(path);
-  };
-  
   const handleLogout = () => {
     localStorage.removeItem('token');
     navigate("/");
+  };
+
+  const handleMenuItemClick = (path: string) => {
+    navigate(path);
   };
 
   const handleCardClick = (actionType: string) => {
@@ -376,15 +357,7 @@ function Inicial(): JSX.Element {
             <div className={styles.feedContainer}>
               <h2 className={styles.feedTitle}>Feed de atividades</h2>
               <div className={styles.activityList}>
-                {mockActivities.map((activity) => (
-                  <div key={activity.id} className={styles.activityItem}>
-                    <div className={styles.activityIcon}>{activity.icon}</div>
-                    <div className={styles.activityText}>
-                      {activity.text}
-                      <div className={styles.activityTime}>{activity.time}</div>
-                    </div>
-                  </div>
-                ))}
+                <div className={styles.noData}>Nenhuma atividade recente</div>
               </div>
             </div>
 
@@ -412,14 +385,14 @@ function Inicial(): JSX.Element {
                   </tr>
                 </thead>
                 <tbody>
-                  {mockOcorrenciasRecentes.map((ocorrencia) => (
+                  {ocorrenciasRecentes.map((ocorrencia) => (
                     <tr key={ocorrencia.id} className={styles.tableRow}>
                       <td className={styles.cellTipo}>
                         <span className={styles.cellTipoName}>
                           {ocorrencia.tipo}
                         </span>
                         <span className={styles.cellAgente}>
-                          {ocorrencia.agente}
+                          {ocorrencia.criadoPor}
                         </span>
                       </td>
                       <td className={styles.cellRegiao}>{ocorrencia.regiao}</td>

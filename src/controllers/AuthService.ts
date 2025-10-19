@@ -1,24 +1,23 @@
 
-import prisma from './prisma';
+import prisma from '../database/prisma';
 import { AuthUtils } from '../utils/auth';
-import { Prisma, PerfilAcesso } from '@prisma/client'; 
-import { LoginRequest, CriarMilitarRequest } from '../types';
+import { PerfilAcesso, LoginRequest, CriarMilitarRequest } from '../types';
 
 interface Militar {
     id: string;
-    nome: string;
-    matricula: string;
-    email: string;
-    senhaHash: string;
-    perfilAcesso: PerfilAcesso;
-    cpf: string;
+    nome?: string | null;
+    matricula?: string | null;
+    email?: string | null;
+    senhaHash?: string | null;
+    perfilAcesso?: PerfilAcesso | string | null;
+    cpf?: string | null;
 }
 
 interface LoginResult {
     token: string;
     user: {
         nome: string;
-        cargo: PerfilAcesso;
+        cargo: PerfilAcesso | string;
     }
 }
 
@@ -34,17 +33,17 @@ export class AuthService {
             throw new Error('Matrícula ou senha inválida.');
         }
 
-        const senhaValida = await AuthUtils.comparePassword(loginData.senha, militar.senhaHash);
+    const senhaValida = await AuthUtils.verifyPassword(loginData.senha, militar.senhaHash || '');
 
         if (!senhaValida) {
             throw new Error('Matrícula ou senha inválida.');
         }
 
+        // construir payload conforme AuthUtils.generateToken espera: { id, matricula, perfilAcesso }
         const payload = {
             id: militar.id,
-            matricula: militar.matricula,
-            nome: militar.nome,
-            cargo: militar.perfilAcesso,
+            matricula: militar.matricula || '',
+            perfilAcesso: (militar.perfilAcesso as PerfilAcesso) || PerfilAcesso.MILITAR,
         };
 
         const token = AuthUtils.generateToken(payload);
@@ -52,8 +51,8 @@ export class AuthService {
         return {
             token,
             user: {
-                nome: militar.nome,
-                cargo: militar.perfilAcesso,
+                nome: militar.nome || '',
+                cargo: militar.perfilAcesso || PerfilAcesso.MILITAR,
             }
         };
     }

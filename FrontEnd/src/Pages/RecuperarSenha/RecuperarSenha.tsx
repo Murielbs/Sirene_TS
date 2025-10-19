@@ -1,4 +1,4 @@
-import React, { useState, type JSX } from "react";
+import { useState, type JSX } from "react";
 import styles from "./RecuperarSenha.module.css";
 import { useNavigate } from 'react-router-dom';
 

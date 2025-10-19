@@ -1,38 +1,28 @@
-import React, { type JSX } from 'react';
+import React, { useEffect, useState, type JSX } from 'react';
 import { LayoutDashboard, Users, FileText, BarChart, Settings, LogOut, ChevronLeft, MapPin } from 'lucide-react';
 import styles from './visualizacao.module.css'; 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 
 interface DetalheOcorrenciaData {
-    id: number;
-    status: string;
-    tipo: string;
-    prioridade: string;
-    dataHora: string;
-    criadoPor: string;
-    localizacaoEndereco: string;
-    localizacaoImagem: string; 
+    id: string;
+    status?: string;
+    tipo?: string;
+    prioridade?: string;
+    dataHora?: string;
+    criadoPor?: string;
+    localizacaoEndereco?: string;
+    localizacaoImagem?: string;
+    descricao?: string;
 }
-
-const mockDetalhe: DetalheOcorrenciaData = {
-    id: 202530,
-    status: 'Em aberto',
-    tipo: 'Acidente',
-    prioridade: 'Alta',
-    dataHora: '02/02/2025 09:30',
-    criadoPor: 'Marina Sena',
-    localizacaoEndereco: 'Av Gov. Agamenon Magalhães - Recife, PE',
-    localizacaoImagem: 'URL_DA_IMAGEM_DO_MAPA_AQUI' 
-};
 
 interface DetailItemProps {
     label: string;
-    value: string;
+    value?: string;
     isStatus?: boolean;
 }
 
-const DetailItem: React.FC<DetailItemProps> = ({ label, value, isStatus = false }) => {
+const DetailItem: React.FC<DetailItemProps> = ({ label, value = '—', isStatus = false }) => {
     let statusClass = '';
     if (isStatus) {
         switch (value) {
@@ -54,8 +44,59 @@ const DetailItem: React.FC<DetailItemProps> = ({ label, value, isStatus = false 
 
 function DetalheOcorrencia(): JSX.Element {
     const navigate = useNavigate();
-    const data = mockDetalhe;
-    
+    const { id } = useParams();
+    const [data, setData] = useState<DetalheOcorrenciaData | null>(null);
+
+    useEffect(() => {
+        if (!id) return;
+        const token = localStorage.getItem('token');
+        const API_BASE = (typeof import.meta !== 'undefined' ? (import.meta as any).env?.VITE_API_URL : '') || '';
+        const base = API_BASE ? API_BASE.replace(/\/$/, '') : '';
+        const url = `${base}/api/ocorrencia/${id}`;
+
+        (async () => {
+            try {
+                const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+                if (!res.ok) throw new Error(`Resposta não OK: ${res.status}`);
+                const body = await res.json();
+                const o = body?.data || body || body?.ocorrencia || body?.ocorrencias?.[0];
+
+                const rawDate = o?.data_hora || o?.dataHora || o?.created_at;
+                const dateStr = rawDate ? new Date(rawDate).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : undefined;
+
+                const normalizeStatus = (s: any) => {
+                    if (!s) return 'Em aberto';
+                    const ss = String(s).toLowerCase();
+                    if (ss.includes('open') || ss.includes('aberto') || ss.includes('aberta') || ss.includes('pend')) return 'Em aberto';
+                    if (ss.includes('progress') || ss.includes('andament') || ss.includes('in_progress') || ss.includes('em_andamento')) return 'Andamento';
+                    if (ss.includes('close') || ss.includes('fech') || ss.includes('conclu') || ss.includes('closed')) return 'Fechado';
+                    return 'Em aberto';
+                };
+
+                const criadoFromApi = body?.criadoPor ?? o?.criadoPor;
+                const criadoFallback = o?.assinatura_digital || o?.assinaturaDigital || o?.responsavel || undefined;
+
+                const cidade = o?.cidade || o?.localizacao?.cidade || undefined;
+                const bairro = o?.bairro || o?.localizacao?.bairro || undefined;
+                const localGps = o?.localizacao_gps || o?.localizacaoGps || o?.localizacao?.gps || undefined;
+
+                setData({
+                    id: String(o?.id ?? o?._id ?? ''),
+                    status: normalizeStatus(body?.status ?? o?.status),
+                    tipo: o?.tipoOcorrencia || o?.tipo || o?.descricao || undefined,
+                    prioridade: o?.prioridade || undefined,
+                    dataHora: dateStr,
+                    criadoPor: criadoFromApi ?? criadoFallback ?? undefined,
+                    localizacaoEndereco: [cidade, bairro, localGps].filter(Boolean).join(', '),
+                    localizacaoImagem: o?.foto_url || o?.video_url || undefined,
+                    descricao: o?.descricao || undefined,
+                });
+            } catch (err) {
+                console.error('Erro ao buscar detalhe da ocorrência:', err);
+            }
+        })();
+    }, [id]);
+
     const handleMenuItemClick = (path: string) => {
         navigate(path);
     };
@@ -114,18 +155,18 @@ function DetalheOcorrencia(): JSX.Element {
                         <ChevronLeft size={14} /> Voltar para a lista
                     </a>
                     <h1 className={styles.detailTitle}>Visualização de detalhe</h1>
-                    <span className={styles.detailSubtitle}>{data.id}</span>
+                    <span className={styles.detailSubtitle}>{data ? data.id : 'Carregando...'}</span>
                 </div>
 
                 <div className={styles.detailGrid}>
                     
                     <div className={styles.detailCard}>
                         <div className={styles.detailInfoList}>
-                            <DetailItem label="Status" value={data.status} isStatus={true} />
-                            <DetailItem label="Tipo" value={data.tipo} />
-                            <DetailItem label="Prioridade" value={data.prioridade} />
-                            <DetailItem label="Data/Hora" value={data.dataHora} />
-                            <DetailItem label="Criado por" value={data.criadoPor} />
+                            <DetailItem label="Status" value={data?.status ?? '—'} isStatus={true} />
+                            <DetailItem label="Tipo" value={data?.tipo ?? '—'} />
+                            <DetailItem label="Prioridade" value={data?.prioridade ?? '—'} />
+                            <DetailItem label="Data/Hora" value={data?.dataHora ?? '—'} />
+                            <DetailItem label="Criado por" value={data?.criadoPor ?? '—'} />
                         </div>
                     </div>
 
@@ -137,7 +178,7 @@ function DetalheOcorrencia(): JSX.Element {
                         </div>
                         <div className={styles.locationFooter}>
                             <MapPin size={16} className={styles.locationIcon}/>
-                            <span className={styles.locationAddress}>{data.localizacaoEndereco}</span>
+                            <span className={styles.locationAddress}>{data?.localizacaoEndereco ?? '—'}</span>
                         </div>
                     </div>
                 </div>

@@ -11,78 +11,16 @@ import ConfiguracaoSvg from "../../img/Configuracao.svg";
 import SairSvg from "../../img/sair.svg";
 
 interface Ocorrencia {
-  id: number;
+  id: string;
   tipo: string;
+  criadoPor?: string;
   regiao: string;
   dataHora: string;
-  status: "Em aberto" | "Fechado" | "Andamento";
+  status: string;
+  dataTimestamp?: number;
 }
 
-const mockOcorrencias: Ocorrencia[] = [
-  {
-    id: 202530,
-    tipo: "Acidente",
-    regiao: "Recife (COM)",
-    dataHora: "02/02/2025 06:30",
-    status: "Em aberto",
-  },
-  {
-    id: 202531,
-    tipo: "Vazamento",
-    regiao: "Camaragibe (COM)",
-    dataHora: "02/02/2025 07:33",
-    status: "Fechado",
-  },
-  {
-    id: 202532,
-    tipo: "Incêndio",
-    regiao: "Paulista (COM)",
-    dataHora: "02/02/2025 07:35",
-    status: "Fechado",
-  },
-  {
-    id: 202533,
-    tipo: "Resgate",
-    regiao: "Caruaru (COInter/I)",
-    dataHora: "02/02/2025 08:30",
-    status: "Em aberto",
-  },
-  {
-    id: 202534,
-    tipo: "Desabamento",
-    regiao: "Recife (COM)",
-    dataHora: "02/02/2025 10:30",
-    status: "Andamento",
-  },
-  {
-    id: 202535,
-    tipo: "Acidente",
-    regiao: "Recife (COM)",
-    dataHora: "02/02/2025 11:00",
-    status: "Andamento",
-  },
-  {
-    id: 202536,
-    tipo: "Afogamento",
-    regiao: "Bezerros (COInter/I)",
-    dataHora: "02/02/2025 12:30",
-    status: "Em aberto",
-  },
-  {
-    id: 202537,
-    tipo: "Resgate",
-    regiao: "Carpina (COInter/I)",
-    dataHora: "02/02/2025 13:30",
-    status: "Fechado",
-  },
-  {
-    id: 202538,
-    tipo: "Afogamento",
-    regiao: "Recife (COM)",
-    dataHora: "02/02/2025 19:00",
-    status: "Fechado",
-  },
-];
+// dados de ocorrências virão do backend; não usar mocks estáticos aqui
 
 interface MetricCardProps {
   title: string;
@@ -269,7 +207,6 @@ const NewOcorrenciaModal: React.FC<NewOcorrenciaModalProps> = ({ onClose }) => {
 
   const handleNext = () =>
     setCurrentStep((prev) => Math.min(totalSteps, prev + 1));
-  const handleBack = () => setCurrentStep((prev) => Math.max(1, prev - 1));
   const handleSubmit = () => {
     onClose();
   };
@@ -321,9 +258,11 @@ const NewOcorrenciaModal: React.FC<NewOcorrenciaModalProps> = ({ onClose }) => {
   );
 };
 
+import { useEffect } from "react";
+
 function ListaOcorrencias(): JSX.Element {
   const navigate = useNavigate();
-  const [allOcorrencias] = useState<Ocorrencia[]>(mockOcorrencias);
+  const [allOcorrencias, setAllOcorrencias] = useState<Ocorrencia[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState<"recente" | "tipo">("recente");
   const [currentPage, setCurrentPage] = useState(1);
@@ -332,9 +271,9 @@ function ListaOcorrencias(): JSX.Element {
   const [isNewOcorrenciaModalOpen, setIsNewOcorrenciaModalOpen] =
     useState(false);
 
-  const totalOcorrencias = 530;
-  const ocorrenciasAbertas = 30;
-  const tempoMedioResposta = "17";
+  const totalOcorrencias = allOcorrencias.length.toString();
+  const ocorrenciasAbertas = allOcorrencias.filter(o => o.status === 'Em aberto').length;
+  const tempoMedioResposta = "-"; // não disponível no backend ainda
 
   const filteredOcorrencias = allOcorrencias.filter(
     (ocorrencia) =>
@@ -345,7 +284,9 @@ function ListaOcorrencias(): JSX.Element {
 
   const sortedOcorrencias = [...filteredOcorrencias].sort((a, b) => {
     if (sortBy === "recente") {
-      return b.id - a.id;
+      const ta = a.dataTimestamp || 0;
+      const tb = b.dataTimestamp || 0;
+      return tb - ta;
     }
     return a.tipo.localeCompare(b.tipo);
   });
@@ -380,9 +321,69 @@ function ListaOcorrencias(): JSX.Element {
     navigate(path);
   };
 
-  const handleViewDetail = (id: number) => {
+  const handleViewDetail = (id: string) => {
     navigate(`/visualizacao/${id}`);
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    let cancelled = false;
+
+    const API_BASE = (typeof import.meta !== "undefined" ? (import.meta as any).env?.VITE_API_URL : "") || "";
+    const base = API_BASE ? API_BASE.replace(/\/$/, "") : "";
+    const url = `${base}/api/ocorrencia`;
+
+    (async () => {
+      try {
+        const res = await fetch(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!res.ok) throw new Error(`Resposta não OK: ${res.status}`);
+
+        const body = await res.json();
+        const list = body?.data || body?.ocorrencias || body;
+
+        const normalized: Ocorrencia[] = (Array.isArray(list) ? list : []).map((o: any) => {
+          const rawDate = o.data_hora || o.dataHora || o.data || o.created_at;
+          const ts = rawDate ? new Date(rawDate).getTime() : undefined;
+          const dateStr = ts ? new Date(ts).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—';
+
+          const rawStatus = String(o?.status ?? '').toLowerCase();
+          const status = (
+            !rawStatus || rawStatus === 'open' || rawStatus === 'aberta' || rawStatus === 'aberto'
+          ) ? 'Em aberto'
+          : (rawStatus.includes('in_progress') || rawStatus.includes('andamento') || rawStatus.includes('em_andamento') || rawStatus.includes('em-andamento') || rawStatus.includes('em andamento')) ? 'Andamento'
+          : (rawStatus.includes('closed') || rawStatus.includes('fechado') || rawStatus.includes('concluida') || rawStatus.includes('concluido') || rawStatus.includes('cancel')) ? 'Fechado'
+          : 'Em aberto';
+
+          return {
+            id: String(o.id ?? o._id ?? o.codigo ?? o.numero ?? ''),
+            tipo: o.tipoOcorrencia || o.tipo || o.descricao || '—',
+            criadoPor: o.assinatura_digital || o.assinaturaDigital || o.responsavel || o.nomeAgente || undefined,
+            regiao: o.cidade || o.regiao || o.local || o.unidade || '—',
+            dataHora: dateStr,
+            dataTimestamp: ts,
+            status,
+          } as Ocorrencia;
+        });
+
+        if (!cancelled) setAllOcorrencias(normalized);
+      } catch (err) {
+        console.error("Erro ao buscar ocorrências (lista):", err);
+        if (!cancelled) setAllOcorrencias([]);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const renderPageNumbers = () => {
     const pageNumbers = [];
