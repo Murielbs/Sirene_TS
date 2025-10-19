@@ -29,5 +29,13 @@ router.get('/:id', async (req: Request, res: Response) => {
 		res.status(500).json({ erro: 'Erro interno ao buscar ocorrência.' });
 	}
 });
+router.put('/:id', async (req: Request, res: Response) => {
+	try {
+		await OcorrenciaController.atualizarOcorrencia(req, res);
+	} catch (error) {
+		console.error('Erro ao atualizar ocorrência:', error);
+		res.status(500).json({ erro: 'Erro interno ao atualizar ocorrência.' });
+	}
+});
 
 export default router;

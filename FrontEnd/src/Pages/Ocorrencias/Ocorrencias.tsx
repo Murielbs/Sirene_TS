@@ -19,6 +19,10 @@ interface Ocorrencia {
   dataHora: string;
   status: string;
   dataTimestamp?: number;
+  prioridade?: string;
+  endereco?: string;
+  numero?: string;
+  pontoReferencia?: string;
 }
 
 // dados de ocorrências virão do backend; não usar mocks estáticos aqui
@@ -102,8 +106,9 @@ const NewOcorrenciaModal: React.FC<NewOcorrenciaModalProps> = ({ onClose }) => {
                 <label>Status</label>
                 <select className={styles.modalInput} required>
                   <option value="">Status</option>
-                  <option value="ativo">Ativo</option>
-                  <option value="pendente">Pendente</option>
+                  <option value="ativo">ABERTA</option>
+                  <option value="pendente">EM ANDAMENTO</option>
+                  <option value="pendente">CONCLUIDA</option>
                 </select>
               </div>
             </div>
@@ -402,6 +407,10 @@ function ListaOcorrencias(): JSX.Element {
               dataHora: dateStr,
               dataTimestamp: ts,
               status,
+              prioridade: o.prioridade || o.priority || undefined,
+              endereco: o.endereco || o.address || undefined,
+              numero: o.numero || o.number || undefined,
+              pontoReferencia: o.ponto_referencia || o.pontoReferencia || o.pontoReferencia || undefined,
             } as Ocorrencia;
           }
         );

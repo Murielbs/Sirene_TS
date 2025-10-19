@@ -1,14 +1,5 @@
 import React, { useEffect, useState, type JSX } from "react";
-import {
-  LayoutDashboard,
-  Users,
-  FileText,
-  BarChart,
-  Settings,
-  LogOut,
-  ChevronLeft,
-  MapPin,
-} from "lucide-react";
+import { ChevronLeft, MapPin } from "lucide-react";
 import styles from "./visualizacao.module.css";
 import { useNavigate, useParams } from "react-router-dom";
 import PaginaIncialSvg from "../../img/PaginaIncial.svg";
@@ -72,6 +63,7 @@ function DetalheOcorrencia(): JSX.Element {
   const navigate = useNavigate();
   const { id } = useParams();
   const [data, setData] = useState<DetalheOcorrenciaData | null>(null);
+
 
   useEffect(() => {
     if (!id) return;
@@ -278,6 +270,7 @@ function DetalheOcorrencia(): JSX.Element {
         <div className={styles.detailGrid}>
           <div className={styles.detailCard}>
             <div className={styles.detailInfoList}>
+              
               <DetailItem
                 label="Status"
                 value={data?.status ?? "—"}
@@ -285,6 +278,7 @@ function DetalheOcorrencia(): JSX.Element {
               />
               <DetailItem label="Tipo" value={data?.tipo ?? "—"} />
               <DetailItem label="Prioridade" value={data?.prioridade ?? "—"} />
+              
               <DetailItem label="Data/Hora" value={data?.dataHora ?? "—"} />
               <DetailItem label="Criado por" value={data?.criadoPor ?? "—"} />
             </div>
