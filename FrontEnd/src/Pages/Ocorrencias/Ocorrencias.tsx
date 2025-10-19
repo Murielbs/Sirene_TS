@@ -45,11 +45,25 @@ const MetricCard: React.FC<MetricCardProps> = ({ title, value, unit }) => (
 
 interface NewOcorrenciaModalProps {
   onClose: () => void;
+  onCreated?: (created: Ocorrencia) => void;
 }
 
-const NewOcorrenciaModal: React.FC<NewOcorrenciaModalProps> = ({ onClose }) => {
+const NewOcorrenciaModal: React.FC<NewOcorrenciaModalProps> = ({ onClose, onCreated }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 3;
+
+  // campos do formulário
+  const [tipo, setTipo] = useState("");
+  const [dataHoraInput, setDataHoraInput] = useState("");
+  const [prioridade, setPrioridade] = useState("");
+  const [status, setStatus] = useState("");
+  const [endereco, setEndereco] = useState("");
+  const [numero, setNumero] = useState("");
+  const [bairro, setBairro] = useState("");
+  const [cidade, setCidade] = useState("");
+  const [regiao, setRegiao] = useState("");
+  const [pontoReferencia, setPontoReferencia] = useState("");
+  const [descricaoDetalhada, setDescricaoDetalhada] = useState("");
 
   const renderPassos = () => (
     <div className={styles.stepIndicator}>
@@ -80,6 +94,8 @@ const NewOcorrenciaModal: React.FC<NewOcorrenciaModalProps> = ({ onClose }) => {
                   className={styles.modalInput}
                   placeholder="Tipo de ocorrência"
                   required
+                  value={tipo}
+                  onChange={(e) => setTipo(e.target.value)}
                 />
               </div>
               <div className={styles.formGroup}>
@@ -88,6 +104,8 @@ const NewOcorrenciaModal: React.FC<NewOcorrenciaModalProps> = ({ onClose }) => {
                   type="datetime-local"
                   className={styles.modalInput}
                   required
+                  value={dataHoraInput}
+                  onChange={(e) => setDataHoraInput(e.target.value)}
                 />
               </div>
             </div>
@@ -95,7 +113,7 @@ const NewOcorrenciaModal: React.FC<NewOcorrenciaModalProps> = ({ onClose }) => {
             <div className={styles.formRow}>
               <div className={styles.formGroup}>
                 <label>Prioridade</label>
-                <select className={styles.modalInput} required>
+                <select className={styles.modalInput} required value={prioridade} onChange={(e) => setPrioridade(e.target.value)}>
                   <option value="">Prioridade</option>
                   <option value="baixa">Baixa</option>
                   <option value="media">Média</option>
@@ -104,11 +122,11 @@ const NewOcorrenciaModal: React.FC<NewOcorrenciaModalProps> = ({ onClose }) => {
               </div>
               <div className={styles.formGroup}>
                 <label>Status</label>
-                <select className={styles.modalInput} required>
+                <select className={styles.modalInput} required value={status} onChange={(e) => setStatus(e.target.value)}>
                   <option value="">Status</option>
-                  <option value="ativo">ABERTA</option>
-                  <option value="pendente">EM ANDAMENTO</option>
-                  <option value="pendente">CONCLUIDA</option>
+                  <option value="Em aberto">ABERTA</option>
+                  <option value="Andamento">EM ANDAMENTO</option>
+                  <option value="Fechado">CONCLUIDA</option>
                 </select>
               </div>
             </div>
@@ -125,6 +143,8 @@ const NewOcorrenciaModal: React.FC<NewOcorrenciaModalProps> = ({ onClose }) => {
                   className={styles.modalInput}
                   placeholder="Endereço"
                   required
+                  value={endereco}
+                  onChange={(e) => setEndereco(e.target.value)}
                 />
               </div>
               <div className={styles.formGroupSmall}>
@@ -134,6 +154,8 @@ const NewOcorrenciaModal: React.FC<NewOcorrenciaModalProps> = ({ onClose }) => {
                   className={styles.modalInput}
                   placeholder="Número"
                   required
+                  value={numero}
+                  onChange={(e) => setNumero(e.target.value)}
                 />
               </div>
             </div>
@@ -146,6 +168,8 @@ const NewOcorrenciaModal: React.FC<NewOcorrenciaModalProps> = ({ onClose }) => {
                   className={styles.modalInput}
                   placeholder="Bairro"
                   required
+                  value={bairro}
+                  onChange={(e) => setBairro(e.target.value)}
                 />
               </div>
               <div className={styles.formGroupSmall}>
@@ -155,15 +179,17 @@ const NewOcorrenciaModal: React.FC<NewOcorrenciaModalProps> = ({ onClose }) => {
                   className={styles.modalInput}
                   placeholder="Cidade"
                   required
+                  value={cidade}
+                  onChange={(e) => setCidade(e.target.value)}
                 />
               </div>
               <div className={styles.formGroupSmall}>
                 <label>Região</label>
-                <select className={styles.modalInput} required>
+                <select className={styles.modalInput} required value={regiao} onChange={(e) => setRegiao(e.target.value)}>
                   <option value="">Região</option>
                   <option value="RegiaoMetropolitana">(COM)</option>
                   <option value="AgresteZonaDaMata">(COInter/I)</option>
-                  <option value="Sertão">(COInter/II)</option>
+                  <option value="Sertao">(COInter/II)</option>
                   {/* Opções de Região */}
                 </select>
               </div>
@@ -175,6 +201,8 @@ const NewOcorrenciaModal: React.FC<NewOcorrenciaModalProps> = ({ onClose }) => {
                 type="text"
                 className={styles.modalInput}
                 placeholder="Ponto de referência (Opcional)"
+                value={pontoReferencia}
+                onChange={(e) => setPontoReferencia(e.target.value)}
               />
             </div>
           </form>
@@ -188,6 +216,8 @@ const NewOcorrenciaModal: React.FC<NewOcorrenciaModalProps> = ({ onClose }) => {
                 className={styles.modalTextarea}
                 placeholder="Descrição detalhada (opcional)"
                 rows={5}
+                value={descricaoDetalhada}
+                onChange={(e) => setDescricaoDetalhada(e.target.value)}
               ></textarea>
             </div>
 
@@ -216,8 +246,50 @@ const NewOcorrenciaModal: React.FC<NewOcorrenciaModalProps> = ({ onClose }) => {
 
   const handleNext = () =>
     setCurrentStep((prev) => Math.min(totalSteps, prev + 1));
-  const handleSubmit = () => {
-    onClose();
+  
+
+  const handleCreate = async () => {
+    const token = localStorage.getItem('token');
+    const API_BASE =
+      (typeof import.meta !== 'undefined'
+        ? (import.meta as any).env?.VITE_API_URL
+        : '') || '';
+    const base = API_BASE ? API_BASE.replace(/\/$/, '') : '';
+    const url = `${base}/api/ocorrencia`;
+
+    const payload: any = {
+      tipoOcorrencia: tipo,
+      dataHora: dataHoraInput ? new Date(dataHoraInput).toISOString() : new Date().toISOString(),
+      prioridade,
+      status,
+      endereco,
+      numero,
+      bairro,
+      cidade,
+      regiao,
+      pontoReferencia,
+      descricao: descricaoDetalhada,
+    };
+
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) throw new Error(`Status: ${res.status}`);
+      const body = await res.json();
+      const created = body?.data || body;
+      if (onCreated && created) onCreated(created as Ocorrencia);
+      onClose();
+    } catch (err) {
+      console.error('Erro ao criar ocorrência:', err);
+      alert('Erro ao criar ocorrência. Veja o console para detalhes.');
+    }
   };
 
   return (
@@ -252,7 +324,7 @@ const NewOcorrenciaModal: React.FC<NewOcorrenciaModalProps> = ({ onClose }) => {
             <button
               type="button"
               className={styles.botaoCadastrar}
-              onClick={handleSubmit}
+              onClick={handleCreate}
             >
               CADASTRAR
             </button>
@@ -332,99 +404,95 @@ function ListaOcorrencias(): JSX.Element {
     navigate(`/visualizacao/${id}`);
   };
 
-  useEffect(() => {
+  const fetchOcorrencias = async () => {
     const token = localStorage.getItem("token");
     if (!token) return;
 
-    let cancelled = false;
+    try {
+      const API_BASE =
+        (typeof import.meta !== "undefined"
+          ? (import.meta as any).env?.VITE_API_URL
+          : "") || "";
+      const base = API_BASE ? API_BASE.replace(/\/$/, "") : "";
+      const url = `${base}/api/ocorrencia`;
 
-    const API_BASE =
-      (typeof import.meta !== "undefined"
-        ? (import.meta as any).env?.VITE_API_URL
-        : "") || "";
-    const base = API_BASE ? API_BASE.replace(/\/$/, "") : "";
-    const url = `${base}/api/ocorrencia`;
+      const res = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
-    (async () => {
-      try {
-        const res = await fetch(url, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
+      if (!res.ok) throw new Error(`Resposta não OK: ${res.status}`);
 
-        if (!res.ok) throw new Error(`Resposta não OK: ${res.status}`);
+      const body = await res.json();
+      const list = body?.data || body?.ocorrencias || body;
 
-        const body = await res.json();
-        const list = body?.data || body?.ocorrencias || body;
+      const normalized: Ocorrencia[] = (Array.isArray(list) ? list : []).map(
+        (o: any) => {
+          const rawDate = o.data_hora || o.dataHora || o.data || o.created_at;
+          const ts = rawDate ? new Date(rawDate).getTime() : undefined;
+          const dateStr = ts
+            ? new Date(ts).toLocaleString("pt-BR", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+              })
+            : "—";
 
-        const normalized: Ocorrencia[] = (Array.isArray(list) ? list : []).map(
-          (o: any) => {
-            const rawDate = o.data_hora || o.dataHora || o.data || o.created_at;
-            const ts = rawDate ? new Date(rawDate).getTime() : undefined;
-            const dateStr = ts
-              ? new Date(ts).toLocaleString("pt-BR", {
-                  day: "2-digit",
-                  month: "2-digit",
-                  year: "numeric",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })
-              : "—";
+          const rawStatus = String(o?.status ?? "").toLowerCase();
+          const status =
+            !rawStatus ||
+            rawStatus === "open" ||
+            rawStatus === "aberta" ||
+            rawStatus === "aberto"
+              ? "Em aberto"
+              : rawStatus.includes("in_progress") ||
+                rawStatus.includes("andamento") ||
+                rawStatus.includes("em_andamento") ||
+                rawStatus.includes("em-andamento") ||
+                rawStatus.includes("em andamento")
+              ? "Andamento"
+              : rawStatus.includes("closed") ||
+                rawStatus.includes("fechado") ||
+                rawStatus.includes("concluida") ||
+                rawStatus.includes("concluido") ||
+                rawStatus.includes("cancel")
+              ? "Fechado"
+              : "Em aberto";
 
-            const rawStatus = String(o?.status ?? "").toLowerCase();
-            const status =
-              !rawStatus ||
-              rawStatus === "open" ||
-              rawStatus === "aberta" ||
-              rawStatus === "aberto"
-                ? "Em aberto"
-                : rawStatus.includes("in_progress") ||
-                  rawStatus.includes("andamento") ||
-                  rawStatus.includes("em_andamento") ||
-                  rawStatus.includes("em-andamento") ||
-                  rawStatus.includes("em andamento")
-                ? "Andamento"
-                : rawStatus.includes("closed") ||
-                  rawStatus.includes("fechado") ||
-                  rawStatus.includes("concluida") ||
-                  rawStatus.includes("concluido") ||
-                  rawStatus.includes("cancel")
-                ? "Fechado"
-                : "Em aberto";
+          return {
+            id: String(o.id ?? o._id ?? o.codigo ?? o.numero ?? ""),
+            tipo: o.tipoOcorrencia || o.tipo || o.descricao || "—",
+            criadoPor:
+              o.assinatura_digital ||
+              o.assinaturaDigital ||
+              o.responsavel ||
+              o.nomeAgente ||
+              undefined,
+            regiao: o.cidade || o.regiao || o.local || o.unidade || "—",
+            dataHora: dateStr,
+            dataTimestamp: ts,
+            status,
+            prioridade: o.prioridade || o.priority || undefined,
+            endereco: o.endereco || o.address || undefined,
+            numero: o.numero || o.number || undefined,
+            pontoReferencia: o.ponto_referencia || o.pontoReferencia || o.pontoReferencia || undefined,
+          } as Ocorrencia;
+        }
+      );
 
-            return {
-              id: String(o.id ?? o._id ?? o.codigo ?? o.numero ?? ""),
-              tipo: o.tipoOcorrencia || o.tipo || o.descricao || "—",
-              criadoPor:
-                o.assinatura_digital ||
-                o.assinaturaDigital ||
-                o.responsavel ||
-                o.nomeAgente ||
-                undefined,
-              regiao: o.cidade || o.regiao || o.local || o.unidade || "—",
-              dataHora: dateStr,
-              dataTimestamp: ts,
-              status,
-              prioridade: o.prioridade || o.priority || undefined,
-              endereco: o.endereco || o.address || undefined,
-              numero: o.numero || o.number || undefined,
-              pontoReferencia: o.ponto_referencia || o.pontoReferencia || o.pontoReferencia || undefined,
-            } as Ocorrencia;
-          }
-        );
+      setAllOcorrencias(normalized);
+    } catch (err) {
+      console.error("Erro ao buscar ocorrências (lista):", err);
+      setAllOcorrencias([]);
+    }
+  };
 
-        if (!cancelled) setAllOcorrencias(normalized);
-      } catch (err) {
-        console.error("Erro ao buscar ocorrências (lista):", err);
-        if (!cancelled) setAllOcorrencias([]);
-      }
-    })();
-
-    return () => {
-      cancelled = true;
-    };
+  useEffect(() => {
+    fetchOcorrencias();
   }, []);
 
   const renderPageNumbers = () => {
@@ -674,6 +742,9 @@ function ListaOcorrencias(): JSX.Element {
       {isNewOcorrenciaModalOpen && (
         <NewOcorrenciaModal
           onClose={() => setIsNewOcorrenciaModalOpen(false)}
+          onCreated={() => {
+            fetchOcorrencias();
+          }}
         />
       )}
     </div>

@@ -1,4 +1,4 @@
-import React, { useState, type JSX } from "react";
+import React, { useState, useEffect, type JSX } from "react";
 import { Search, SlidersHorizontal } from "lucide-react";
 import LogoSvg from "../../img/Logo.svg";
 import PaginaIncialSvg from "../../img/PaginaIncial.svg";
@@ -24,30 +24,7 @@ import {
 import styles from "../Ocorrencias/Ocorrencias.module.css";
 import { useNavigate } from "react-router-dom";
 
-const dataTipo = [
-  { name: "Vazamentos", valor: 100 },
-  { name: "Acidentes", valor: 120 },
-  { name: "Resgates", valor: 80 },
-  { name: "Incêndios", valor: 90 },
-  { name: "Afogamentos", valor: 110 },
-  { name: "Outros", valor: 45 },
-];
-
-const dataRegiao = [
-  { dia: "SEG", COM: 60, COInter1: 80, COInter2: 40 },
-  { dia: "TER", COM: 30, COInter1: 50, COInter2: 65 },
-  { dia: "QUA", COM: 90, COInter1: 85, COInter2: 30 },
-  { dia: "QUI", COM: 70, COInter1: 110, COInter2: 80 },
-  { dia: "SEX", COM: 120, COInter1: 70, COInter2: 50 },
-  { dia: "SÁB", COM: 80, COInter1: 115, COInter2: 15 },
-  { dia: "DOM", COM: 95, COInter1: 60, COInter2: 100 },
-];
-
-const dataTurno = [
-  { name: "Noite", value: 10000, color: "var(--primary-dark)" },
-  { name: "Tarde", value: 4000, color: "var(--status-in-progress)" },
-  { name: "Manhã", value: 2000, color: "var(--status-closed)" },
-];
+// Dados serão populados pela API
 
 interface MetricCardProps {
   title: string;
@@ -100,10 +77,119 @@ const VisualizationPanel: React.FC<VisualizationPanelProps> = ({
 function DashboardAdmin(): JSX.Element {
   const navigate = useNavigate();
   const [isFilterActive, setIsFilterActive] = useState(false);
+  const [totalOcorrencias, setTotalOcorrencias] = useState(0);
+  const [ocorrenciasAbertas, setOcorrenciasAbertas] = useState(0);
+  const [resolvidas, setResolvidas] = useState(0);
 
-  const totalOcorrencias = "530";
-  const ocorrenciasAbertas = "30";
-  const resolvidas = "500";
+  const [dataTipo, setDataTipo] = useState<{ name: string; valor: number }[]>([]);
+  const [dataRegiao, setDataRegiao] = useState<any[]>([
+    { dia: "SEG", COM: 0, COInter1: 0, COInter2: 0 },
+    { dia: "TER", COM: 0, COInter1: 0, COInter2: 0 },
+    { dia: "QUA", COM: 0, COInter1: 0, COInter2: 0 },
+    { dia: "QUI", COM: 0, COInter1: 0, COInter2: 0 },
+    { dia: "SEX", COM: 0, COInter1: 0, COInter2: 0 },
+    { dia: "SÁB", COM: 0, COInter1: 0, COInter2: 0 },
+    { dia: "DOM", COM: 0, COInter1: 0, COInter2: 0 },
+  ]);
+  const [dataTurno, setDataTurno] = useState<any[]>([
+    { name: "Noite", value: 0, color: "var(--primary-dark)" },
+    { name: "Tarde", value: 0, color: "var(--status-in-progress)" },
+    { name: "Manhã", value: 0, color: "var(--status-closed)" },
+  ]);
+
+  // Manhã: 06:00 - 11:59
+  // Tarde: 12:00 - 17:59
+  // Noite: 18:00 - 05:59
+  const getTurnoFromDate = (d: Date) => {
+    const h = d.getHours();
+    if (h >= 6 && h <= 11) return "Manhã";
+    if (h >= 12 && h <= 17) return "Tarde";
+    return "Noite"; // 18-23 e 0-5
+  };
+
+  const fetchDashboardData = async () => {
+    const token = localStorage.getItem("token");
+    const API_BASE = (typeof import.meta !== "undefined" ? (import.meta as any).env?.VITE_API_URL : "") || "";
+    const base = API_BASE ? API_BASE.replace(/\/$/, "") : "";
+    const url = `${base}/api/ocorrencia`;
+    try {
+      const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+      if (!res.ok) throw new Error(`Status ${res.status}`);
+      const body = await res.json();
+      const list = body?.data || body?.ocorrencias || body || [];
+
+      // reset counters
+      let total = 0;
+      let abertas = 0;
+      let concluidas = 0;
+
+      const tipoMap: Record<string, number> = {};
+
+      const regionWeek = [0, 0, 0, 0, 0, 0, 0].map(() => ({ COM: 0, COInter1: 0, COInter2: 0 }));
+
+      const turnoCounts: Record<string, number> = { Manhã: 0, Tarde: 0, Noite: 0 };
+
+      (Array.isArray(list) ? list : []).forEach((o: any) => {
+        total += 1;
+        const rawStatus = String(o?.status ?? "").toLowerCase();
+        const status =
+          !rawStatus ||
+          rawStatus === "open" ||
+          rawStatus === "aberta" ||
+          rawStatus === "aberto"
+            ? "Em aberto"
+            : rawStatus.includes("in_progress") || rawStatus.includes("andamento")
+            ? "Andamento"
+            : rawStatus.includes("closed") || rawStatus.includes("fech") || rawStatus.includes("conclu")
+            ? "Fechado"
+            : "Em aberto";
+
+        if (status === "Em aberto") abertas += 1;
+        if (status === "Fechado") concluidas += 1;
+
+        const tipo = o.tipoOcorrencia || o.tipo || o.descricao || "Outros";
+        tipoMap[tipo] = (tipoMap[tipo] || 0) + 1;
+
+        // região: simplificação por valor em o.regiao ou o.cidade
+        const reg = (o.regiao || o.cidade || "").toString().toLowerCase();
+        // dia da semana
+        const rawDate = o.data_hora || o.dataHora || o.data || o.created_at;
+        const d = rawDate ? new Date(rawDate) : new Date();
+        const day = d.getDay(); // 0 (domingo) - 6
+
+        if (reg.includes("metrop") || reg.includes("com")) regionWeek[day].COM += 1;
+        else if (reg.includes("interior") || reg.includes("cointer")) regionWeek[day].COInter1 += 1;
+        else regionWeek[day].COInter2 += 1;
+
+        // turno
+        const turno = getTurnoFromDate(d);
+        turnoCounts[turno] = (turnoCounts[turno] || 0) + 1;
+      });
+
+      setTotalOcorrencias(total);
+      setOcorrenciasAbertas(abertas);
+      setResolvidas(concluidas);
+
+      setDataTipo(Object.keys(tipoMap).map((k) => ({ name: k, valor: tipoMap[k] })));
+
+      // montar dataRegiao no formato esperado
+      const dias = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SÁB"];
+      const regData = dias.map((label, i) => ({ dia: label, ...regionWeek[i] }));
+      setDataRegiao(regData as any[]);
+
+      setDataTurno([
+        { name: "Noite", value: turnoCounts["Noite"] || 0, color: "var(--primary-dark)" },
+        { name: "Tarde", value: turnoCounts["Tarde"] || 0, color: "var(--status-in-progress)" },
+        { name: "Manhã", value: turnoCounts["Manhã"] || 0, color: "var(--status-closed)" },
+      ]);
+    } catch (err) {
+      console.error("Erro ao carregar dashboard:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
 
   const handleMenuItemClick = (path: string) => {
     navigate(path);
@@ -230,9 +316,9 @@ function DashboardAdmin(): JSX.Element {
         </div>
 
         <div className={styles.metricCardsContainer}>
-          <MetricCard title="Total de Ocorrências" value={totalOcorrencias} />
-          <MetricCard title="Ocorrências Abertas" value={ocorrenciasAbertas} />
-          <MetricCard title="Resolvidas" value={resolvidas} />
+          <MetricCard title="Total de Ocorrências" value={String(totalOcorrencias)} />
+            <MetricCard title="Ocorrências Abertas" value={String(ocorrenciasAbertas)} />
+            <MetricCard title="Resolvidas" value={String(resolvidas)} />
           <MetricCard
             title="Tempo Médio de Resposta"
             value="17"
