@@ -100,7 +100,6 @@ const MetricCard: React.FC<MetricCardProps> = ({ title, value, unit }) => (
   </div>
 );
 
-// --- COMPONENTE MODAL MULTI-ETAPA ---
 interface NewOcorrenciaModalProps {
   onClose: () => void;
 }
@@ -109,65 +108,158 @@ const NewOcorrenciaModal: React.FC<NewOcorrenciaModalProps> = ({ onClose }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 3;
 
+  const renderPassos = () => (
+    <div className={styles.stepIndicator}>
+      {[1, 2, 3].map((step) => (
+        <div
+          key={step}
+          // Aplica a classe 'active' se a etapa for menor ou igual à etapa atual
+          className={`${styles.stepCircle} ${
+            step <= currentStep ? styles.active : "" // Usando 'active' para a cor de fundo sólida
+          }`}
+        >
+          {step}
+        </div>
+      ))}
+    </div>
+  );
+
   const renderStepContent = (step: number): JSX.Element => {
     switch (step) {
       case 1:
         return (
-          <form className={styles.modalForm}>
-            <h3 className={styles.formTitle}>Dados da Ocorrência</h3>
-            <input
-              type="text"
-              className={styles.modalInput}
-              placeholder="Tipo de Ocorrência"
-              required
-            />
-            <select className={styles.modalInput} required>
-              <option value="">Selecione a Prioridade</option>
-              <option value="alta">Alta</option>
-              <option value="media">Média</option>
-              <option value="baixa">Baixa</option>
-            </select>
-            <textarea
-              className={styles.modalInput}
-              placeholder="Descrição detalhada (opcional)"
-            ></textarea>
+          <form className={styles.modalFormPasso}>
+            <div className={styles.formRow}>
+              <div className={styles.formGroup}>
+                <label>Tipo de ocorrência</label>
+                <input
+                  type="text"
+                  className={styles.modalInput}
+                  placeholder="Tipo de ocorrência"
+                  required
+                />
+              </div>
+              <div className={styles.formGroup}>
+                <label>Data e Hora</label>
+                <input
+                  type="datetime-local"
+                  className={styles.modalInput}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className={styles.formRow}>
+              <div className={styles.formGroup}>
+                <label>Prioridade</label>
+                <select className={styles.modalInput} required>
+                  <option value="">Prioridade</option>
+                  <option value="baixa">Baixa</option>
+                  <option value="media">Média</option>
+                  <option value="alta">Alta</option>
+                </select>
+              </div>
+              <div className={styles.formGroup}>
+                <label>Status</label>
+                <select className={styles.modalInput} required>
+                  <option value="">Status</option>
+                  <option value="ativo">Ativo</option>
+                  <option value="pendente">Pendente</option>
+                </select>
+              </div>
+            </div>
           </form>
         );
       case 2:
         return (
-          <form className={styles.modalForm}>
-            <h3 className={styles.formTitle}>Localização</h3>
-            <input
-              type="text"
-              className={styles.modalInput}
-              placeholder="CEP / Logradouro"
-              required
-            />
-            <input
-              type="text"
-              className={styles.modalInput}
-              placeholder="Referência (opcional)"
-            />
-            <input
-              type="text"
-              className={styles.modalInput}
-              placeholder="Produto Químico (se aplicável)"
-            />
-            <div className={styles.mapPlaceholder}>Mapa de localização</div>
+          <form className={styles.modalFormPasso}>
+            <div className={styles.formRow}>
+              <div className={styles.formGroupFull}>
+                <label>Endereço</label>
+                <input
+                  type="text"
+                  className={styles.modalInput}
+                  placeholder="Endereço"
+                  required
+                />
+              </div>
+              <div className={styles.formGroupSmall}>
+                <label>Número</label>
+                <input
+                  type="text"
+                  className={styles.modalInput}
+                  placeholder="Número"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className={styles.formRow}>
+              <div className={styles.formGroupSmall}>
+                <label>Bairro</label>
+                <input
+                  type="text"
+                  className={styles.modalInput}
+                  placeholder="Bairro"
+                  required
+                />
+              </div>
+              <div className={styles.formGroupSmall}>
+                <label>Cidade</label>
+                <input
+                  type="text"
+                  className={styles.modalInput}
+                  placeholder="Cidade"
+                  required
+                />
+              </div>
+              <div className={styles.formGroupSmall}>
+                <label>Região</label>
+                <select className={styles.modalInput} required>
+                  <option value="">Região</option>
+                  {/* Opções de Região */}
+                </select>
+              </div>
+            </div>
+
+            <div className={styles.formGroup}>
+              <label>Ponto de referência</label>
+              <input
+                type="text"
+                className={styles.modalInput}
+                placeholder="Ponto de referência (Opcional)"
+              />
+            </div>
           </form>
         );
       case 3:
         return (
-          <form className={styles.modalForm}>
-            <h3 className={styles.formTitle}>Anexos e Observações</h3>
-            <p className={styles.uploadInfo}>
-              Clique ou arraste imagens e vídeos para anexar.
-            </p>
-            <div className={styles.uploadBox}>Clique para fazer upload</div>
-            <textarea
-              className={styles.modalInput}
-              placeholder="Observações finais (opcional)"
-            ></textarea>
+          <form className={styles.modalFormPasso}>
+            <div className={styles.formGroup}>
+              <label>Descrição detalhada</label>
+              <textarea
+                className={styles.modalTextarea}
+                placeholder="Descrição detalhada (opcional)"
+                rows={5}
+              ></textarea>
+            </div>
+
+            <div className={styles.formGroup}>
+              <label>Anexo de mídia</label>
+              <div className={styles.uploadContainer}>
+                <p>Arraste o arquivo ou clique para fazer o upload</p>
+                <div className={styles.uploadIcon}>
+                  <span role="img" aria-label="upload icon">
+                    ☁️
+                  </span>
+                </div>
+                <input
+                  type="file"
+                  multiple
+                  className={styles.hiddenFileInput}
+                />
+              </div>
+            </div>
           </form>
         );
       default:
@@ -185,55 +277,42 @@ const NewOcorrenciaModal: React.FC<NewOcorrenciaModalProps> = ({ onClose }) => {
   return (
     <div className={styles.modalOverlay}>
       <div className={`${styles.modalContent} ${styles.multistepModal}`}>
-        <div className={styles.stepIndicator}>
-          {[1, 2, 3].map((step) => (
-            <div
-              key={step}
-              className={`${styles.stepCircle} ${
-                step <= currentStep ? styles.stepActive : ""
-              }`}
-            >
-              {step}
-            </div>
-          ))}
+        
+        <div className={styles.stepHeader}>
+            {renderPassos()}
         </div>
+        
 
-        <div className={styles.stepContent}>
-          {renderStepContent(currentStep)}
+        <div className={styles.boxFundoBranca}> 
+            <div className={styles.stepContent}>
+                {renderStepContent(currentStep)}
+            </div>
         </div>
 
         <div className={styles.modalActions}>
           <button
             type="button"
-            className={`${styles.button} ${styles.buttonSecondary}`}
+            className={styles.botaoCancelar}
             onClick={onClose}
           >
-            Cancelar
+            CANCELAR
           </button>
-          {currentStep > 1 && (
-            <button
-              type="button"
-              className={styles.button}
-              onClick={handleBack}
-            >
-              Voltar
-            </button>
-          )}
+          
           {currentStep < totalSteps ? (
             <button
               type="button"
-              className={`${styles.button} ${styles.buttonPrimary}`}
+              className={styles.botaoAvancar}
               onClick={handleNext}
             >
-              Próximo
+              AVANÇAR
             </button>
           ) : (
             <button
               type="button"
-              className={`${styles.button} ${styles.buttonPrimary}`}
+              className={styles.botaoCadastrar}
               onClick={handleSubmit}
             >
-              Finalizar Registro
+              CADASTRAR
             </button>
           )}
         </div>
@@ -241,7 +320,6 @@ const NewOcorrenciaModal: React.FC<NewOcorrenciaModalProps> = ({ onClose }) => {
     </div>
   );
 };
-// --- FIM DO MODAL MULTI-ETAPA ---
 
 function ListaOcorrencias(): JSX.Element {
   const navigate = useNavigate();
@@ -251,7 +329,6 @@ function ListaOcorrencias(): JSX.Element {
   const [currentPage, setCurrentPage] = useState(1);
   const ocorrenciasPerPage = 8;
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  // NOVO ESTADO PARA O MODAL MULTI-ETAPA
   const [isNewOcorrenciaModalOpen, setIsNewOcorrenciaModalOpen] =
     useState(false);
 
@@ -458,7 +535,6 @@ function ListaOcorrencias(): JSX.Element {
           <div className={styles.controlsRightGroup}>
             <button
               className={styles.newOcorrenciaButton}
-              // CHAMA O NOVO MODAL
               onClick={() => setIsNewOcorrenciaModalOpen(true)}
             >
               <Plus size={18} />
@@ -550,7 +626,6 @@ function ListaOcorrencias(): JSX.Element {
         </div>
       </div>
 
-      {/* RENDERIZAÇÃO DO MODAL MULTI-ETAPA */}
       {isNewOcorrenciaModalOpen && (
         <NewOcorrenciaModal
           onClose={() => setIsNewOcorrenciaModalOpen(false)}

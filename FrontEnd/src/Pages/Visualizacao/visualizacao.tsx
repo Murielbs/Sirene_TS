@@ -1,5 +1,5 @@
 import React, { type JSX } from 'react';
-import { LayoutDashboard, Users, FileText, BarChart, Settings, LogOut, ChevronLeft, AlertCircle, MapPin } from 'lucide-react';
+import { LayoutDashboard, Users, FileText, BarChart, Settings, LogOut, ChevronLeft, MapPin } from 'lucide-react';
 import styles from './visualizacao.module.css'; 
 import { useNavigate } from 'react-router-dom';
 
@@ -15,7 +15,6 @@ interface DetalheOcorrenciaData {
     localizacaoImagem: string; 
 }
 
-// Mock de dados (simulando que o ID 202530 foi selecionado)
 const mockDetalhe: DetalheOcorrenciaData = {
     id: 202530,
     status: 'Em aberto',
@@ -27,7 +26,6 @@ const mockDetalhe: DetalheOcorrenciaData = {
     localizacaoImagem: 'URL_DA_IMAGEM_DO_MAPA_AQUI' 
 };
 
-// Componente para a lista de informações (Status, Tipo, etc.)
 interface DetailItemProps {
     label: string;
     value: string;
@@ -73,7 +71,7 @@ function DetalheOcorrencia(): JSX.Element {
                 <nav className={styles.navMenu}>
                     
                     <div className={styles.navItem} onClick={() => handleMenuItemClick('/Inicial')}>
-                        <div className={styles.navIcon}><AlertCircle size={20} /></div>
+                        <div className={styles.navIcon}><LayoutDashboard size={20} /></div>
                         <span className={styles.navText}>Pagina inicial</span>
                     </div>
 
@@ -83,7 +81,7 @@ function DetalheOcorrencia(): JSX.Element {
                     </div>
 
                     <div className={styles.navItem} onClick={() => handleMenuItemClick('/dashboard')}>
-                        <div className={styles.navIcon}><LayoutDashboard size={20} /></div>
+                        <div className={styles.navIcon}><BarChart size={20} /></div>
                         <span className={styles.navText}>Dashboard</span>
                     </div>
 
@@ -112,11 +110,11 @@ function DetalheOcorrencia(): JSX.Element {
             <div className={styles.mainContent}>
                 
                 <div className={styles.detailHeader}>
-                    <h1 className={styles.detailTitle}>Visualização de detalhe</h1>
-                    <span className={styles.detailSubtitle}>{data.id}</span>
                     <a className={styles.backLink} onClick={() => navigate('/Ocorrencias')}>
                         <ChevronLeft size={14} /> Voltar para a lista
                     </a>
+                    <h1 className={styles.detailTitle}>Visualização de detalhe</h1>
+                    <span className={styles.detailSubtitle}>{data.id}</span>
                 </div>
 
                 <div className={styles.detailGrid}>
@@ -135,7 +133,7 @@ function DetalheOcorrencia(): JSX.Element {
                     <div className={styles.detailLocationCard}>
                         <h2 className={styles.locationTitle}>Localização</h2>
                         <div className={styles.mapPlaceholder}>
-                             {/*  */}
+                             {/* Conteúdo do mapa aqui */}
                         </div>
                         <div className={styles.locationFooter}>
                             <MapPin size={16} className={styles.locationIcon}/>
@@ -143,9 +141,6 @@ function DetalheOcorrencia(): JSX.Element {
                         </div>
                     </div>
                 </div>
-
-                {/* Exemplo de Badge P solto, se for parte do design */}
-                <div className={styles.pBadge}>P</div>
             </div>
         </div>
     );
