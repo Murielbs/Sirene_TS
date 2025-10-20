@@ -69,21 +69,21 @@
   background-color: var(--background-page);
   color: var(--text-dark);
   display: flex;
-  min-height: 100vh;
   height: 100vh;
+  min-height: 100vh;
   position: relative;
   z-index: 1;
 }
 
 .backLink {
-  position: absolute;
-  top: 1.5rem;
-  right: 0;
-  font-size: 0.9rem;
+  align-items: center;
   color: var(--text-subtle);
   cursor: pointer;
   display: flex;
-  align-items: center;
+  font-size: 0.9rem;
+  position: absolute;
+  top: 0;
+  right: 0;
   transition: color 0.2s;
 }
 
@@ -102,8 +102,8 @@ body {
 
 .blurBackground {
   filter: blur(3px) grayscale(50%);
-  transition: filter 0.3s ease;
   pointer-events: none;
+  transition: filter 0.3s ease;
 }
 
 .controlsBar {
@@ -124,9 +124,25 @@ body {
   background-color: var(--background-card);
   border-radius: var(--radius-default);
   box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.05);
-  padding: 1.5rem;
   flex: 1;
   min-width: 400px;
+  padding: 1.5rem;
+}
+
+.detailDescription {
+  background-color: var(--background-card);
+  border-radius: var(--radius-default);
+  box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+  margin-top: 2rem;
+  padding: 1.5rem;
+  width: 100%;
+}
+
+.detailDescription p {
+  color: var(--text-dark);
+  font-size: 1rem;
+  line-height: 1.5;
 }
 
 .detailGrid {
@@ -137,10 +153,7 @@ body {
 }
 
 .detailHeader {
-  position: relative;
-  margin-bottom: 2rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border-color);
+  display: none;
 }
 
 .detailInfoList {
@@ -149,11 +162,11 @@ body {
 }
 
 .detailItem {
+  border-bottom: 1px dashed #eee;
   display: flex;
+  font-size: 1rem;
   justify-content: space-between;
   padding: 0.75rem 0;
-  border-bottom: 1px dashed #eee;
-  font-size: 1rem;
 }
 
 .detailItem:last-child {
@@ -169,9 +182,9 @@ body {
   background-color: var(--background-card);
   border-radius: var(--radius-default);
   box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.05);
-  padding: 1.5rem;
   flex: 1;
   min-width: 400px;
+  padding: 1.5rem;
 }
 
 .detailStatusClosed {
@@ -191,22 +204,49 @@ body {
 
 .detailSubtitle {
   color: var(--text-subtle);
+  display: block;
   font-size: 1rem;
   font-weight: 600;
-  display: block;
   margin-top: 0.25rem;
 }
 
 .detailTitle {
+  color: var(--primary-dark);
   font-size: 1.8rem;
   font-weight: 700;
   margin: 0;
-  color: var(--primary-dark);
+}
+
+.detailTitleContainer {
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 2rem;
+  padding-bottom: 0.5rem;
 }
 
 .detailValue {
   color: var(--text-dark);
   font-weight: 600;
+}
+
+.downloadButton {
+  align-items: center;
+  background-color: transparent;
+  border: 1px solid var(--primary-dark);
+  border-radius: var(--radius-default);
+  color: var(--primary-dark);
+  cursor: pointer;
+  display: flex;
+  font-weight: 600;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: auto;
+  padding: 0.75rem 1rem;
+  transition: background-color 0.2s;
+}
+
+.downloadButton:hover {
+  background-color: var(--primary-dark);
+  color: var(--white);
 }
 
 .dropdownArrow {
@@ -235,6 +275,7 @@ body {
   background-color: var(--background-card);
   border: 1px solid var(--border-color);
   border-radius: 0.75rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
   color: var(--text-dark);
   cursor: pointer;
   display: flex;
@@ -243,7 +284,6 @@ body {
   gap: 0.5rem;
   padding: 0.75rem 1.25rem;
   transition: background-color 0.2s, box-shadow 0.2s;
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
 }
 
 .filterButton:hover {
@@ -268,19 +308,19 @@ body {
 }
 
 .locationAddress {
-  font-size: 0.9rem;
   color: var(--text-dark);
+  font-size: 0.9rem;
   font-weight: 600;
 }
 
 .locationFooter {
-  background-color: #f0f0f0;
-  border-radius: 0 0 var(--radius-default) var(--radius-default);
-  padding: 0.75rem 1rem;
-  margin: 1.5rem -1.5rem -1.5rem -1.5rem;
-  display: flex;
   align-items: center;
+  background-color: var(--background-card);
+  border-radius: 0 0 var(--radius-default) var(--radius-default);
+  display: flex;
   gap: 0.5rem;
+  margin: 1.5rem -1.5rem -1.5rem -1.5rem;
+  padding: 0.75rem 1rem;
 }
 
 .locationIcon {
@@ -288,44 +328,69 @@ body {
 }
 
 .locationTitle {
+  color: var(--text-dark);
   font-size: 1.2rem;
   font-weight: 700;
   margin: 0 0 1rem 0;
-  color: var(--text-dark);
+}
+
+.logoImage {
+  height: 70px;
+  margin-right: 0.25rem;
+  width: 70px;
 }
 
 .logoSection {
   align-items: center;
+  border-bottom: none;
   display: flex;
   justify-content: flex-start;
   margin-bottom: 2rem;
   padding: 1.5rem 1rem;
-  border-bottom: none;
-}
-
-.logoImage {
-  width: 70px;
-  height: 70px;
-  margin-right: 0.25rem;
 }
 
 .mainContent {
+  align-items: flex-start;
   background-color: var(--background-page);
+  border-bottom-left-radius: 1.5rem;
+  border-top-left-radius: 1.5rem;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  max-width: none;
   overflow-y: auto;
   padding: 2.5rem 3rem;
-  max-width: none;
-  align-items: flex-start;
-  border-top-left-radius: 1.5rem;
-  border-bottom-left-radius: 1.5rem;
 }
 
-.mapPlaceholder {
-  height: 200px;
-  background-color: #ccc;
+.mapContainer {
   border-radius: var(--radius-default);
+  height: 200px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.mediaGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 1.5rem;
+}
+
+.mediaSection {
+  background-color: var(--background-card);
+  border-radius: var(--radius-default);
+  box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 1.5rem;
+}
+
+.mediaTitle {
+  color: var(--text-dark);
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
 }
 
 .metricCard {
@@ -336,11 +401,11 @@ body {
   display: flex;
   flex: 0 0 calc(33.33% - 1rem);
   flex-direction: column;
-  padding: 1rem 1rem;
-  text-align: center;
   height: auto;
   justify-content: center;
   min-width: 150px;
+  padding: 1rem 1rem;
+  text-align: center;
 }
 
 .metricCardsContainer {
@@ -348,18 +413,19 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 1.5rem;
+  justify-content: space-between;
   margin-bottom: 2rem;
   width: 100%;
 }
 
 .metricTitle {
   color: var(--text-dark);
+  flex-grow: 0;
   font-size: 0.9rem;
   font-weight: 600;
-  margin-bottom: 0.2rem;
   line-height: 1.2;
+  margin-bottom: 0.2rem;
   text-transform: uppercase;
-  flex-grow: 0;
 }
 
 .metricUnit {
@@ -382,15 +448,27 @@ body {
   justify-content: center;
 }
 
+.midiaPlaceholder {
+  align-items: center;
+  background-color: #f7f7f7;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-default);
+  cursor: pointer;
+  display: flex;
+  height: 90px;
+  justify-content: center;
+  width: 90px;
+}
+
 .modalCloseButton {
-  position: absolute;
-  top: 10px;
-  right: 10px;
   background: none;
   border: none;
-  cursor: pointer;
   color: var(--text-subtle);
+  cursor: pointer;
   padding: 5px;
+  position: absolute;
+  right: 10px;
+  top: 10px;
   transition: color 0.2s;
 }
 
@@ -399,58 +477,58 @@ body {
 }
 
 .modalContent {
+  animation: popIn 0.3s forwards;
   background-color: var(--white);
-  padding: 30px;
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  width: 90%;
   max-width: 500px;
+  padding: 30px;
   position: relative;
   transform: scale(0.9);
-  animation: popIn 0.3s forwards;
+  width: 90%;
 }
 
 .modalInput {
-  width: 100%;
-  padding: 10px;
-  margin-top: 15px;
   border: 1px solid #ccc;
   border-radius: 6px;
   box-sizing: border-box;
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
 }
 
 .modalOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  align-items: center;
+  animation: fadeIn 0.3s forwards;
+  backdrop-filter: blur(1px);
   background-color: rgba(0, 0, 0, 0.2);
+  bottom: 0;
   display: flex;
   justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  backdrop-filter: blur(1px);
+  left: 0;
   opacity: 0;
-  animation: fadeIn 0.3s forwards;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 1000;
 }
 
 .modalTitle {
-  margin-top: 0;
-  margin-bottom: 20px;
+  border-bottom: 1px solid #eee;
   color: var(--text-dark);
   font-size: 1.5rem;
-  border-bottom: 1px solid #eee;
+  margin-bottom: 20px;
+  margin-top: 0;
   padding-bottom: 10px;
 }
 
 .navActive {
   background-color: var(--primary-dark);
+  border-left: 4px solid var(--white);
   border-radius: var(--radius-default) 0 0 var(--radius-default);
   color: var(--text-light);
   font-weight: 700;
   margin-left: 0.75rem;
-  border-left: 4px solid var(--white);
   padding-left: calc(1.5rem - 4px);
 }
 
@@ -469,27 +547,27 @@ body {
 }
 
 .navIconImg {
-  width: 20px;
+  display: inline-block;
   height: 20px;
   margin-right: 0.9375rem;
-  display: inline-block;
+  width: 20px;
 }
 
 .navItem {
   align-items: center;
+  border-left: 4px solid transparent;
   border-radius: var(--radius-default) 0 0 var(--radius-default);
   cursor: pointer;
   display: flex;
   font-size: 0.95rem;
   font-weight: 700;
   margin-left: 0.75rem;
-  margin-top: 0;
   margin-right: 0;
+  margin-top: 0;
   padding: 0.8rem 1.5rem;
+  padding-left: calc(1.5rem - 4px);
   position: static;
   transition: background-color 0.2s, border-left 0.2s;
-  border-left: 4px solid transparent;
-  padding-left: calc(1.5rem - 4px);
 }
 
 .navItem:hover:not(.navActive) {
@@ -497,13 +575,13 @@ body {
 }
 
 .navMenu {
+  align-items: stretch;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  justify-content: center;
-  align-items: stretch;
-  padding-top: 0;
   gap: 2rem;
+  justify-content: center;
+  padding-top: 0;
 }
 
 .navText {
@@ -515,6 +593,7 @@ body {
   background-color: var(--white);
   border: 1px solid var(--primary-dark);
   border-radius: 0.75rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
   color: var(--primary-dark);
   cursor: pointer;
   display: flex;
@@ -523,7 +602,6 @@ body {
   gap: 0.5rem;
   padding: 0.75rem 1.25rem;
   transition: background-color 0.2s, box-shadow 0.2s;
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
 }
 
 .newOcorrenciaButton:hover {
@@ -562,20 +640,20 @@ body {
 }
 
 .pBadge {
-  position: absolute;
-  left: 20rem;
-  bottom: 10rem;
-  background-color: #ffc107;
-  color: var(--primary-dark);
-  font-weight: 700;
-  font-size: 1.2rem;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
   align-items: center;
+  background-color: #ffc107;
+  border-radius: 50%;
   box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
+  bottom: 10rem;
+  color: var(--primary-dark);
+  display: flex;
+  font-size: 1.2rem;
+  font-weight: 700;
+  height: 40px;
+  justify-content: center;
+  left: 20rem;
+  position: absolute;
+  width: 40px;
 }
 
 .pageActive {
@@ -615,6 +693,13 @@ body {
   cursor: default;
 }
 
+.pageHeader {
+  height: 30px;
+  margin-bottom: 10px;
+  position: relative;
+  width: 100%;
+}
+
 .pageHeaderTitle {
   color: var(--text-subtle);
   font-size: 1rem;
@@ -652,17 +737,17 @@ body {
 .rightSidebar {
   background-color: var(--white);
   border-bottom-right-radius: 1rem;
+  border-top-left-radius: 1rem;
   box-shadow: -0.25rem 0 0.625rem rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
   gap: 1.875rem;
+  height: calc(100vh - 4rem);
   padding: 1.875rem 1.25rem 1.875rem 1.25rem;
-  width: 20rem;
   position: flex;
   right: 1rem;
   top: 2rem;
-  height: calc(100vh - 4rem);
-  border-top-left-radius: 1rem;
+  width: 20rem;
 }
 
 .sLogo {
@@ -707,22 +792,24 @@ body {
 
 .sidebar {
   background-color: var(--primary-dark);
+  border-bottom-right-radius: 1.5rem;
+  border-top-right-radius: 1.5rem;
   box-shadow: 0.125rem 0 0.3125rem rgba(0, 0, 0, 0.2);
   color: var(--text-light);
   display: flex;
   flex-direction: column;
+  height: 100%;
   justify-content: space-between;
   padding: 0;
-  width: 16.5rem; /* aumentado para evitar quebra de linha */
-  height: 100%;
-
-  border-top-right-radius: 1.5rem;
-  border-bottom-right-radius: 1.5rem;
+  width: 16.5rem;
 }
 
 .sidebar > .navItem:last-child {
+  align-items: center;
+  border-bottom: none;
   border-radius: 0;
   border-top: 0.0625rem solid rgba(255, 255, 255, 0.1);
+  display: flex;
   margin-left: 0;
   margin-top: 2rem;
   padding: 1.5rem 1.5rem;
@@ -733,13 +820,13 @@ body {
   background-color: var(--background-card);
   border: 1px solid var(--border-color);
   border-radius: 0.75rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
   color: var(--text-dark);
   display: flex;
   font-size: 0.9rem;
   gap: 0.25rem;
   padding: 0.75rem 1rem;
   position: relative;
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
 }
 
 .sortDropdown span {
@@ -781,6 +868,79 @@ body {
   width: 100%;
 }
 
+.timelineContent {
+  margin-left: 15px;
+}
+
+.timelineDateTime {
+  color: var(--text-subtle);
+  font-size: 0.85rem;
+}
+
+.timelineDescription {
+  color: var(--text-dark);
+  font-weight: 600;
+  line-height: 1.4;
+  margin-bottom: 2px;
+}
+
+.timelineDot {
+  background-color: var(--primary-dark);
+  border: 3px solid var(--background-card);
+  border-radius: 50%;
+  height: 12px;
+  left: 10px;
+  position: absolute;
+  top: 10px;
+  transform: translateX(-50%);
+  width: 12px;
+  z-index: 2;
+}
+
+.timelineItem {
+  padding-bottom: 25px;
+  padding-top: 5px;
+  position: relative;
+}
+
+.timelineList {
+  padding-left: 20px;
+  position: relative;
+}
+
+.timelineList::before {
+  background-color: var(--border-color);
+  content: '';
+  height: 100%;
+  left: 10px;
+  position: absolute;
+  top: 0;
+  width: 2px;
+}
+
+.timelineMediaContainer {
+  align-items: flex-start;
+  display: flex;
+  gap: 2rem;
+  margin-top: 2rem;
+  width: 100%;
+}
+
+.timelineSection {
+  background-color: var(--background-card);
+  border-radius: var(--radius-default);
+  box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.05);
+  flex: 2;
+  padding: 1.5rem;
+}
+
+.timelineTitle {
+  color: var(--text-dark);
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+}
+
 .userTable {
   border-collapse: collapse;
   width: 100%;
@@ -808,4 +968,14 @@ body {
   color: var(--text-subtle);
   font-weight: 600;
   text-transform: uppercase;
+}
+
+@media (max-width: 992px) {
+  .timelineMediaContainer {
+    flex-direction: column;
+  }
+  .timelineSection, .mediaSection {
+    flex: auto;
+    width: 100%;
+  }
 }
