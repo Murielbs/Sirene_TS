@@ -1,12 +1,10 @@
-
-
 .filterOverlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.4); 
+  background-color: rgba(0, 0, 0, 0.4);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -18,11 +16,11 @@
 
 .filterBox {
   background-color: var(--background-card);
-  border-radius: 1.5rem; 
+  border-radius: 1.5rem;
   box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.25);
   padding: 2rem 3rem;
   width: 90%;
-  max-width: 800px; 
+  max-width: 800px;
   position: relative;
   transform: scale(0.95);
   animation: fadeInScale 0.3s forwards;
@@ -120,7 +118,7 @@
 }
 
 .checkboxLabel input[type="checkbox"]:checked::after {
-  content: '✓';
+  content: "✓";
   color: var(--white);
   font-size: 0.8rem;
   font-weight: 700;
@@ -138,18 +136,18 @@
 }
 
 .otherInput {
-    border: none;
-    border-bottom: 1px solid var(--text-subtle);
-    margin-left: 0.5rem;
-    padding: 0 0.25rem;
-    font-size: 0.95rem;
-    color: var(--text-dark);
-    width: 60px; /* Tamanho para o campo 'Outra' */
+  border: none;
+  border-bottom: 1px solid var(--text-subtle);
+  margin-left: 0.5rem;
+  padding: 0 0.25rem;
+  font-size: 0.95rem;
+  color: var(--text-dark);
+  width: 60px; /* Tamanho para o campo 'Outra' */
 }
 
 .otherInput:disabled {
-    background-color: transparent;
-    border-bottom-color: #eee;
+  background-color: transparent;
+  border-bottom-color: #eee;
 }
 
 .filterActions {
@@ -194,33 +192,60 @@
 
 /* Responsividade do Filtro */
 @media (max-width: 768px) {
-    .filterBox {
-        max-width: 95%;
-        padding: 1.5rem;
-    }
+  .filterBox {
+    max-width: 95%;
+    padding: 1.5rem;
+  }
 
-    .filterGrid {
-        flex-direction: column;
-        gap: 1.5rem;
-    }
+  .filterGrid {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
 
-    .checkboxGrid {
-        grid-template-columns: 1fr; 
-    }
-    
-    .typeGrid .checkboxLabel:first-child {
-      grid-column: span 1;
-    }
+  .checkboxGrid {
+    grid-template-columns: 1fr;
+  }
 
-    .filterActions {
-        justify-content: space-between;
-        gap: 1rem;
-    }
-    
-    .clearFiltersButton,
-    .applyFiltersButton {
-      flex: 1;
-      padding: 0.75rem 1rem;
-      text-align: center;
-    }
+  .typeGrid .checkboxLabel:first-child {
+    grid-column: span 1;
+  }
+
+  .filterActions {
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .clearFiltersButton,
+  .applyFiltersButton {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    text-align: center;
+  }
+}
+
+.metricCardsContainer {
+  animation: fadeInScale 0.3s ease-in-out;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: space-between;
+  margin: 0 auto 2rem auto;
+  width: 30%;
+}
+.metricCard {
+  background-color: var(--background-card);
+  border-radius: 1.5rem;
+  box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.25);
+  padding: 1.5rem;
+  text-align: center;
+  height: 85px;
+  justify-content: center;
+  min-width: 140px;
+}
+
+.metricTitle {
+  color: var(--text-subtle);
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
 }

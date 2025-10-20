@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
 @keyframes fadeInScale {
   from {
     opacity: 0;
@@ -59,10 +61,15 @@
 }
 
 .actionsCell {
-  color: var(--primary-dark);
+  color: var(--text-dark);
   cursor: pointer;
   font-weight: 600;
   text-align: center;
+}
+
+.actionsCell:hover {
+  text-decoration: underline;
+  color: var(--primary-dark);
 }
 
 .appContainer {
@@ -78,7 +85,7 @@
 body {
   background-color: var(--background-page);
   box-sizing: border-box;
-  font-family: "Open Sans", sans-serif;
+  font-family: "poppins-medium", sans-serif;
   margin: 0;
   min-height: 100vh;
   padding: 0;
@@ -171,7 +178,7 @@ body {
 .filterButton {
   align-items: center;
   background-color: var(--background-card);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--primary-dark);
   border-radius: 0.75rem;
   color: var(--text-dark);
   cursor: pointer;
@@ -185,7 +192,8 @@ body {
 }
 
 .filterButton:hover {
-  background-color: #f0f0f0;
+  background-color: #550d08;
+  color: var(--text-light);
 }
 
 .formGroup {
@@ -317,7 +325,7 @@ body {
   padding: 1rem 1rem;
   text-align: center;
   height: 85px;
-  justify-content: center;
+  justify-content: space-between;
   min-width: 150px;
 }
 
@@ -327,8 +335,8 @@ body {
   flex-wrap: wrap;
   gap: 1.5rem;
   justify-content: space-between;
-  margin-bottom: 2rem;
-  width: 100%;
+  margin: 0 auto 2rem auto;
+  width: 50%;
 }
 
 .metricTitle {
@@ -555,7 +563,8 @@ select.modalInput:focus {
 }
 
 .newOcorrenciaButton:hover {
-  background-color: #fce8e8;
+  background-color: #550d08;
+  color: var(--text-light);
 }
 
 .occurrencesTable {
