@@ -142,8 +142,7 @@ body {
 }
 
 .buttonPrimary:hover {
-  background-color: #550d08;
-  color: var(--text-light);
+  background-color: #ddd;
 }
 
 /* ------------------------------------------- */
@@ -172,7 +171,7 @@ body {
 .dropdownButton {
   align-items: center;
   background: none;
-  border: 0.0625rem solid var(--primary-dark);
+  border: 0.0625rem solid #ddd;
   border-radius: 0.375rem;
   color: var(--text-dark);
   cursor: pointer;
@@ -603,9 +602,7 @@ body {
 }
 
 .stepCircle:hover {
-  background-color: var(
-    --background-card
-  ); /* Remove o hover para o efeito cinza */
+    background-color: var(--background-card); /* Remove o hover para o efeito cinza */
 }
 
 /* ------------------------------------------- */
@@ -661,9 +658,7 @@ select.modalInput:focus {
 select.modalInput {
   appearance: none;
   padding-right: 2.5rem;
-  background: var(--background-card)
-    url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%23550d08" d="M7 10l5 5 5-5z"/></svg>')
-    no-repeat right 10px center;
+  background: var(--background-card) url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%23550d08" d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center;
   background-size: 16px;
   cursor: pointer;
 }
@@ -682,8 +677,7 @@ select.modalInput {
   box-sizing: border-box;
 }
 
-.botaoAvancar,
-.botaoCadastrar {
+.botaoAvancar, .botaoCadastrar {
   background-color: var(--primary-dark) !important;
   border: 1px solid var(--primary-dark) !important;
   border-radius: 8px !important;
@@ -719,8 +713,7 @@ select.modalInput {
     margin-bottom: 1rem;
   }
 
-  .modalContent,
-  .multistepModal {
+  .modalContent, .multistepModal {
     max-width: 95%;
   }
 }

@@ -337,7 +337,7 @@ function Inicial(): JSX.Element {
 
             <div
               className={styles.navItem}
-              onClick={() => handleMenuItemClick("/auditoria")}
+              onClick={() => handleMenuItemClick("/Auditoria")}
             >
               <img
                 src={AuditoriaLogSvg}

@@ -7,6 +7,8 @@ import Ocorrencias from './Pages/Ocorrencias/Ocorrencias.tsx';
 import Visualizacao from './Pages/Visualizacao/visualizacao.tsx';
 import Inicial from './Pages/Inicial/Inicial.tsx';
 import Dashboard from './Pages/Dashboard/Dashboard.tsx';
+// 1. IMPORTAR O NOVO COMPONENTE
+import AuditoriaLogs from './Pages/Auditoria/Auditoria.tsx'; // OU AuditoriaLogs.tsx, dependendo do nome do seu arquivo
 import './App.css';
 
 function App() {
@@ -14,7 +16,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<Login/>} />
         
         <Route path="/RecuperarSenha" element={<RecuperarSenha />} />
 
@@ -26,10 +28,13 @@ function App() {
 
         <Route path="/Inicial" element={<Inicial />} />
         
-        
         <Route path='/Visualizacao/:id' element={<Visualizacao />} />
 
         <Route path='/Dashboard' element={<Dashboard />} />
+
+        {/* 2. ADICIONAR A ROTA DE AUDITORIA */}
+        <Route path='/auditoria' element={<AuditoriaLogs />} />
+
 
         <Route path="*" element={<div>404 - Página Não Encontrada</div>} />
 
