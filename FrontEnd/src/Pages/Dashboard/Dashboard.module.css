@@ -438,7 +438,7 @@ body {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background-color: #007bff;
+  background-color: rgba(0, 0, 0, 0.05);
   margin-right: 0.5rem;
 }
 

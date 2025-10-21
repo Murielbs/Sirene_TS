@@ -1,4 +1,4 @@
-import React, { useState, type JSX } from "react";
+import React, { useEffect, useState, type JSX } from "react";
 import {
   Search,
   Plus,
@@ -20,10 +20,10 @@ import styles from "./GestaoUsuario.module.css";
 import { useNavigate } from "react-router-dom";
 
 interface User {
-  id: number;
+  id: string; // ObjectId do MongoDB
   nome: string;
-  cargo: string;
-  numero: string;
+  cargo: string; // mapeado de "posto"
+  numero: string; // mapeado de "numeroMilitar" ou "matricula"
   email: string;
   status: "Em serviço" | "Fora de serviço";
 }
@@ -36,24 +36,7 @@ interface ActionModalState {
   user: User | null;
 }
 
-const mockUsers: User[] = [
-  {
-    id: 1,
-    nome: "Ana Silva",
-    cargo: "Analista",
-    numero: "1199999999",
-    email: "ana.silva@email.com",
-    status: "Em serviço",
-  },
-  {
-    id: 2,
-    nome: "João Souza",
-    cargo: "Bombeiro",
-    numero: "2198888888",
-    email: "joao.souza@email.com",
-    status: "Fora de serviço",
-  },
-];
+// ... sem mock: carregaremos da API
 
 interface SimpleModalProps {
   onClose: () => void;
@@ -358,7 +341,12 @@ const NewUserModal: React.FC<NewUserModalProps> = ({ onClose }) => {
 
 function GestaoUsuarios(): JSX.Element {
   const navigate = useNavigate();
-  const [allUsers] = useState<User[]>(mockUsers);
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const limit = 10;
   const [isNewUserModalOpen, setIsNewUserModalOpen] = useState(false);
 
   const [actionModal, setActionModal] = useState<ActionModalState>({
@@ -370,25 +358,17 @@ function GestaoUsuarios(): JSX.Element {
   const [filterBy, setFilterBy] = useState<
     "todos" | "Em serviço" | "Fora de serviço"
   >("todos");
-  const currentPage = 1;
-  const usersPerPage = 8;
-  const totalPages = Math.max(1, Math.ceil(allUsers.length / usersPerPage));
-
-  const filteredUsers = allUsers.filter((user) => {
+  
+  const filteredUsers = users.filter((user) => {
     if (filterBy === "todos") return true;
     return user.status === filterBy;
   });
 
   const sortedUsers = [...filteredUsers].sort((a, b) => {
-    if (sortBy === "recente") {
-      return b.id - a.id;
-    }
-    return a.nome.localeCompare(b.nome);
+    if (sortBy === "nome") return a.nome.localeCompare(b.nome);
+    // "recente": mantém a ordem vinda da API
+    return 0;
   });
-
-  const indexOfLastUser = currentPage * usersPerPage;
-  const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = sortedUsers.slice(indexOfFirstUser, indexOfLastUser);
 
   const getStatusClass = (status: User["status"]) => {
     return status === "Em serviço"
@@ -396,8 +376,55 @@ function GestaoUsuarios(): JSX.Element {
       : styles.statusInactive;
   };
 
-  const paginate = (pageNumber: number) =>
-    console.log("Paginar para", pageNumber);
+  const paginate = (pageNumber: number) => {
+    if (pageNumber < 1 || pageNumber > totalPages) return;
+    setPage(pageNumber);
+  };
+
+  // Fetch de usuários reais
+  useEffect(() => {
+    let cancelled = false;
+    const fetchUsers = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const token = localStorage.getItem("token");
+        const headers: Record<string, string> = { "Content-Type": "application/json" };
+        if (token) headers["Authorization"] = `Bearer ${token}`;
+
+        const resp = await fetch(`/api/auth/militares?page=${page}&limit=${limit}`, { headers });
+        if (!resp.ok) {
+          const t = await resp.text();
+          throw new Error(`Erro ${resp.status}: ${t}`);
+        }
+        const json = await resp.json();
+        const payload = json?.data || json;
+        const militares = payload?.militares || payload?.items || [];
+        const tp = payload?.totalPages || 1;
+
+        // Normaliza para User
+        const mapped: User[] = (militares as any[]).map((m) => ({
+          id: String(m.id),
+          nome: m.nome || "",
+          cargo: m.posto || m.perfilAcesso || "",
+          numero: m.numeroMilitar || m.matricula || "",
+          email: m.email || "",
+          status: "Em serviço", // Sem campo no backend; default
+        }));
+
+        if (!cancelled) {
+          setUsers(mapped);
+          setTotalPages(tp || 1);
+        }
+      } catch (e: any) {
+        if (!cancelled) setError(e.message || "Erro ao carregar usuários");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+    fetchUsers();
+    return () => { cancelled = true; };
+  }, [page]);
 
   const handleMenuItemClick = (path: string) => {
     navigate(path);
@@ -419,9 +446,7 @@ function GestaoUsuarios(): JSX.Element {
     });
   };
 
-  const renderPageNumbers = () => {
-    return <p className={styles.pageNumber}>1</p>;
-  };
+  // paginação: números renderizados inline no footer
 
   return (
     <div className={styles.appContainer}>
@@ -584,14 +609,22 @@ function GestaoUsuarios(): JSX.Element {
                 </tr>
               </thead>
               <tbody>
-                {currentUsers.length === 0 ? (
+                {loading ? (
+                  <tr>
+                    <td colSpan={6} className={styles.emptyState}>Carregando...</td>
+                  </tr>
+                ) : error ? (
+                  <tr>
+                    <td colSpan={6} className={styles.emptyState}>{error}</td>
+                  </tr>
+                ) : sortedUsers.length === 0 ? (
                   <tr>
                     <td colSpan={6} className={styles.emptyState}>
                       Nenhum usuário encontrado. Adicione um novo usuário.
                     </td>
                   </tr>
                 ) : (
-                  currentUsers.map((user) => (
+                  sortedUsers.map((user) => (
                     <tr key={user.id}>
                       <td>{user.nome}</td>
                       <td>{user.cargo}</td>
@@ -634,16 +667,18 @@ function GestaoUsuarios(): JSX.Element {
 
           <div className={styles.pagination}>
             <button
-              onClick={() => paginate(currentPage - 1)}
-              disabled={currentPage === 1 || totalPages === 1}
+              onClick={() => paginate(page - 1)}
+              disabled={page === 1 || totalPages === 1}
               className={styles.pageArrow}
             >
               <ChevronLeft size={20} />
             </button>
-            {renderPageNumbers()}
+            <p className={styles.pageNumber}>
+              {page} / {totalPages}
+            </p>
             <button
-              onClick={() => paginate(currentPage + 1)}
-              disabled={currentPage === totalPages || totalPages === 1}
+              onClick={() => paginate(page + 1)}
+              disabled={page === totalPages || totalPages === 1}
               className={styles.pageArrow}
             >
               <ChevronRight size={20} />
