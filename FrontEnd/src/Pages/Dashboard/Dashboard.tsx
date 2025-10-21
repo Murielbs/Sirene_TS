@@ -317,7 +317,7 @@ function DashboardAdmin(): JSX.Element {
 
           <div
             className={styles.navItem}
-            onClick={() => handleMenuItemClick("/configuracao")}
+            onClick={() => handleMenuItemClick("/Conniguracoes")}
           >
             <img
               src={ConfiguracaoSvg}

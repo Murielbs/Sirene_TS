@@ -625,7 +625,7 @@ function ListaOcorrencias(): JSX.Element {
 
           <div
             className={styles.navItem}
-            onClick={() => handleMenuItemClick("/configuracao")}
+            onClick={() => handleMenuItemClick("/Configuracoes")}
           >
             <img
               src={ConfiguracaoSvg}

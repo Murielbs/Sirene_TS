@@ -59,7 +59,7 @@ function Inicial(): JSX.Element {
       const urlOcorrencias = `${base}/api/ocorrencia`;
       const fetchOcorrencias = async () => {
         try {
-          const res = await fetch(urlOcorrencias, {
+          const res = await fetch(urlOocorrencias, {
             headers: {
               Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
@@ -349,7 +349,7 @@ function Inicial(): JSX.Element {
 
             <div
               className={styles.navItem}
-              onClick={() => handleMenuItemClick("/configuracao")}
+              onClick={() => handleMenuItemClick("/Configuracoes")}
             >
               <img
                 src={ConfiguracaoSvg}

@@ -8,13 +8,14 @@ import Visualizacao from "./Pages/Visualizacao/visualizacao.tsx";
 import Inicial from "./Pages/Inicial/Inicial.tsx";
 import Dashboard from "./Pages/Dashboard/Dashboard.tsx";
 import AuditoriaLogs from "./Pages/Auditoria/Auditoria.tsx";
+import Configuracoes from "./Pages/Configuracoes/Configuracoes.tsx";
 import "./App.css";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<Inicial />} />
 
         <Route path="/RecuperarSenha" element={<RecuperarSenha />} />
 
@@ -31,6 +32,8 @@ function App() {
         <Route path="/Dashboard" element={<Dashboard />} />
 
         <Route path="/Auditoria" element={<AuditoriaLogs />} />
+        
+        <Route path="/Configuracoes" element={<Configuracoes />} />
 
         <Route path="*" element={<div>404 - Página Não Encontrada</div>} />
       </Routes>
