@@ -7,7 +7,7 @@ import Ocorrencias from "./Pages/Ocorrencias/Ocorrencias.tsx";
 import Visualizacao from "./Pages/Visualizacao/visualizacao.tsx";
 import Inicial from "./Pages/Inicial/Inicial.tsx";
 import Dashboard from "./Pages/Dashboard/Dashboard.tsx";
-import AuditoriaLogs from "./Pages/Auditoria/AuditoriaLogs.tsx";
+import AuditoriaLogs from "./Pages/Auditoria/Auditoria.tsx";
 import "./App.css";
 
 function App() {

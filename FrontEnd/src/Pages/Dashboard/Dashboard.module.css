@@ -39,9 +39,9 @@
   --primary-dark: #d9232f;
   --primary-light: #ea646f;
   --radius-default: 0.75rem;
-  --status-closed: #DF0404;
-  --status-in-progress: #FF6200;
-  --status-open: #00B087;
+  --status-closed: #df0404;
+  --status-in-progress: #ff6200;
+  --status-open: #00b087;
   --text-dark: #333333;
   --text-light: #eeeeee;
   --text-subtle: #999999;
@@ -51,7 +51,7 @@
 body {
   background-color: var(--background-page);
   box-sizing: border-box;
-  font-family: 'Open Sans', sans-serif;
+  font-family: "Open Sans", sans-serif;
   margin: 0;
   min-height: 100vh;
   padding: 0;
@@ -152,7 +152,8 @@ body {
   background-size: 50px 100%;
 }
 
-.chartCard, .chartCardFull {
+.chartCard,
+.chartCardFull {
   background-color: var(--background-card);
   border-radius: var(--radius-default);
   box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.05);
@@ -172,9 +173,9 @@ body {
   height: 150px;
   border-radius: 50%;
   background: conic-gradient(
-      var(--primary-dark) 0% 40%,
-      var(--status-closed) 40% 65%,
-      var(--status-in-progress) 65% 100%
+    var(--primary-dark) 0% 40%,
+    var(--status-closed) 40% 65%,
+    var(--status-in-progress) 65% 100%
   );
   box-shadow: 0 0 0 10px rgba(0, 0, 0, 0.05);
   position: relative;
@@ -340,16 +341,16 @@ body {
   height: 150px;
   border-radius: 50%;
   background: conic-gradient(
-      var(--primary-dark) 0% 40%,
-      var(--status-closed) 40% 65%,
-      var(--status-in-progress) 65% 100%
+    var(--primary-dark) 0% 40%,
+    var(--status-closed) 40% 65%,
+    var(--status-in-progress) 65% 100%
   );
   box-shadow: 0 0 0 10px rgba(0, 0, 0, 0.05);
   position: relative;
 }
 
 .donutChart::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 50%;
   left: 50%;
@@ -384,8 +385,8 @@ body {
 .filterButton {
   align-items: center;
   background-color: var(--background-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-default);
+  border: 1px solid var(--primary-dark);
+  border-radius: 0.75rem;
   color: var(--text-dark);
   cursor: pointer;
   display: flex;
@@ -394,11 +395,12 @@ body {
   gap: 0.5rem;
   padding: 0.75rem 1.25rem;
   transition: background-color 0.2s, box-shadow 0.2s;
-  box-shadow: none;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
 }
 
 .filterButton:hover {
-  background-color: #f0f0f0;
+  background-color: #550d08;
+  color: var(--text-light);
 }
 
 .filterButtonActive {
@@ -607,9 +609,10 @@ body {
 .logoSection {
   align-items: center;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   margin-bottom: 2rem;
-  padding: 3rem 0;
+  padding: 1.5rem 1rem;
+  border-bottom: none;
 }
 
 .mainContent {
@@ -776,13 +779,17 @@ body {
   transition: color 0.2s;
 }
 
+.logoImage {
+  width: 70px;
+  height: 70px;
+  margin-right: 0.25rem;
+}
+
 .navIconImg {
-  color: var(--text-light);
   width: 20px;
   height: 20px;
   margin-right: 0.9375rem;
-  transition: color 0.2s;
-  filter: invert(1);
+  display: inline-block;
 }
 
 .navItem {
@@ -810,9 +817,9 @@ body {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: stretch;
-  padding-top: 0;
+  gap: 2rem; /* espaçamento vertical entre itens do menu */
 }
 
 .navText {
@@ -874,7 +881,7 @@ body {
   position: absolute;
   top: 0.75rem;
   left: 0.75rem;
-  background-color: #FFC107;
+  background-color: #ffc107;
   color: var(--text-dark);
   font-weight: 700;
   font-size: 0.8rem;
@@ -895,7 +902,9 @@ body {
   font-weight: 700;
 }
 
-.pageArrow, .pageNumber, .pageEllipsis {
+.pageArrow,
+.pageNumber,
+.pageEllipsis {
   align-items: center;
   background: var(--background-card);
   border: 1px solid var(--border-color);
@@ -1222,7 +1231,8 @@ body {
   background-color: #f7f7f7;
 }
 
-.userTable td, .userTable th {
+.userTable td,
+.userTable th {
   border-bottom: 1px solid var(--border-color);
   font-size: 0.9rem;
   padding: 1rem 1.25rem;

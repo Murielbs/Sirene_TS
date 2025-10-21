@@ -698,11 +698,11 @@ select.modalInput:focus {
 .searchBox {
   align-items: center;
   background-color: var(--background-card);
-  border: none;
-  border-radius: 0.75rem;
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-default);
+  box-shadow: none;
   display: flex;
-  max-width: 20rem;
+  max-width: 25rem;
   padding: 0.75rem 1.25rem;
 }
 
