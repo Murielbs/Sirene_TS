@@ -1,44 +1,38 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Login from './Pages/Login/Login.tsx';
-import ConfirmarSenha from './Pages/ConfirmarSenha/ConfirmarSenha.tsx';
-import GestaoUsuarios from './Pages/GestaoUsuario/GestaoUsuario.tsx';
-import RecuperarSenha from './Pages/RecuperarSenha/RecuperarSenha.tsx';
-import Ocorrencias from './Pages/Ocorrencias/Ocorrencias.tsx';
-import Visualizacao from './Pages/Visualizacao/visualizacao.tsx';
-import Inicial from './Pages/Inicial/Inicial.tsx';
-import Dashboard from './Pages/Dashboard/Dashboard.tsx';
-// 1. IMPORTAR O NOVO COMPONENTE
-import AuditoriaLogs from './Pages/Auditoria/Auditoria.tsx'; // OU AuditoriaLogs.tsx, dependendo do nome do seu arquivo
-import './App.css';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from "./Pages/Login/Login.tsx";
+import ConfirmarSenha from "./Pages/ConfirmarSenha/ConfirmarSenha.tsx";
+import GestaoUsuarios from "./Pages/GestaoUsuario/GestaoUsuario.tsx";
+import RecuperarSenha from "./Pages/RecuperarSenha/RecuperarSenha.tsx";
+import Ocorrencias from "./Pages/Ocorrencias/Ocorrencias.tsx";
+import Visualizacao from "./Pages/Visualizacao/visualizacao.tsx";
+import Inicial from "./Pages/Inicial/Inicial.tsx";
+import Dashboard from "./Pages/Dashboard/Dashboard.tsx";
+import AuditoriaLogs from "./Pages/Auditoria/AuditoriaLogs.tsx";
+import "./App.css";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        
-        <Route path="/" element={<Login/>} />
-        
+        <Route path="/" element={<Login />} />
+
         <Route path="/RecuperarSenha" element={<RecuperarSenha />} />
 
         <Route path="/ConfirmarSenha" element={<ConfirmarSenha />} />
 
         <Route path="/GestaoUsuario" element={<GestaoUsuarios />} />
-        
+
         <Route path="/Ocorrencias" element={<Ocorrencias />} />
 
         <Route path="/Inicial" element={<Inicial />} />
-        
-        <Route path='/Visualizacao/:id' element={<Visualizacao />} />
 
-        <Route path='/Dashboard' element={<Dashboard />} />
+        <Route path="/Visualizacao/:id" element={<Visualizacao />} />
 
-        {/* 2. ADICIONAR A ROTA DE AUDITORIA */}
-        <Route path='/auditoria' element={<AuditoriaLogs />} />
+        <Route path="/Dashboard" element={<Dashboard />} />
 
+        <Route path="/Auditoria" element={<AuditoriaLogs />} />
 
         <Route path="*" element={<div>404 - Página Não Encontrada</div>} />
-
-
       </Routes>
     </BrowserRouter>
   );

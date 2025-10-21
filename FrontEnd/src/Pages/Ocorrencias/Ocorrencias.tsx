@@ -48,7 +48,10 @@ interface NewOcorrenciaModalProps {
   onCreated?: (created: Ocorrencia) => void;
 }
 
-const NewOcorrenciaModal: React.FC<NewOcorrenciaModalProps> = ({ onClose, onCreated }) => {
+const NewOcorrenciaModal: React.FC<NewOcorrenciaModalProps> = ({
+  onClose,
+  onCreated,
+}) => {
   const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 3;
 
@@ -113,7 +116,12 @@ const NewOcorrenciaModal: React.FC<NewOcorrenciaModalProps> = ({ onClose, onCrea
             <div className={styles.formRow}>
               <div className={styles.formGroup}>
                 <label>Prioridade</label>
-                <select className={styles.modalInput} required value={prioridade} onChange={(e) => setPrioridade(e.target.value)}>
+                <select
+                  className={styles.modalInput}
+                  required
+                  value={prioridade}
+                  onChange={(e) => setPrioridade(e.target.value)}
+                >
                   <option value="">Prioridade</option>
                   <option value="baixa">Baixa</option>
                   <option value="media">Média</option>
@@ -122,7 +130,12 @@ const NewOcorrenciaModal: React.FC<NewOcorrenciaModalProps> = ({ onClose, onCrea
               </div>
               <div className={styles.formGroup}>
                 <label>Status</label>
-                <select className={styles.modalInput} required value={status} onChange={(e) => setStatus(e.target.value)}>
+                <select
+                  className={styles.modalInput}
+                  required
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
+                >
                   <option value="">Status</option>
                   <option value="Em aberto">ABERTA</option>
                   <option value="Andamento">EM ANDAMENTO</option>
@@ -185,7 +198,12 @@ const NewOcorrenciaModal: React.FC<NewOcorrenciaModalProps> = ({ onClose, onCrea
               </div>
               <div className={styles.formGroupSmall}>
                 <label>Região</label>
-                <select className={styles.modalInput} required value={regiao} onChange={(e) => setRegiao(e.target.value)}>
+                <select
+                  className={styles.modalInput}
+                  required
+                  value={regiao}
+                  onChange={(e) => setRegiao(e.target.value)}
+                >
                   <option value="">Região</option>
                   <option value="RegiaoMetropolitana">(COM)</option>
                   <option value="AgresteZonaDaMata">(COInter/I)</option>
@@ -246,20 +264,21 @@ const NewOcorrenciaModal: React.FC<NewOcorrenciaModalProps> = ({ onClose, onCrea
 
   const handleNext = () =>
     setCurrentStep((prev) => Math.min(totalSteps, prev + 1));
-  
 
   const handleCreate = async () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     const API_BASE =
-      (typeof import.meta !== 'undefined'
+      (typeof import.meta !== "undefined"
         ? (import.meta as any).env?.VITE_API_URL
-        : '') || '';
-    const base = API_BASE ? API_BASE.replace(/\/$/, '') : '';
+        : "") || "";
+    const base = API_BASE ? API_BASE.replace(/\/$/, "") : "";
     const url = `${base}/api/ocorrencia`;
 
     const payload: any = {
       tipoOcorrencia: tipo,
-      dataHora: dataHoraInput ? new Date(dataHoraInput).toISOString() : new Date().toISOString(),
+      dataHora: dataHoraInput
+        ? new Date(dataHoraInput).toISOString()
+        : new Date().toISOString(),
       prioridade,
       status,
       endereco,
@@ -273,10 +292,10 @@ const NewOcorrenciaModal: React.FC<NewOcorrenciaModalProps> = ({ onClose, onCrea
 
     try {
       const res = await fetch(url, {
-        method: 'POST',
+        method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
       });
@@ -287,8 +306,8 @@ const NewOcorrenciaModal: React.FC<NewOcorrenciaModalProps> = ({ onClose, onCrea
       if (onCreated && created) onCreated(created as Ocorrencia);
       onClose();
     } catch (err) {
-      console.error('Erro ao criar ocorrência:', err);
-      alert('Erro ao criar ocorrência. Veja o console para detalhes.');
+      console.error("Erro ao criar ocorrência:", err);
+      alert("Erro ao criar ocorrência. Veja o console para detalhes.");
     }
   };
 
@@ -479,7 +498,11 @@ function ListaOcorrencias(): JSX.Element {
             prioridade: o.prioridade || o.priority || undefined,
             endereco: o.endereco || o.address || undefined,
             numero: o.numero || o.number || undefined,
-            pontoReferencia: o.ponto_referencia || o.pontoReferencia || o.pontoReferencia || undefined,
+            pontoReferencia:
+              o.ponto_referencia ||
+              o.pontoReferencia ||
+              o.pontoReferencia ||
+              undefined,
           } as Ocorrencia;
         }
       );
@@ -590,7 +613,7 @@ function ListaOcorrencias(): JSX.Element {
 
           <div
             className={styles.navItem}
-            onClick={() => handleMenuItemClick("/auditoria")}
+            onClick={() => handleMenuItemClick("/Auditoria")}
           >
             <img
               src={AuditoriaLogSvg}
