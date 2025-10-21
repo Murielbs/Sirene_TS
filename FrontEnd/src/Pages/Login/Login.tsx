@@ -1,5 +1,6 @@
 // Login.tsx
 import React, { useState, type JSX } from "react";
+import { apiFetch } from "../../lib/api";
 import styles from "./Login.module.css";
 import { useNavigate } from 'react-router-dom';
 
@@ -15,7 +16,7 @@ function Login(): JSX.Element {
     setMessage("");
 
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await apiFetch('/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

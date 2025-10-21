@@ -1,4 +1,5 @@
 import React, { useEffect, useState, type JSX } from "react";
+import { apiFetch } from "../../lib/api";
 import {
   Search,
   Plus,
@@ -392,7 +393,7 @@ function GestaoUsuarios(): JSX.Element {
         const headers: Record<string, string> = { "Content-Type": "application/json" };
         if (token) headers["Authorization"] = `Bearer ${token}`;
 
-        const resp = await fetch(`/api/auth/militares?page=${page}&limit=${limit}`, { headers });
+  const resp = await apiFetch(`/api/auth/militares?page=${page}&limit=${limit}`, { headers });
         if (!resp.ok) {
           const t = await resp.text();
           throw new Error(`Erro ${resp.status}: ${t}`);

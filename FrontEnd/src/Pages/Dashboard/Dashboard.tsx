@@ -1,4 +1,5 @@
 import React, { useState, useEffect, type JSX } from "react";
+import { apiFetch } from "../../lib/api";
 import { Search, SlidersHorizontal } from "lucide-react";
 import styles from "./Dashboard.module.css";
 import { useNavigate } from "react-router-dom";
@@ -215,7 +216,7 @@ function DashboardAdmin(): JSX.Element {
           headers['Authorization'] = `Bearer ${token}`;
         }
 
-        const res = await fetch('/api/ocorrencia', { headers });
+  const res = await apiFetch('/api/ocorrencia', { headers });
         if (!res.ok) {
           const errorText = await res.text();
           throw new Error(`Erro ${res.status}: ${errorText}` || 'Erro ao buscar ocorrências');
