@@ -1,4 +1,4 @@
-// Conteúdo para src/controllers/AuthController.ts
+// funções que lidam com as requisições HTTP
 
 import { Request, Response } from 'express';
 import { AuthService } from '../services/AuthService';

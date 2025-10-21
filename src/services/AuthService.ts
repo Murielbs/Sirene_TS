@@ -1,3 +1,4 @@
+// Aqui ficam as regras de funcionamento
 import prisma from '../database/prisma';
 import { AuthUtils, ValidationUtils } from '../utils/auth';
 import { 

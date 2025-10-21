@@ -1,3 +1,5 @@
+
+//Define as rotas da aplicação
 import { Router } from 'express';
 import { AuthController } from '../controllers/AuthController';
 import { OcorrenciaController } from '../controllers/OcorrenciaController';
