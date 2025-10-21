@@ -64,7 +64,7 @@ const ActionModal: React.FC<SimpleModalProps> = ({ onClose, action, user }) => {
           />
           <input
             type="text"
-            placeholder="Cargo"
+            placeholder="Posto"
             defaultValue={user.cargo}
             required
           />
@@ -157,11 +157,26 @@ const ActionModal: React.FC<SimpleModalProps> = ({ onClose, action, user }) => {
 // NOVO MODAL: Multi-etapas para cadastro de usuário
 interface NewUserModalProps {
   onClose: () => void;
+  onCreated?: () => void;
 }
 
-const NewUserModal: React.FC<NewUserModalProps> = ({ onClose }) => {
+const NewUserModal: React.FC<NewUserModalProps> = ({ onClose, onCreated }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 3;
+  const [loading, setLoading] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
+
+  const [form, setForm] = useState({
+    nome: "",
+    matricula: "",
+    cpf: "",
+    numeroMilitar: "",
+    posto: "",
+    email: "",
+    senha: "",
+    perfilAcesso: "MILITAR",
+  });
+  const [confirmSenha, setConfirmSenha] = useState("");
 
   const renderPassos = () => (
     <div className={styles.stepIndicator}>
@@ -182,7 +197,7 @@ const NewUserModal: React.FC<NewUserModalProps> = ({ onClose }) => {
     switch (step) {
       case 1:
         return (
-          <form className={styles.modalFormPasso}>
+          <div className={styles.modalFormPasso}>
             <div className={styles.formRowTwoColumns}>
               <div className={styles.formGroup}>
                 <label>Nome Completo</label>
@@ -191,6 +206,8 @@ const NewUserModal: React.FC<NewUserModalProps> = ({ onClose }) => {
                   className={styles.modalInput}
                   placeholder="Nome completo"
                   required
+                  value={form.nome}
+                  onChange={(e) => setForm({ ...form, nome: e.target.value })}
                 />
               </div>
               <div className={styles.formGroup}>
@@ -200,68 +217,76 @@ const NewUserModal: React.FC<NewUserModalProps> = ({ onClose }) => {
                   className={styles.modalInput}
                   placeholder="email@exemplo.com"
                   required
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
                 />
               </div>
             </div>
+
             <div className={styles.formRowTwoColumns}>
               <div className={styles.formGroup}>
-                <label>Cargo</label>
+                <label>Posto</label>
                 <input
                   type="text"
                   className={styles.modalInput}
-                  placeholder="Ex: Bombeiro, Analista..."
+                  placeholder="Ex: 2º Sargento"
                   required
+                  value={form.posto}
+                  onChange={(e) => setForm({ ...form, posto: e.target.value })}
                 />
               </div>
               <div className={styles.formGroup}>
-                <label>Telefone</label>
+                <label>Número</label>
                 <input
                   type="text"
                   className={styles.modalInput}
-                  placeholder="(00) 90000-0000"
+                  placeholder="Número do militar"
                   required
+                  value={form.numeroMilitar}
+                  onChange={(e) => setForm({ ...form, numeroMilitar: e.target.value })}
                 />
               </div>
             </div>
-          </form>
+          </div>
         );
       case 2:
         return (
-          <form className={styles.modalFormPasso}>
             <div className={styles.formRowTwoColumns}>
+              <div className={styles.formGroup}>  
               <div className={styles.formGroup}>
-                <label>Data de Admissão</label>
-                <input type="date" className={styles.modalInput} required />
-              </div>
-              <div className={styles.formGroup}>
-                <label>Unidade</label>
-                <select className={styles.modalInput} required>
-                  <option value="">Selecione a Unidade</option>
-                  <option value="RegiaoMetropolitana">(COM)</option>
-                  <option value="AgresteZonaDaMata">(COInter/I)</option>
-                  <option value="Sertão">(COInter/II)</option>
-                  {/* Outras opções de unidade */}
-                </select>
+                <label>CPF</label>
+                <input
+                  type="text"
+                  className={styles.modalInput}
+                  placeholder="000.000.000-00"
+                  required
+                  value={form.cpf}
+                  onChange={(e) => setForm({ ...form, cpf: e.target.value })}
+                />
               </div>
             </div>
+
             <div className={styles.formRowTwoColumns}>
               <div className={styles.formGroup}>
                 <label>Perfil de Acesso</label>
-                <select className={styles.modalInput} required>
-                  <option value="">Selecione o Perfil</option>
-                  <option value="admin">Administrador</option>
-                  <option value="operador">Operador</option>
-                  <option value="visualizador">Visualizador</option>
+                <select
+                  className={styles.modalInput}
+                  required
+                  value={form.perfilAcesso}
+                  onChange={(e) => setForm({ ...form, perfilAcesso: e.target.value })}
+                >
+                  <option value="ADMIN">ADMIN</option>
+                  <option value="COMANDANTE">COMANDANTE</option>
+                  <option value="MILITAR">MILITAR</option>
                 </select>
               </div>
-              {/* Espaço vazio para manter o layout de 2 colunas */}
               <div className={styles.formGroup}></div>
             </div>
-          </form>
+          </div>
         );
       case 3:
         return (
-          <form className={styles.modalFormPasso}>
+          <div className={styles.modalFormPasso}>
             <div className={styles.formRowTwoColumns}>
               <div className={styles.formGroup}>
                 <label>Senha</label>
@@ -270,6 +295,8 @@ const NewUserModal: React.FC<NewUserModalProps> = ({ onClose }) => {
                   className={styles.modalInput}
                   placeholder="Nova Senha"
                   required
+                  value={form.senha}
+                  onChange={(e) => setForm({ ...form, senha: e.target.value })}
                 />
               </div>
               <div className={styles.formGroup}>
@@ -279,22 +306,67 @@ const NewUserModal: React.FC<NewUserModalProps> = ({ onClose }) => {
                   className={styles.modalInput}
                   placeholder="Confirmar Senha"
                   required
+                  value={confirmSenha}
+                  onChange={(e) => setConfirmSenha(e.target.value)}
                 />
               </div>
             </div>
-          </form>
+            {serverError && <div className={styles.formError}>{serverError}</div>}
+          </div>
         );
       default:
         return <p>Erro</p>;
     }
   };
 
-  const handleNext = () =>
-    setCurrentStep((prev) => Math.min(totalSteps, prev + 1));
+  const handleNext = () => setCurrentStep((prev) => Math.min(totalSteps, prev + 1));
 
-  const handleSubmit = () => {
-    // Lógica final de submissão do formulário
-    onClose();
+  const handleFinalSubmit = async () => {
+    setServerError(null);
+    if (!form.nome || !form.email || !form.senha) {
+      setServerError('Preencha os campos obrigatórios');
+      return;
+    }
+    if (form.senha !== confirmSenha) {
+      setServerError('As senhas não conferem');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('token');
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
+      const body = JSON.stringify({
+        nome: form.nome,
+        matricula: form.matricula,
+        cpf: form.cpf,
+        numeroMilitar: form.numeroMilitar,
+        posto: form.posto,
+        email: form.email,
+        senha: form.senha,
+        perfilAcesso: form.perfilAcesso,
+      });
+
+      const resp = await apiFetch('/api/auth/militar', { method: 'POST', headers, body });
+      const text = await resp.text();
+      let json: any = null;
+      try { json = text ? JSON.parse(text) : null; } catch (e) { json = text; }
+
+      if (!resp.ok) {
+        const msg = json?.message || text || `Erro ${resp.status}`;
+        setServerError(String(msg));
+        return;
+      }
+
+      if (onCreated) onCreated();
+      onClose();
+    } catch (e: any) {
+      setServerError(e.message || 'Erro ao comunicar com o servidor');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -303,35 +375,21 @@ const NewUserModal: React.FC<NewUserModalProps> = ({ onClose }) => {
         <div className={styles.stepHeader}>{renderPassos()}</div>
 
         <div className={styles.boxFundoBranca}>
-          <div className={styles.stepContent}>
-            {renderStepContent(currentStep)}
-          </div>
+          <div className={styles.stepContent}>{renderStepContent(currentStep)}</div>
         </div>
 
         <div className={styles.modalActions}>
-          <button
-            type="button"
-            className={styles.botaoCancelar}
-            onClick={onClose}
-          >
+          <button type="button" className={styles.botaoCancelar} onClick={onClose}>
             CANCELAR
           </button>
 
           {currentStep < totalSteps ? (
-            <button
-              type="button"
-              className={styles.botaoAvancar}
-              onClick={handleNext}
-            >
+            <button type="button" className={styles.botaoAvancar} onClick={handleNext}>
               AVANÇAR
             </button>
           ) : (
-            <button
-              type="button"
-              className={styles.botaoCadastrar}
-              onClick={handleSubmit}
-            >
-              CADASTRAR
+            <button type="button" className={styles.botaoCadastrar} onClick={handleFinalSubmit} disabled={loading}>
+              {loading ? 'Enviando...' : 'CADASTRAR'}
             </button>
           )}
         </div>
@@ -349,6 +407,7 @@ function GestaoUsuarios(): JSX.Element {
   const [totalPages, setTotalPages] = useState<number>(1);
   const limit = 10;
   const [isNewUserModalOpen, setIsNewUserModalOpen] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const [actionModal, setActionModal] = useState<ActionModalState>({
     isOpen: false,
@@ -425,7 +484,7 @@ function GestaoUsuarios(): JSX.Element {
     };
     fetchUsers();
     return () => { cancelled = true; };
-  }, [page]);
+  }, [page, refreshKey]);
 
   const handleMenuItemClick = (path: string) => {
     navigate(path);
@@ -689,7 +748,14 @@ function GestaoUsuarios(): JSX.Element {
       </div>
 
       {isNewUserModalOpen && (
-        <NewUserModal onClose={() => setIsNewUserModalOpen(false)} />
+        <NewUserModal
+          onClose={() => setIsNewUserModalOpen(false)}
+          onCreated={() => {
+            // força reload da lista (volta pra página 1)
+            setPage(1);
+            setRefreshKey((k) => k + 1);
+          }}
+        />
       )}
 
       {actionModal.isOpen && (

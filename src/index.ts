@@ -1,5 +1,18 @@
 import app from './server';
 
+// Registra Service Worker
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/sw.js')
+            .then(function(registration) {
+              console.log('SW registrado: ', registration);
+            })
+            .catch(function(registrationError) {
+              console.log('SW falhou: ', registrationError);
+            });
+        });
+      }
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
