@@ -82,7 +82,6 @@ const OcorrenciasPorTurnoChart: React.FC<ChartProps> = ({ ocorrencias }) => {
   const segments = legendItems.filter((i) => i.count > 0);
   const total = segments.reduce((acc, cur) => acc + cur.count, 0);
 
-  // Gera gradiente dinâmico apenas com segmentos > 0
   let start = 0;
   const stops: string[] = [];
   segments.forEach((seg) => {
@@ -117,7 +116,6 @@ const OcorrenciasPorTurnoChart: React.FC<ChartProps> = ({ ocorrencias }) => {
 const OcorrenciasPorTipoChart: React.FC<ChartProps> = ({ ocorrencias }) => {
   const counts: Record<string, number> = {};
 
-  // Normaliza o rótulo do tipo para exibição
   function normalizeTipoLabel(raw?: string): string {
     if (!raw) return 'Não classificado';
     const v = raw.toString().trim().toLowerCase();
@@ -130,7 +128,6 @@ const OcorrenciasPorTipoChart: React.FC<ChartProps> = ({ ocorrencias }) => {
       outro: 'Outros',
     };
     if (map[v]) return map[v];
-    // Capitaliza primeira letra e substitui _ por espaço
     return v.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
   }
 
@@ -317,7 +314,7 @@ function DashboardAdmin(): JSX.Element {
 
           <div
             className={styles.navItem}
-            onClick={() => handleMenuItemClick("/Conniguracoes")}
+            onClick={() => handleMenuItemClick("/Configuracoes")}
           >
             <img
               src={ConfiguracaoSvg}

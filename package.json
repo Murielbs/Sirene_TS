@@ -49,9 +49,11 @@
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
+    "leaflet": "^1.9.4",
     "mongodb": "^6.20.0",
     "multer": "^2.0.2",
     "prisma": "^5.15.0",
+    "react-leaflet": "^5.0.0",
     "sharp": "^0.34.4",
     "uuid": "^13.0.0"
   }

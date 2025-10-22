@@ -1,4 +1,3 @@
-// Login.tsx
 import React, { useState, type JSX } from "react";
 import { apiFetch } from "../../lib/api";
 import styles from "./Login.module.css";
@@ -28,15 +27,10 @@ function Login(): JSX.Element {
 
       if (response.ok) {
         
-        // 🔑 CORREÇÃO: O token está aninhado em data.data.token
-        // Assumimos que a resposta é: { success: true, data: { token: '...', user: {...} } }
         const token = data.data && data.data.token ? data.data.token : null;
         
         if (token) {
-            // 1. Armazena o token na chave 'token', que o Inicial.tsx lerá
             localStorage.setItem('token', token); 
-            
-            // 2. Redireciona para a página inicial
             navigate('/Inicial'); 
             
         } else {
@@ -45,7 +39,6 @@ function Login(): JSX.Element {
         }
 
       } else {
-        // Usa a mensagem de erro do servidor, se disponível
         setMessage(data.message || "Credenciais inválidas. Tente novamente.");
       }
     } catch (error) {
@@ -112,10 +105,11 @@ function Login(): JSX.Element {
             </button>
           </div>
         </div>
-        <footer>
-          <div className={styles.copyright}>Copyright © 2025 Sirene</div>
-        </footer>
       </form>
+      
+      <footer>
+        <div className={styles.copyright}>Copyright © 2025 Sirene</div>
+      </footer>
     </div>
   );
 }

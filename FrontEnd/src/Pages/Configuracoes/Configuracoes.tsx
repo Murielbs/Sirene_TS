@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Settings,
@@ -13,6 +13,8 @@ import {
   LayoutDashboard,
   Users,
   ClipboardList,
+  Sun,
+  Moon,
 } from "lucide-react";
 import LogoSvg from "../../img/Logo.svg";
 import PaginaIncialSvg from "../../img/PaginaIncial.svg";
@@ -21,63 +23,102 @@ import DashboardSvg from "../../img/Dashboard.svg";
 import GestaoUsuarioSvg from "../../img/GestaoUsuario.svg";
 import AuditoriaLogSvg from "../../img/AuditoriaLog.svg";
 import ConfiguracaoSvg from "../../img/Configuracao.svg";
-import SairSvg from "../../img/Sair.svg";
+import SairSvg from "../../img/sair.svg";
 
 import styles from "./Configuracoes.module.css";
 
 const Configuracoes = () => {
   const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState("account");
-  const [activeSidebarItem, setActiveSidebarItem] = useState("settings");
 
-  const alertMessage = (message) => {
+  const alertMessage = (message: string) => {
     console.log("MENSAGEM AO USUÁRIO:", message);
     alert(message);
   };
 
-  const userSidebarItems = [
-    { id: "home", icon: Home, label: "Pagina inicial", path: "/inicial" },
-    {
-      id: "occurrences",
-      icon: ListChecks,
-      label: "Lista de ocorrências",
-      path: "/Ocorrencias",
-    },
-    {
-      id: "dashboard",
-      icon: LayoutDashboard,
-      label: "Dashboard",
-      path: "/Dashboard",
-    },
-    {
-      id: "user_management",
-      icon: Users,
-      label: "Gestão de usuários",
-      path: "/GestaoUsuario",
-    },
-    {
-      id: "audit",
-      icon: ClipboardList,
-      label: "Auditoria e logs",
-      path: "/Auditoria",
-    },
-    {
-      id: "settings",
-      icon: Settings,
-      label: "Configuração",
-      path: "/configuracao",
-    },
+  const SettingsTabs = [
+    { id: "account", label: "Minha Conta" },
+    { id: "appearance", label: "Aparência" },
+    { id: "notifications", label: "Notificações" },
+    { id: "security", label: "Segurança" },
+    { id: "integrations", label: "Integrações" },
   ];
 
   const handleMenuItemClick = (path: string) => {
     navigate(path);
   };
 
-  const SettingsCard = ({ title, description, children }) => (
+  const SettingsCard = ({ title, description, children }: { title: string, description: string, children: React.ReactNode }) => (
     <div className={styles.settingsCard}>
       <h2 className={styles.cardTitle}>{title}</h2>
       <p className={styles.cardDescription}>{description}</p>
       {children}
+    </div>
+  );
+
+  const InputGroup = ({ label, type = "text", defaultValue = "" }: { label: string, type?: string, defaultValue?: string }) => (
+    <div className={styles.inputGroup}>
+      <label className={styles.inputLabel}>{label}</label>
+      <input
+        type={type}
+        defaultValue={defaultValue}
+        className={styles.inputField}
+        placeholder={`Seu ${label.toLowerCase()}`}
+      />
+    </div>
+  );
+
+  const ToggleOption = ({ label, checked, action }: { label: string, checked: boolean, action: (c: boolean) => void }) => {
+    const [isChecked, setIsChecked] = useState(checked);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const newChecked = e.target.checked;
+      setIsChecked(newChecked);
+      if (action) action(newChecked);
+    };
+
+    return (
+      <label className={styles.toggleOption}>
+        <span className={styles.toggleLabelText}>{label}</span>
+        <div className={styles.toggleSwitch}>
+          <input
+            type="checkbox"
+            checked={isChecked}
+            onChange={handleChange}
+            className={styles.toggleInput}
+          />
+          <span className={styles.toggleSlider}>
+            <span className={styles.toggleCircle}></span>
+          </span>
+        </div>
+      </label>
+    );
+  };
+
+  const OptionButton = ({ icon: Icon, label, action }: { icon: React.ElementType, label: string, action: () => void }) => (
+    <button onClick={action} className={styles.optionButton}>
+      <div className={styles.optionIconWrapper}>
+        <Icon className={styles.optionIcon} />
+        <span className={styles.optionLabel}>{label}</span>
+      </div>
+      <ArrowLeftRight className={styles.optionArrow} />
+    </button>
+  );
+
+  const ThemeOption = ({ label, theme, currentTheme, onClick }: { label: string, theme: string, currentTheme: string, onClick: () => void }) => (
+    <div className={styles.themeOption} onClick={onClick}>
+      <div className={`${styles.themeBox} ${currentTheme === theme ? styles.themeActive : ''}`}>
+        {theme === 'light' ? (
+          <div className={styles.themeIconLight}>
+            <Sun size={24} color="#333" />
+          </div>
+        ) : (
+          <div className={styles.themeIconDark}>
+            <Moon size={24} color="#fff" />
+          </div>
+        )}
+      </div>
+      <span className={styles.themeLabel}>{label}</span>
     </div>
   );
 
@@ -86,8 +127,8 @@ const Configuracoes = () => {
       "https://placehold.co/128x128/550d08/ffffff?text=User"
     );
 
-    const handleFileChange = (e) => {
-      const file = e.target.files[0];
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
       if (file) {
         const newUrl = URL.createObjectURL(file);
         setImageUrl(newUrl);
@@ -102,8 +143,8 @@ const Configuracoes = () => {
           alt="Foto de Perfil"
           className={styles.profileImage}
           onError={(e) => {
-            e.target.onerror = null;
-            e.target.src =
+            e.currentTarget.onerror = null;
+            e.currentTarget.src =
               "https://placehold.co/128x128/999999/ffffff?text=Err";
           }}
         />
@@ -126,16 +167,6 @@ const Configuracoes = () => {
       </div>
     );
   };
-
-  const OptionButton = ({ icon: Icon, label, action }) => (
-    <button onClick={action} className={styles.optionButton}>
-      <div className={styles.optionIconWrapper}>
-        <Icon className={styles.optionIcon} />
-        <span className={styles.optionLabel}>{label}</span>
-      </div>
-      <ArrowLeftRight className={styles.optionArrow} />
-    </button>
-  );
 
   const AccountSettings = () => (
     <>
@@ -330,40 +361,6 @@ const Configuracoes = () => {
     }
   };
 
-  const InputGroup = ({ label, type = "text", defaultValue = "" }) => (
-    <div className={styles.inputGroup}>
-      <label className={styles.inputLabel}>{label}</label>
-      <input
-        type={type}
-        defaultValue={defaultValue}
-        className={styles.inputField}
-        placeholder={`Seu ${label.toLowerCase()}`}
-      />
-    </div>
-  );
-
-  const ToggleOption = ({ label, checked, action }) => {
-    const [isChecked, setIsChecked] = useState(checked);
-
-    const handleChange = (e) => {
-      const newChecked = e.target.checked;
-      setIsChecked(newChecked);
-      if (action) action(newChecked);
-    };
-
-    return (
-      <label className={styles.toggleOption}>
-        <span className={styles.toggleLabel}>{label}</span>
-        <input
-          type="checkbox"
-          checked={isChecked}
-          onChange={handleChange}
-          className={styles.toggleInput}
-        />
-      </label>
-    );
-  };
-
   return (
     <div className={styles.appContainer}>
       <div className={styles.sidebar}>
@@ -466,26 +463,16 @@ const Configuracoes = () => {
             </p>
 
             <nav className={styles.navTabs}>
-              {[
-                "Minha Conta",
-                "Aparência",
-                "Notificações",
-                "Segurança",
-                "Integrações",
-              ].map((label) => {
-                const id = label
-                  .toLowerCase()
-                  .replace(/á|ã/g, "a")
-                  .replace(/\s/g, "");
+              {SettingsTabs.map((tab) => {
                 return (
                   <button
-                    key={id}
-                    onClick={() => setActiveSection(id)}
+                    key={tab.id}
+                    onClick={() => setActiveSection(tab.id)}
                     className={`${styles.navTabButton} ${
-                      activeSection === id ? styles.tabActive : ""
+                      activeSection === tab.id ? styles.tabActive : ""
                     }`}
                   >
-                    {label}
+                    {tab.label}
                   </button>
                 );
               })}

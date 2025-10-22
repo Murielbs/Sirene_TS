@@ -1,4 +1,4 @@
-import React, { useEffect, useState, type JSX, useRef } from "react";
+import React, { useEffect, useState, type JSX } from "react";
 import { ChevronLeft, MapPin, Download, Image as ImageIcon } from "lucide-react";
 import styles from "./visualizacao.module.css";
 import { useNavigate, useParams } from "react-router-dom";
@@ -11,22 +11,11 @@ import ConfiguracaoSvg from "../../img/Configuracao.svg";
 import SairSvg from "../../img/sair.svg";
 import LogoSvg from "../../img/Logo.svg";
 
-// Importação alterada para incluir AdvancedMarkerElement
-import { GoogleMap, useLoadScript, Libraries } from "@react-google-maps/api";
-// Nota: O AdvancedMarkerElement é geralmente acessado pela instância do mapa, 
-// mas usaremos useRef para acessá-lo no useEffect, conforme o guia de migração.
+// Importação dinâmica para corrigir o erro de renderização do Leaflet
+const LazyRealTimeMap = React.lazy(() => import('./RealTimeMap'));
 
-// --- DADOS E COORDENADAS FIXAS ---
-const MAP_API_KEY = "SUA_CHAVE_DE_API_GOOGLE";
-const CASA_FORTE_COORDS = { lat: -8.0335, lng: -34.9080 };
-const MAP_CONTAINER_STYLE = {
-    width: '100%',
-    height: '200px'
-};
-
-// 1. CORREÇÃO DE PERFORMANCE: Libraries como constante fora do componente
-const libraries: Libraries = ["places", "marker"]; 
-// ----------------------------------
+// Importe o CSS do Leaflet para garantir que os estilos estejam presentes
+import 'leaflet/dist/leaflet.css'; 
 
 interface TimelineItem {
   id: number;
@@ -121,61 +110,6 @@ const MidiaItemPlaceholder: React.FC<{ item: MidiaItem }> = ({ item }) => (
         )}
     </div>
 );
-
-// --- COMPONENTE: RENDERIZA O MAPA (COM CORREÇÕES) ---
-const RealTimeMap: React.FC = () => {
-    // 2. CORREÇÃO DO MARKER E PERFORMANCE: 
-    // Removemos a dependência de 'libraries' do useLoadScript
-    const { isLoaded, loadError } = useLoadScript({
-        googleMapsApiKey: MAP_API_KEY,
-        libraries: libraries, // Usa a constante definida fora do componente
-    });
-    
-    // Ref para a instância do mapa
-    const mapRef = useRef<google.maps.Map | null>(null);
-
-    // Adiciona o AdvancedMarkerElement após o mapa carregar
-    useEffect(() => {
-        if (isLoaded && mapRef.current) {
-            const map = mapRef.current;
-            
-            // Verifica se a API de Marcadores Avançados está carregada
-            if (google.maps.marker && google.maps.marker.AdvancedMarkerElement) {
-                // Cria o AdvancedMarkerElement
-                new google.maps.marker.AdvancedMarkerElement({
-                    map: map,
-                    position: CASA_FORTE_COORDS,
-                    title: 'Local da Ocorrência'
-                });
-            }
-        }
-    }, [isLoaded]);
-
-    const onLoad = React.useCallback(function callback(mapInstance: google.maps.Map) {
-        mapRef.current = mapInstance;
-    }, []);
-
-    const onUnmount = React.useCallback(function callback() {
-        mapRef.current = null;
-    }, []);
-
-    if (loadError) return <div className={styles.mapError}>Erro ao carregar o mapa.</div>;
-    if (!isLoaded) return <div className={styles.mapLoading}>Carregando Mapa...</div>;
-
-    return (
-        <GoogleMap
-            mapContainerStyle={MAP_CONTAINER_STYLE}
-            center={CASA_FORTE_COORDS}
-            zoom={15}
-            options={{ disableDefaultUI: true, zoomControl: true }}
-            onLoad={onLoad}
-            onUnmount={onUnmount}
-        >
-            {/* O Marker agora é criado via useEffect (AdvancedMarkerElement) */}
-        </GoogleMap>
-    );
-};
-// ------------------------------------------
 
 function DetalheOcorrencia(): JSX.Element {
   const navigate = useNavigate();
@@ -395,13 +329,15 @@ function DetalheOcorrencia(): JSX.Element {
             <h2 className={styles.locationTitle}>Localização</h2>
             
             <div className={styles.mapContainer}>
-              <RealTimeMap />
+                <React.Suspense fallback={<div className={styles.mapLoading}>Carregando Mapa...</div>}>
+                    <LazyRealTimeMap />
+                </React.Suspense>
             </div>
             
             <div className={styles.locationFooter}>
               <MapPin size={16} className={styles.locationIcon} />
               <span className={styles.locationAddress}>
-                Recife, Casa forte
+                {data?.localizacaoEndereco ?? "Carregando..."}
               </span>
             </div>
           </div>

@@ -68,16 +68,16 @@
 }
 
 .actionsCell:hover {
-  text-decoration: underline;
   color: var(--primary-dark);
+  text-decoration: underline;
 }
 
 .appContainer {
   background-color: var(--background-page);
   color: var(--text-dark);
   display: flex;
-  min-height: 100vh;
   height: 100vh;
+  min-height: 100vh;
   position: relative;
   z-index: 1;
 }
@@ -93,8 +93,8 @@ body {
 
 .blurBackground {
   filter: blur(3px) grayscale(50%);
-  transition: filter 0.3s ease;
   pointer-events: none;
+  transition: filter 0.3s ease;
 }
 
 .botaoAvancar {
@@ -123,21 +123,21 @@ body {
   border-radius: 8px !important;
   color: var(--primary-dark) !important;
   font-weight: 600 !important;
+  margin-right: 0.5rem;
   padding: 0.6rem 1.8rem !important;
   text-transform: uppercase;
-  margin-right: auto;
 }
 
 .boxFundoBranca {
   background-color: var(--white);
   border-radius: var(--radius-default);
-  padding: 1.5rem 2rem;
   box-shadow: none;
-  width: 100%;
   box-sizing: border-box;
-  flex-grow: 1;
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
+  padding: 1.5rem 2rem;
+  width: 100%;
 }
 
 .controlsBar {
@@ -180,6 +180,7 @@ body {
   background-color: var(--background-card);
   border: 1px solid var(--primary-dark);
   border-radius: 0.75rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
   color: var(--text-dark);
   cursor: pointer;
   display: flex;
@@ -188,7 +189,6 @@ body {
   gap: 0.5rem;
   padding: 0.75rem 1.25rem;
   transition: background-color 0.2s, box-shadow 0.2s;
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
 }
 
 .filterButton:hover {
@@ -204,23 +204,23 @@ body {
 }
 
 .formGroup label {
-  font-size: 0.9rem;
   color: var(--text-dark);
+  font-size: 0.9rem;
   font-weight: 600;
   margin-bottom: 0.25rem;
 }
 
 .formGroupFull {
+  grid-column: 1 / span 3;
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
   width: auto;
-  grid-column: 1 / span 3;
 }
 
 .formGroupFull label {
-  font-size: 0.9rem;
   color: var(--text-dark);
+  font-size: 0.9rem;
   font-weight: 600;
   margin-bottom: 0.25rem;
 }
@@ -233,16 +233,16 @@ body {
 }
 
 .formGroupSmall label {
-  font-size: 0.9rem;
   color: var(--text-dark);
+  font-size: 0.9rem;
   font-weight: 600;
   margin-bottom: 0.25rem;
 }
 
 .formRow {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
+  grid-template-columns: repeat(3, 1fr);
   margin-bottom: 1.5rem;
 }
 
@@ -272,46 +272,46 @@ body {
 }
 
 .logoImage {
-  width: 70px;
   height: 70px;
   margin-right: 0.25rem;
+  width: 70px;
 }
 
 .logoSection {
   align-items: center;
+  border-bottom: none;
   display: flex;
   justify-content: flex-start;
   margin-bottom: 2rem;
   padding: 1.5rem 1rem;
-  border-bottom: none;
 }
 
 .mainContent {
+  align-items: flex-start;
   background-color: var(--background-page);
+  border-bottom-left-radius: 1.5rem;
+  border-bottom-right-radius: 0.5rem;
+  border-top-left-radius: 1.5rem;
+  border-top-right-radius: 0.5rem;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  max-width: none;
+  overflow: hidden;
   overflow-y: auto;
   padding: 2.5rem 3rem;
-  max-width: none;
-  align-items: flex-start;
-  border-top-left-radius: 1.5rem;
-  border-bottom-left-radius: 1.5rem;
-  border-top-right-radius: 0.5rem;
-  border-bottom-right-radius: 0.5rem;
-  overflow: hidden;
 }
 
 .mapPlaceholder {
-  height: 150px;
-  background-color: #f0f0f0;
-  border-radius: var(--radius-default);
-  display: flex;
-  justify-content: center;
   align-items: center;
-  color: var(--text-subtle);
-  font-size: 0.9rem;
+  background-color: #f0f0f0;
   border: 1px solid var(--border-color);
+  border-radius: var(--radius-default);
+  color: var(--text-subtle);
+  display: flex;
+  font-size: 0.9rem;
+  height: 150px;
+  justify-content: center;
 }
 
 .metricCard {
@@ -322,11 +322,11 @@ body {
   display: flex;
   flex: 1;
   flex-direction: column;
-  padding: 1rem 1rem;
-  text-align: center;
   height: 85px;
   justify-content: space-between;
   min-width: 150px;
+  padding: 1rem 1rem;
+  text-align: center;
 }
 
 .metricCardsContainer {
@@ -341,12 +341,12 @@ body {
 
 .metricTitle {
   color: var(--text-dark);
+  flex-grow: 0;
   font-size: 0.9rem;
   font-weight: 600;
-  margin-bottom: 0.2rem;
   line-height: 1.2;
+  margin-bottom: 0.2rem;
   text-transform: uppercase;
-  flex-grow: 0;
 }
 
 .metricUnit {
@@ -371,33 +371,22 @@ body {
 
 .modalActions {
   display: flex;
-  justify-content: flex-end;
   gap: 1rem;
+  justify-content: flex-end;
   margin-top: 1.5rem;
   padding: 0;
   width: 100%;
 }
 
-.botaoCancelar {
-  background-color: transparent !important;
-  border: 1px solid var(--primary-dark) !important;
-  border-radius: 8px !important;
-  color: var(--primary-dark) !important;
-  font-weight: 600 !important;
-  padding: 0.6rem 1.8rem !important;
-  text-transform: uppercase;
-  margin-right: 0.5rem; /* Ajustado para aproximar do Avançar */
-}
-
 .modalCloseButton {
-  position: absolute;
-  top: 10px;
-  right: 10px;
   background: none;
   border: none;
-  cursor: pointer;
   color: var(--text-subtle);
+  cursor: pointer;
   padding: 5px;
+  position: absolute;
+  right: 10px;
+  top: 10px;
   transition: color 0.2s;
 }
 
@@ -406,6 +395,8 @@ body {
 }
 
 .modalContent {
+  align-items: center;
+  animation: popIn 0.3s forwards;
   background-color: var(--white);
   border: 1px solid var(--primary-dark);
   border-radius: 16px;
@@ -413,12 +404,10 @@ body {
   display: flex;
   flex-direction: column;
   max-width: fit-content;
-  padding: 2rem 2.5rem; /* Padding original para espaço interno */
+  padding: 2rem 2.5rem;
   position: relative;
   transform: scale(0.9);
-  animation: popIn 0.3s forwards;
   width: 100%;
-  align-items: center;
 }
 
 .modalFormPasso {
@@ -429,13 +418,13 @@ body {
 
 .modalInput,
 .modalTextarea {
-  width: 100%;
-  padding: 10px;
+  background-color: var(--white);
   border: 1px solid var(--primary-dark);
   border-radius: 6px;
   box-sizing: border-box;
   font-size: 0.95rem;
-  background-color: var(--white);
+  padding: 10px;
+  width: 100%;
 }
 
 .modalInput:focus,
@@ -446,47 +435,47 @@ select.modalInput:focus {
 }
 
 .modalOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  align-items: center;
+  animation: fadeIn 0.3s forwards;
+  backdrop-filter: blur(8px);
   background-color: rgba(0, 0, 0, 0.2);
+  bottom: 0;
   display: flex;
   justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  backdrop-filter: blur(8px);
+  left: 0;
   opacity: 0;
-  animation: fadeIn 0.3s forwards;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 1000;
 }
 
 .modalTitle {
-  margin-top: 0;
-  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
   color: var(--primary-dark);
   font-size: 1.5rem;
-  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 20px;
+  margin-top: 0;
   padding-bottom: 10px;
 }
 
 .multistepModal {
-  max-width: fit-content; /* Remove o max-width fixo */
-  padding: 2rem 2.5rem; /* Padding original para espaço interno */
   background-color: var(--white);
   border: 2px solid var(--primary-dark);
   border-radius: 16px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  max-width: fit-content;
   overflow: hidden;
+  padding: 2rem 2.5rem;
 }
 
 .navActive {
   background-color: var(--primary-dark);
+  border-left: 4px solid var(--white);
   border-radius: var(--radius-default) 0 0 var(--radius-default);
   color: var(--text-light);
   font-weight: 700;
   margin-left: 0.75rem;
-  border-left: 4px solid var(--white);
   padding-left: calc(1.5rem - 4px);
 }
 
@@ -505,27 +494,27 @@ select.modalInput:focus {
 }
 
 .navIconImg {
-  width: 20px;
+  display: inline-block;
   height: 20px;
   margin-right: 0.9375rem;
-  display: inline-block;
+  width: 20px;
 }
 
 .navItem {
   align-items: center;
+  border-left: 4px solid transparent;
   border-radius: var(--radius-default) 0 0 var(--radius-default);
   cursor: pointer;
   display: flex;
   font-size: 0.95rem;
   font-weight: 600;
   margin-left: 0.75rem;
-  margin-top: 0;
   margin-right: 0;
+  margin-top: 0;
   padding: 0.8rem 1.5rem;
+  padding-left: calc(1.5rem - 4px);
   position: static;
   transition: background-color 0.2s, border-left 0.2s;
-  border-left: 4px solid transparent;
-  padding-left: calc(1.5rem - 4px);
 }
 
 .navItem:hover:not(.navActive) {
@@ -533,13 +522,13 @@ select.modalInput:focus {
 }
 
 .navMenu {
+  align-items: stretch;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  justify-content: center;
-  align-items: stretch;
-  padding-top: 0;
   gap: 2rem;
+  justify-content: center;
+  padding-top: 0;
 }
 
 .navText {
@@ -551,6 +540,7 @@ select.modalInput:focus {
   background-color: var(--white);
   border: 1px solid var(--primary-dark);
   border-radius: 0.75rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
   color: var(--primary-dark);
   cursor: pointer;
   display: flex;
@@ -559,7 +549,6 @@ select.modalInput:focus {
   gap: 0.5rem;
   padding: 0.75rem 1.25rem;
   transition: background-color 0.2s, box-shadow 0.2s;
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
 }
 
 .newOcorrenciaButton:hover {
@@ -672,17 +661,17 @@ select.modalInput:focus {
 .rightSidebar {
   background-color: var(--white);
   border-bottom-right-radius: 1rem;
+  border-top-left-radius: 1rem;
   box-shadow: -0.25rem 0 0.625rem rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
   gap: 1.875rem;
+  height: calc(100vh - 4rem);
   padding: 1.875rem 1.25rem 1.875rem 1.25rem;
-  width: 20rem;
   position: flex;
   right: 1rem;
   top: 2rem;
-  height: calc(100vh - 4rem);
-  border-top-left-radius: 1rem;
+  width: 20rem;
 }
 
 .sLogo {
@@ -727,27 +716,26 @@ select.modalInput:focus {
 
 select.modalInput {
   appearance: none;
-  padding-right: 2.5rem;
   background: var(--white)
     url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%23550d08" d="M7 10l5 5 5-5z"/></svg>')
     no-repeat right 10px center;
   background-size: 16px;
   cursor: pointer;
+  padding-right: 2.5rem;
 }
 
 .sidebar {
   background-color: var(--primary-dark);
+  border-bottom-right-radius: 1.5rem;
+  border-top-right-radius: 1.5rem;
   box-shadow: 0.125rem 0 0.3125rem rgba(0, 0, 0, 0.2);
   color: var(--text-light);
   display: flex;
   flex-direction: column;
+  height: 100%;
   justify-content: space-between;
   padding: 0;
-  width: 16.5rem; /* aumentado para evitar quebra de linha */
-  height: 100%;
-
-  border-top-right-radius: 1.5rem;
-  border-bottom-right-radius: 1.5rem;
+  width: 16.5rem;
 }
 
 .sidebar > .navItem:last-child {
@@ -763,13 +751,13 @@ select.modalInput {
   background-color: var(--background-card);
   border: 1px solid var(--border-color);
   border-radius: 0.75rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
   color: var(--text-dark);
   display: flex;
   font-size: 0.9rem;
   gap: 0.25rem;
   padding: 0.75rem 1rem;
   position: relative;
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
 }
 
 .sortDropdown span {
@@ -778,61 +766,64 @@ select.modalInput {
 }
 
 .statusClosed {
-  background-color: rgba(223, 4, 4, 0.15);
+  background-color: var(--white);
+  border: 1px solid var(--status-closed);
   color: var(--status-closed);
 }
 
 .statusInProgress {
-  background-color: rgba(255, 98, 0, 0.15);
+  background-color: var(--white);
+  border: 1px solid var(--status-in-progress);
   color: var(--status-in-progress);
 }
 
 .statusOpen {
-  background-color: rgba(0, 176, 135, 0.15);
+  background-color: var(--white);
+  border: 1px solid var(--status-open);
   color: var(--status-open);
 }
 
 .statusPill {
-  border: none;
-  border-radius: 1rem;
+  border-radius: 0.3rem; /* Mais suave que 1rem */
   display: inline-block;
-  font-size: 0.75rem;
-  font-weight: 700;
+  font-size: 0.8rem; /* Um pouco maior que 0.75rem */
+  font-weight: 600; /* Mais sutil que 700 */
   min-width: 6rem;
-  padding: 0.25rem 0.75rem;
+  padding: 0.4rem 0.9rem; /* Mais espaçamento interno */
   text-align: center;
+  text-transform: capitalize; /* Adiciona, caso não esteja no seu JSX */
+  line-height: 1; /* Garante que o padding defina a altura */
 }
 
 .stepActive {
   background-color: var(--primary-dark);
-  color: var(--white);
   border-color: var(--primary-dark);
+  color: var(--white);
 }
 
 .stepCircle {
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
+  align-items: center;
   background-color: var(--background-card);
   border: 2px solid var(--primary-dark);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 700;
+  border-radius: 50%;
   color: var(--primary-dark);
+  cursor: default;
+  display: flex;
+  font-weight: 700;
+  height: 35px;
+  justify-content: center;
   transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-  cursor: default; /* Remove o cursor pointer do hover */
+  width: 35px;
+}
+
+.stepCircle.active {
+  background-color: var(--primary-dark);
+  border-color: var(--primary-dark);
+  color: var(--white);
 }
 
 .stepCircle:hover {
-  background-color: var(--white); /* Remove o hover para o efeito cinza */
-}
-
-/* Nova classe para etapas já concluídas/ativas */
-.stepCircle.active {
-  background-color: var(--primary-dark);
-  color: var(--white);
-  border-color: var(--primary-dark);
+  background-color: var(--white);
 }
 
 .stepContent {
@@ -844,25 +835,25 @@ select.modalInput {
 }
 
 .stepIndicator {
+  align-items: center;
+  box-sizing: border-box;
   display: flex;
   justify-content: space-between;
-  align-items: center;
   margin-bottom: 2rem;
+  padding: 0 3rem;
   position: relative;
-  padding: 0 3rem; /* Espaço lateral dos círculos */
   width: 100%;
-  box-sizing: border-box;
 }
 
 .stepIndicator::before {
+  background-color: var(--primary-dark);
   content: "";
+  height: 2px;
+  left: 3rem;
   position: absolute;
   top: 50%;
-  left: 3rem;
-  width: calc(100% - 6rem);
-  height: 2px;
-  background-color: var(--primary-dark);
   transform: translateY(-50%);
+  width: calc(100% - 6rem);
   z-index: 1;
 }
 
@@ -881,19 +872,19 @@ select.modalInput {
 }
 
 .uploadContainer {
+  align-items: center;
   border: 1px dashed var(--primary-dark);
   border-radius: 8px;
-  padding: 1.5rem;
-  text-align: center;
   color: var(--primary-dark);
   cursor: pointer;
-  transition: background-color 0.2s;
-  position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
   gap: 0.5rem;
+  justify-content: center;
+  padding: 1.5rem;
+  position: relative;
+  text-align: center;
+  transition: background-color 0.2s;
 }
 
 .uploadContainer:hover {
@@ -901,9 +892,9 @@ select.modalInput {
 }
 
 .uploadIcon {
+  color: var(--primary-dark);
   height: 32px;
   width: 32px;
-  color: var(--primary-dark);
 }
 
 .userTable {
@@ -911,12 +902,12 @@ select.modalInput {
   width: 100%;
 }
 
-.userTable tbody tr:last-child td {
-  border-bottom: none;
-}
-
 .userTable tbody tr:hover {
   background-color: #f7f7f7;
+}
+
+.userTable tbody tr:last-child td {
+  border-bottom: none;
 }
 
 .userTable td,
@@ -943,7 +934,7 @@ select.modalInput {
   .formGroup,
   .formGroupFull,
   .formGroupSmall {
-    width: 100%;
     margin-bottom: 1rem;
+    width: 100%;
   }
 }

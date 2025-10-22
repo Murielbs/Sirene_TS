@@ -136,7 +136,7 @@ function AuditoriaLogs(): JSX.Element {
               alt="Página inicial"
               className={styles.navIconImg}
             />
-            <span className={styles.navText}>Página inicial</span>
+            <span className={styles.navText}>Pagina inicial</span>
           </div>
 
           <div

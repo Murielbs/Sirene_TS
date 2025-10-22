@@ -157,7 +157,7 @@
 body {
   background-color: var(--background-page);
   box-sizing: border-box;
-  font-family: "poppins-medium", sans-serif;
+  font-family: "Poppins", sans-serif;
   margin: 0;
   min-height: 100vh;
   padding: 0;
@@ -279,7 +279,7 @@ body {
 .logoImage {
   width: 70px;
   height: 70px;
-  margin-right: 0.25rem; /* aproximar mais dos ícones */
+  margin-right: 0.25rem;
 }
 
 .navIconImg {
@@ -292,15 +292,15 @@ body {
 .logoSection {
   align-items: center;
   display: flex;
-  justify-content: flex-start; /* mover o logo para a esquerda */
+  justify-content: flex-start;
   margin-bottom: 2rem;
-  padding: 1.5rem 1rem; /* padding lateral reduzido */
+  padding: 1.5rem 1rem;
   border-bottom: none;
 }
 
 .logoText {
-  font-size: 1.2rem;
-  font-weight: bold;
+  font-size: 1.5rem;
+  font-weight: 700;
   display: flex;
   align-items: center;
   color: var(--text-light);
@@ -315,7 +315,6 @@ body {
   padding: 2.5rem 3rem;
   max-width: none;
   align-items: flex-start;
-  /* bordas arredondadas conforme o design (cantos esquerdos maiores) */
   border-top-left-radius: 1.5rem;
   border-bottom-left-radius: 1.5rem;
   border-top-right-radius: 0.5rem;
@@ -386,14 +385,12 @@ body {
 }
 
 .navActive {
-  /* NOVO EFEITO: Mantém o fundo escuro, texto claro e adiciona borda lateral */
-  background-color: var(--primary-dark);
+  background-color: var(--primary-light);
   border-radius: var(--radius-default) 0 0 var(--radius-default);
   color: var(--text-light);
   font-weight: 700;
   margin-left: 0.75rem;
-  /* Borda branca de destaque */
-  border-left: 4px solid var(--white);
+  border-left: 4px solid var(--text-light); /* Borda branca de destaque */
   padding-left: calc(1.5rem - 4px);
 }
 
@@ -420,10 +417,9 @@ body {
   padding: 0.8rem 1.5rem;
   position: static;
   transition: background-color 0.2s, border-left 0.2s;
-
-  /* AJUSTE PARA O NOVO EFEITO: Espaço para a borda transparente */
-  border-left: 4px solid transparent;
-  padding-left: calc(1.5rem - 4px);
+  
+  border-left: 4px solid transparent; /* Adiciona borda transparente */
+  padding-left: calc(1.5rem - 4px); /* Ajusta padding para compensar a borda */
 }
 
 .navItem:hover:not(.navActive) {
@@ -436,7 +432,7 @@ body {
   flex-grow: 1;
   justify-content: center;
   align-items: stretch;
-  gap: 2rem; /* espaçamento vertical entre itens do menu */
+  gap: 2rem;
 }
 
 .occurrencesTable {
@@ -569,8 +565,9 @@ body {
   flex-direction: column;
   justify-content: space-between;
   padding: 0;
-  width: 16.5rem; /* aumentado para evitar quebra de linha */
+  width: 16.5rem;
   height: 100%;
+  font-family: 'Poppins', sans-serif; /* Adicionado para garantir a fonte Poppins */
 
   border-top-right-radius: 1.5rem;
   border-bottom-right-radius: 1.5rem;

@@ -17,8 +17,8 @@ function RecuperarSenha(): JSX.Element {
   };
 
   const handleCancelar = () => {
-    console.log("Cancelar clicado. Redirecionando para /login");
-    navigate("/login"); 
+    console.log("Cancelar clicado. Redirecionando para /");
+    navigate("/"); 
   };
 
   return (

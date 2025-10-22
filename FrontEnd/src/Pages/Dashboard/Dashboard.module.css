@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
 @keyframes fadeInScale {
   from {
     opacity: 0;
@@ -36,8 +38,8 @@
   --border-color: #e0e0e0;
   --border-color-card: #fff;
   --border-color-table: #fff;
-  --primary-dark: #d9232f;
-  --primary-light: #ea646f;
+  --primary-dark: #550d08; /* CORRIGIDO: Tom escuro do Log/Auditoria */
+  --primary-light: #702c28; /* CORRIGIDO: Tom claro do Log/Auditoria */
   --radius-default: 0.75rem;
   --status-closed: #df0404;
   --status-in-progress: #ff6200;
@@ -51,7 +53,7 @@
 body {
   background-color: var(--background-page);
   box-sizing: border-box;
-  font-family: "Open Sans", sans-serif;
+  font-family: 'Poppins', sans-serif; /* CORRIGIDO: Aplicando Poppins no body */
   margin: 0;
   min-height: 100vh;
   padding: 0;
@@ -399,7 +401,7 @@ body {
 }
 
 .filterButton:hover {
-  background-color: #550d08;
+  background-color: var(--primary-light);
   color: var(--text-light);
 }
 
@@ -756,12 +758,12 @@ body {
 }
 
 .navActive {
-  background-color: var(--primary-dark);
+  background-color: var(--primary-light); /* Corrigido para primary-light */
   border-radius: var(--radius-default) 0 0 var(--radius-default);
   color: var(--text-light);
   font-weight: 700;
   margin-left: 0.75rem;
-  border-left: 4px solid var(--white);
+  border-left: 4px solid var(--text-light); /* Borda branca de destaque */
   padding-left: calc(1.5rem - 4px);
 }
 
@@ -798,7 +800,7 @@ body {
   cursor: pointer;
   display: flex;
   font-size: 0.95rem;
-  font-weight: 700;
+  font-weight: 600; /* Corrigido de 700 para 600 */
   margin-left: 0.75rem;
   margin-top: 0;
   margin-right: 0;
@@ -819,7 +821,7 @@ body {
   flex-grow: 1;
   justify-content: center;
   align-items: stretch;
-  gap: 2rem; /* espaçamento vertical entre itens do menu */
+  gap: 2rem;
 }
 
 .navText {
@@ -843,7 +845,8 @@ body {
 }
 
 .newOcorrenciaButton:hover {
-  background-color: #fce8e8;
+  background-color: var(--primary-light);
+  color: var(--text-light);
 }
 
 .occurrencesTable {
@@ -1085,11 +1088,12 @@ body {
   flex-direction: column;
   justify-content: space-between;
   padding: 0;
-  width: 17rem;
+  width: 16.5rem; /* CORRIGIDO: Largura para 16.5rem */
   height: 100%;
   z-index: 2;
   border-top-right-radius: 1.5rem;
   border-bottom-right-radius: 1.5rem;
+  font-family: 'Poppins', sans-serif; /* Adicionado Poppins na sidebar */
 }
 
 .sidebar > .navItem:last-child {
