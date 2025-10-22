@@ -3,7 +3,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Status: Desenvolvimento](https://img.shields.io/badge/Status-Em%20Uso-green.svg)]()
 
-![Logo do projeto](blob:https://web.whatsapp.com/0eefaaf9-c16f-45c7-a93e-9a3c2da9b7e4)
+
+[![Descrição da imagem](caminho/imagem.jpg)](blob:https://web.whatsapp.com/0eefaaf9-c16f-45c7-a93e-9a3c2da9b7e4)
 
 ## 📝 Descrição do Projeto
 
