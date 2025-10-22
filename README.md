@@ -1,14 +1,12 @@
 # SIRENE - Sistema de Registro de Ocorrências 
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Status: Desenvolvimento](https://img.shields.io/badge/Status-Em%20Uso-green.svg)]()
+
 
 
 ## 📝 Descrição do Projeto
 
-O *Painel web de gestão* é a interface administrativa do sistema de ocorrências, projetado para fornecer aos administradores, analistas e gestores as ferramentas necessárias para monitorar, analisar e gerenciar todas as ocorrências, usuários do sistema e a performance operacional.
-
-Este painel é a central de inteligência para tomada de decisões, oferecendo controle de acesso baseado em perfil, visualização detalhada dos dados, relatórios e um dashboard operacional.
+O *SIRENE* é uma interface administrativa estratégica, desenvolvida especificamente para atender às necessidades operacionais do *Corpo de Bombeiros de Pernambuco*. Esta plataforma fornece aos comandantes, oficiais e equipes de gestão as ferramentas essenciais para monitorar, analisar e coordenar todas as ocorrências emergenciais em tempo real.
 
 ---
 
