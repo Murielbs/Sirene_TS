@@ -4,8 +4,6 @@
 [![Status: Desenvolvimento](https://img.shields.io/badge/Status-Em%20Uso-green.svg)]()
 
 
-[![Descrição da imagem](caminho/imagem.jpg)](blob:https://web.whatsapp.com/0eefaaf9-c16f-45c7-a93e-9a3c2da9b7e4)
-
 ## 📝 Descrição do Projeto
 
 O *Painel web de gestão* é a interface administrativa do sistema de ocorrências, projetado para fornecer aos administradores, analistas e gestores as ferramentas necessárias para monitorar, analisar e gerenciar todas as ocorrências, usuários do sistema e a performance operacional.
