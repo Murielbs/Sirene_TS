@@ -18,13 +18,15 @@
 .appContainer {
   min-height: 100vh;
   display: flex;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   color: var(--text-dark);
   background-color: var(--app-bg);
 }
 
 .sidebar {
   background-color: var(--primary-dark);
+  border-bottom-right-radius: 1.5rem;
+  border-top-right-radius: 1.5rem;
   box-shadow: 0.125rem 0 0.3125rem rgba(0, 0, 0, 0.2);
   color: var(--text-light);
   display: flex;
@@ -32,10 +34,6 @@
   justify-content: space-between;
   padding: 0;
   width: 16.5rem;
-  height: 100vh;
-  border-top-right-radius: 1.5rem;
-  border-bottom-right-radius: 1.5rem;
-  flex-shrink: 0;
 }
 
 .logoSection {
@@ -48,12 +46,11 @@
 }
 
 .logoText {
-  font-size: 1.25rem;
-  font-weight: 700;
   display: flex;
   align-items: center;
+  font-size: 1.5rem;
+  font-weight: 700;
   color: var(--text-light);
-  gap: 0.5rem;
 }
 
 .logoIcon {
@@ -67,9 +64,10 @@
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: stretch;
-  gap: 0.5rem;
+  padding-top: 0;
+  gap: 2rem;
 }
 
 .navItem {
@@ -82,10 +80,12 @@
   margin-left: 0.75rem;
   padding: 0.8rem 1.5rem;
   transition: background-color 0.2s, border-left 0.2s;
-  color: var(--text-light);
   border-left: 4px solid transparent;
   padding-left: calc(1.5rem - 4px);
-  background-color: transparent;
+}
+
+.navItem:hover:not(.navActive) {
+  background-color: var(--primary-light);
 }
 
 .navItemIcon {
@@ -96,23 +96,23 @@
   color: var(--text-light);
 }
 
-.navItem:hover:not(.navActive) {
-  background-color: var(--primary-light);
-}
-
 .navActive {
   background-color: var(--primary-dark);
   border-radius: var(--radius-default) 0 0 var(--radius-default);
   color: var(--text-light);
   font-weight: 700;
   margin-left: 0.75rem;
-  border-left: 4px solid var(--white);
-  padding-left: calc(1.5rem - 4px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
 }
 
 .navActive .navItemIcon {
   color: var(--text-light);
+}
+
+.navIconImg {
+  width: 20px;
+  height: 20px;
+  margin-right: 0.9375rem;
+  display: inline-block;
 }
 
 .logoutSection {
@@ -212,13 +212,15 @@
   background-color: var(--card-bg);
   padding: 1.5rem;
   border-radius: var(--radius-xl);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -2px rgba(0, 0, 0, 0.06);
   transition: all 0.3s;
   margin-bottom: 2rem;
 }
 
 .settingsCard:hover {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 .cardTitle {
@@ -295,13 +297,15 @@
   transition: background-color 0.2s;
   font-size: 0.875rem;
   font-weight: 500;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -2px rgba(0, 0, 0, 0.06);
   display: inline-block;
 }
 
 .uploadLabel:hover {
   background-color: var(--primary-light);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 .fileInput {
@@ -323,7 +327,8 @@
   border-radius: var(--radius-default);
   transition: background-color 0.2s;
   font-weight: 500;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -2px rgba(0, 0, 0, 0.06);
   cursor: pointer;
   border: none;
 }
@@ -455,7 +460,7 @@
 }
 
 .toggleCircle {
-  content: '';
+  content: "";
   position: absolute;
   top: 2px;
   left: 2px;

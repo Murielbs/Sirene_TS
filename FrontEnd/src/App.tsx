@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Login from "./Pages/Login/Login.tsx";
 import ConfirmarSenha from "./Pages/ConfirmarSenha/ConfirmarSenha.tsx";
 import GestaoUsuarios from "./Pages/GestaoUsuario/GestaoUsuario.tsx";
 import RecuperarSenha from "./Pages/RecuperarSenha/RecuperarSenha.tsx";
@@ -9,13 +8,14 @@ import Inicial from "./Pages/Inicial/Inicial.tsx";
 import Dashboard from "./Pages/Dashboard/Dashboard.tsx";
 import AuditoriaLogs from "./Pages/Auditoria/Auditoria.tsx";
 import Configuracoes from "./Pages/Configuracoes/Configuracoes.tsx";
+import Login from "./Pages/Login/Login.tsx";
 import "./App.css";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Inicial />} />
+        <Route path="/" element={<Login />} />
 
         <Route path="/RecuperarSenha" element={<RecuperarSenha />} />
 
@@ -32,7 +32,7 @@ function App() {
         <Route path="/Dashboard" element={<Dashboard />} />
 
         <Route path="/Auditoria" element={<AuditoriaLogs />} />
-        
+
         <Route path="/Configuracoes" element={<Configuracoes />} />
 
         <Route path="*" element={<div>404 - Página Não Encontrada</div>} />

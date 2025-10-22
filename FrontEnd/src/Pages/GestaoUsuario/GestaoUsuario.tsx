@@ -243,7 +243,9 @@ const NewUserModal: React.FC<NewUserModalProps> = ({ onClose, onCreated }) => {
                   placeholder="Número do militar"
                   required
                   value={form.numeroMilitar}
-                  onChange={(e) => setForm({ ...form, numeroMilitar: e.target.value })}
+                  onChange={(e) =>
+                    setForm({ ...form, numeroMilitar: e.target.value })
+                  }
                 />
               </div>
             </div>
@@ -251,8 +253,8 @@ const NewUserModal: React.FC<NewUserModalProps> = ({ onClose, onCreated }) => {
         );
       case 2:
         return (
-            <div className={styles.formRowTwoColumns}>
-              <div className={styles.formGroup}>  
+          <div className={styles.formRowTwoColumns}>
+            <div className={styles.formGroup}>
               <div className={styles.formGroup}>
                 <label>CPF</label>
                 <input
@@ -273,7 +275,9 @@ const NewUserModal: React.FC<NewUserModalProps> = ({ onClose, onCreated }) => {
                   className={styles.modalInput}
                   required
                   value={form.perfilAcesso}
-                  onChange={(e) => setForm({ ...form, perfilAcesso: e.target.value })}
+                  onChange={(e) =>
+                    setForm({ ...form, perfilAcesso: e.target.value })
+                  }
                 >
                   <option value="ADMIN">ADMIN</option>
                   <option value="COMANDANTE">COMANDANTE</option>
@@ -311,7 +315,9 @@ const NewUserModal: React.FC<NewUserModalProps> = ({ onClose, onCreated }) => {
                 />
               </div>
             </div>
-            {serverError && <div className={styles.formError}>{serverError}</div>}
+            {serverError && (
+              <div className={styles.formError}>{serverError}</div>
+            )}
           </div>
         );
       default:
@@ -319,24 +325,27 @@ const NewUserModal: React.FC<NewUserModalProps> = ({ onClose, onCreated }) => {
     }
   };
 
-  const handleNext = () => setCurrentStep((prev) => Math.min(totalSteps, prev + 1));
+  const handleNext = () =>
+    setCurrentStep((prev) => Math.min(totalSteps, prev + 1));
 
   const handleFinalSubmit = async () => {
     setServerError(null);
     if (!form.nome || !form.email || !form.senha) {
-      setServerError('Preencha os campos obrigatórios');
+      setServerError("Preencha os campos obrigatórios");
       return;
     }
     if (form.senha !== confirmSenha) {
-      setServerError('As senhas não conferem');
+      setServerError("As senhas não conferem");
       return;
     }
 
     try {
       setLoading(true);
-      const token = localStorage.getItem('token');
-      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-      if (token) headers['Authorization'] = `Bearer ${token}`;
+      const token = localStorage.getItem("token");
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+      if (token) headers["Authorization"] = `Bearer ${token}`;
 
       const body = JSON.stringify({
         nome: form.nome,
@@ -349,10 +358,18 @@ const NewUserModal: React.FC<NewUserModalProps> = ({ onClose, onCreated }) => {
         perfilAcesso: form.perfilAcesso,
       });
 
-      const resp = await apiFetch('/api/auth/militar', { method: 'POST', headers, body });
+      const resp = await apiFetch("/api/auth/militar", {
+        method: "POST",
+        headers,
+        body,
+      });
       const text = await resp.text();
       let json: any = null;
-      try { json = text ? JSON.parse(text) : null; } catch (e) { json = text; }
+      try {
+        json = text ? JSON.parse(text) : null;
+      } catch (e) {
+        json = text;
+      }
 
       if (!resp.ok) {
         const msg = json?.message || text || `Erro ${resp.status}`;
@@ -363,7 +380,7 @@ const NewUserModal: React.FC<NewUserModalProps> = ({ onClose, onCreated }) => {
       if (onCreated) onCreated();
       onClose();
     } catch (e: any) {
-      setServerError(e.message || 'Erro ao comunicar com o servidor');
+      setServerError(e.message || "Erro ao comunicar com o servidor");
     } finally {
       setLoading(false);
     }
@@ -375,21 +392,36 @@ const NewUserModal: React.FC<NewUserModalProps> = ({ onClose, onCreated }) => {
         <div className={styles.stepHeader}>{renderPassos()}</div>
 
         <div className={styles.boxFundoBranca}>
-          <div className={styles.stepContent}>{renderStepContent(currentStep)}</div>
+          <div className={styles.stepContent}>
+            {renderStepContent(currentStep)}
+          </div>
         </div>
 
         <div className={styles.modalActions}>
-          <button type="button" className={styles.botaoCancelar} onClick={onClose}>
+          <button
+            type="button"
+            className={styles.botaoCancelar}
+            onClick={onClose}
+          >
             CANCELAR
           </button>
 
           {currentStep < totalSteps ? (
-            <button type="button" className={styles.botaoAvancar} onClick={handleNext}>
+            <button
+              type="button"
+              className={styles.botaoAvancar}
+              onClick={handleNext}
+            >
               AVANÇAR
             </button>
           ) : (
-            <button type="button" className={styles.botaoCadastrar} onClick={handleFinalSubmit} disabled={loading}>
-              {loading ? 'Enviando...' : 'CADASTRAR'}
+            <button
+              type="button"
+              className={styles.botaoCadastrar}
+              onClick={handleFinalSubmit}
+              disabled={loading}
+            >
+              {loading ? "Enviando..." : "CADASTRAR"}
             </button>
           )}
         </div>
@@ -418,7 +450,7 @@ function GestaoUsuarios(): JSX.Element {
   const [filterBy, setFilterBy] = useState<
     "todos" | "Em serviço" | "Fora de serviço"
   >("todos");
-  
+
   const filteredUsers = users.filter((user) => {
     if (filterBy === "todos") return true;
     return user.status === filterBy;
@@ -449,10 +481,15 @@ function GestaoUsuarios(): JSX.Element {
         setLoading(true);
         setError(null);
         const token = localStorage.getItem("token");
-        const headers: Record<string, string> = { "Content-Type": "application/json" };
+        const headers: Record<string, string> = {
+          "Content-Type": "application/json",
+        };
         if (token) headers["Authorization"] = `Bearer ${token}`;
 
-  const resp = await apiFetch(`/api/auth/militares?page=${page}&limit=${limit}`, { headers });
+        const resp = await apiFetch(
+          `/api/auth/militares?page=${page}&limit=${limit}`,
+          { headers }
+        );
         if (!resp.ok) {
           const t = await resp.text();
           throw new Error(`Erro ${resp.status}: ${t}`);
@@ -483,7 +520,9 @@ function GestaoUsuarios(): JSX.Element {
       }
     };
     fetchUsers();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [page, refreshKey]);
 
   const handleMenuItemClick = (path: string) => {
@@ -556,7 +595,7 @@ function GestaoUsuarios(): JSX.Element {
 
           <div
             className={`${styles.navItem} ${styles.navActive}`}
-            onClick={() => handleMenuItemClick("/gestao-usuarios")}
+            onClick={() => handleMenuItemClick("/GestaoUsuario")}
           >
             <img
               src={GestaoUsuarioSvg}
@@ -671,11 +710,15 @@ function GestaoUsuarios(): JSX.Element {
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan={6} className={styles.emptyState}>Carregando...</td>
+                    <td colSpan={6} className={styles.emptyState}>
+                      Carregando...
+                    </td>
                   </tr>
                 ) : error ? (
                   <tr>
-                    <td colSpan={6} className={styles.emptyState}>{error}</td>
+                    <td colSpan={6} className={styles.emptyState}>
+                      {error}
+                    </td>
                   </tr>
                 ) : sortedUsers.length === 0 ? (
                   <tr>
