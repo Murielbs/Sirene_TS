@@ -2,6 +2,19 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+
+---
+
+## Documentação Técnica
+
+[Link documentação](https://docs.google.com/document/d/1P5--2lpsrc51ZA3FAVUqCeMgkGYcoAKgbD8Dn0n_bEs/edit?usp=drivesdk)
+
+---
+
+## Manual do Usuário
+
+[Link manual](https://docs.google.com/document/d/1HekN01xL-Cl8MKh8yKN-Tb9xmBVEPIvMz6SN7-gAyrU/edit?usp=drivesdk)
+
 ---
 
 ## Fase 1: Painel Administrativo Web
