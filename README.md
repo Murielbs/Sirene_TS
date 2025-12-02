@@ -9,7 +9,6 @@
 
 [Link documentação](https://docs.google.com/document/d/1P5--2lpsrc51ZA3FAVUqCeMgkGYcoAKgbD8Dn0n_bEs/edit?usp=drivesdk)
 
----
 
 ## Manual do Usuário
 
