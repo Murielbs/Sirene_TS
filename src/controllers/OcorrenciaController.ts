@@ -17,6 +17,8 @@ export const OcorrenciaController = {
         numero,
         regiao,
         pontoReferencia,
+        latitude,
+        longitude,
       } = req.body;
 
       const novaOcorrencia = await prisma.ocorrencia.create({
@@ -34,6 +36,8 @@ export const OcorrenciaController = {
           numero,
           regiao,
           pontoReferencia,
+          latitude,
+          longitude,
         },
       });
 
@@ -115,6 +119,8 @@ export const OcorrenciaController = {
         numero,
         regiao,
         pontoReferencia,
+        latitude,
+        longitude,
       } = req.body;
 
       const dadosParaAtualizar: any = {};
@@ -129,6 +135,8 @@ export const OcorrenciaController = {
       if (numero !== undefined) dadosParaAtualizar.numero = numero;
       if (regiao !== undefined) dadosParaAtualizar.regiao = regiao;
       if (pontoReferencia !== undefined) dadosParaAtualizar.pontoReferencia = pontoReferencia;
+      if (latitude !== undefined) dadosParaAtualizar.latitude = latitude;
+      if (longitude !== undefined) dadosParaAtualizar.longitude = longitude;
 
       const ocorrenciaAtualizada = await prisma.ocorrencia.update({
         where: { id },

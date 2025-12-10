@@ -59,6 +59,8 @@ model Ocorrencia {
   cidade            String?
   bairro            String?          
   localizacaoGps    String?   @map("localizacao_gps")
+  latitude          Float?
+  longitude         Float?
   pontoReferencia   String?   @map("ponto_referencia")
   prioridade        String?   @map("prioridade")
   status            String?

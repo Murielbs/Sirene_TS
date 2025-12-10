@@ -68,6 +68,8 @@ export interface CriarOcorrenciaRequest {
   tipoOcorrencia: TipoOcorrencia;
   descricao: string;
   localizacaoGps: string;
+  latitude?: number;
+  longitude?: number;
   modoTreinamento?: boolean;
 }
 
@@ -75,6 +77,8 @@ export interface AtualizarOcorrenciaRequest {
   status?: StatusOcorrencia;
   descricao?: string;
   observacoes?: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface ApiResponse<T = any> {
